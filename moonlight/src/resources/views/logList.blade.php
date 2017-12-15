@@ -8,7 +8,11 @@
         <ul class="log">
         @foreach ($userActions as $userAction)
         <li>
+            @if ($loggedUser->photoExists())
             <div class="avatar"><img src="{{ $userAction->user->getPhotoSrc() }}" /></div>
+            @else
+            <div class="avatar"><img src="/packages/moonlight/img/default-avatar.png" /></div>
+            @endif
             <div class="date">{{ $userAction->created_at->format('d.m.Y') }}<br><span class="time">{{ $userAction->created_at->format('H:i:s') }}</span></div>
             <span class="user">{{ $userAction->user->login }}</span>
             <small>{{ $userAction->user->first_name }} {{ $userAction->user->last_name }}</small><br>

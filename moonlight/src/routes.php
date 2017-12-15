@@ -35,6 +35,8 @@ Route::group(['prefix' => 'moonlight'], function() {
         Route::post('/profile', ['as' => 'moonlight.profile', 'uses' => 'Moonlight\Controllers\ProfileController@save']);
         
         Route::get('/password', ['as' => 'moonlight.password', 'uses' => 'Moonlight\Controllers\PasswordController@show']);
+
+        Route::get('/restore', ['as' => 'moonlight.restore', 'uses' => 'Moonlight\Controllers\PasswordController@restore']);
         
         Route::post('/password', ['as' => 'moonlight.password', 'uses' => 'Moonlight\Controllers\PasswordController@save']);
 

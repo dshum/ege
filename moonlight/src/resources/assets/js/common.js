@@ -4,6 +4,24 @@ $(function() {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    $.onCtrlS = function(event) {
+		if ( ! event) event = window.event;
+
+		if (event.keyCode) {
+			var code = event.keyCode;
+		} else if (event.which) {
+			var code = event.which;
+		}
+
+		if (code == 83 && event.ctrlKey == true) {
+			$('form').submit();
+			return false;
+		}
+
+		return true;
+	};
+
     
     $.blockUI = function(handle) {
         $('.block-ui').fadeIn(100, handle);
@@ -46,6 +64,12 @@ $(function() {
         
         container.fadeOut('fast', handle);
     };
+
+    $('body').keypress(function(event) {
+		return $.onCtrlS(event);
+	}).keydown(function(event) {
+		return $.onCtrlS(event);
+	});
     
     $('.alert .container').click(function(e) {
         return false;

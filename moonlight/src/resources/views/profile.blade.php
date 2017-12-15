@@ -47,18 +47,25 @@
                     <input type="text" name="email" value="{{ $email }}" placeholder="E-mail">
                 </div>
                 <div class="row">
-                    <label>Аватар:</label><span name="file" class="error"></span><br>
-                    <div><img src="/packages/moonlight/img/avatar.jpg"></div>
+                    <label>Аватар:</label><span name="photo" class="error"></span><br>
+                    <div id="photo-container">
+                        @if ($loggedUser->photoExists())
+                        <img src="{{ $loggedUser->getPhotoSrc() }}">
+                        @endif
+                    </div>
                     <div>
                         <small class="red">Максимальный размер файла 1024 Кб</small><br />
                         <small class="red">Минимальный размер изображения 100&#215;100 пикселей</small>
                     </div>
                     <div class="loadfile">
-                        <div class="file" name="file">Выберите файл</div>
-                        <span class="reset" name="file">&#215;</span>
-                        <div class="file-hidden"><input type="file" name="file"></div>
+                        <div class="file" name="photo">Выберите файл</div>
+                        <span class="reset" name="photo">&#215;</span>
+                        <div class="file-hidden"><input type="file" name="photo"></div>
                     </div>
-                    <p><input type="checkbox" name="drop" id="drop" value="1"><label for="drop">Удалить</label></p>
+                    <p>
+                        <input type="checkbox" name="drop" id="drop" value="1">
+                        <label for="drop">Удалить</label>
+                    </p>
                 </div>
                 <div class="row submit">
                     <input type="submit" value="Сохранить" class="btn">
