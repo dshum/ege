@@ -24,7 +24,7 @@
                 <div class="search-form-links">
                     <div class="row">
                         @foreach ($properties as $property)
-                        <div class="link active">
+                        <div class="link {{ isset($actives[$property->getName()]) ? 'active' : '' }}" item="{{ $currentItem->getNameId() }}" name="{{ $property->getName() }}">
                             {!! $links[$property->getName()] !!}
                         </div>
                         @endforeach
@@ -33,8 +33,8 @@
                 <div class="search-form-params">
                     <div class="row">
                         @foreach ($properties as $property)
-                        <div class="block">
-                            <div class="close"><i class="fa fa-minus-square-o"></i></div>
+                        <div class="block {{ isset($actives[$property->getName()]) ? 'active' : '' }}" name="{{ $property->getName() }}">
+                            <div class="close" name="{{ $property->getName() }}"><i class="fa fa-minus-square-o"></i></div>
                             {!! $views[$property->getName()] !!}
                         </div>
                         @endforeach

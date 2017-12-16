@@ -23,6 +23,26 @@ $(function() {
         }
     });
 
+    $('.search-form-links div.link').click(function() {
+        var item = $(this).attr('item');
+        var name = $(this).attr('name');
+        var active = ! $(this).hasClass('active');
+
+        $(this).toggleClass('active');
+        $('.search-form-params div.block[name="' + name + '"]').toggleClass('active');
+
+        $.post('/moonlight/search/active/' + item + '/' + name, {
+            active: active
+        });
+    });
+
+    $('.search-form-params div.close').click(function() {
+        var name = $(this).attr('name');
+
+        $('.search-form-links div.link[name="' + name + '"]').removeClass('active');
+        $('.search-form-params div.block[name="' + name + '"]').removeClass('active');
+    });
+
     $('input[name].date').calendar({
         dateFormat: '%Y-%m-%d'
     });

@@ -152,24 +152,6 @@ button:focus {
   color: black;
 }
 
-.one.container {
-  position: relative;
-}
-
-.one.container .reset {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 1.5rem;
-  height: 3rem;
-  line-height: 3rem;
-  vertical-align: middle;
-  text-align: center;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding-top: 2px;
-}
-
 .addnew,
 .next {
   display: inline-block;
@@ -824,8 +806,9 @@ table.elements tbody > tr.chosen {
 }
 
 .search-form-links {
-  margin: 0;
-  padding: 0;
+  margin: 0 -1rem 1rem -1rem;
+  padding: 0 1rem 0.5rem 1rem;
+  border-bottom: 1px solid #bcc;
 }
 
 .search-form-links .row {
@@ -852,7 +835,8 @@ table.elements tbody > tr.chosen {
 .search-form-links .label .fa {
   position: relative;
   top: -2px;
-  margin-right: 0.5rem;
+  margin-right: 0.25rem;
+  width: 1rem;
   font-size: 0.8rem;
 }
 
@@ -861,10 +845,8 @@ table.elements tbody > tr.chosen {
 }
 
 .search-form-params {
-  margin: 1rem -1rem 0 -1rem;
-  padding: 0.5rem 1rem 0.5rem 1rem;
-  border-top: 1px solid #bcc;
-  border-bottom: 1px solid #bcc;
+  margin: 0;
+  padding: 0;
 }
 
 .search-form-params .row {
@@ -874,10 +856,14 @@ table.elements tbody > tr.chosen {
 }
 
 .search-form-params .block {
-  display: inline-block;
-  margin: 0.5rem 1rem;
+  display: none;
+  margin: 0 1rem 1rem 1rem;
   padding: 0;
   white-space: nowrap;
+}
+
+.search-form-params .block.active {
+  display: inline-block;
 }
 
 .search-form-params .label {
@@ -888,7 +874,8 @@ table.elements tbody > tr.chosen {
 .search-form-params .label .fa {
   position: relative;
   top: -1px;
-  margin-right: 0.5rem;
+  margin-right: 0.25rem;
+  width: 1rem;
   font-size: 0.8rem;
 }
 
@@ -900,7 +887,8 @@ table.elements tbody > tr.chosen {
 }
 
 .search-form .row-submit {
-  margin: 1rem;
+  margin: 0;
+  padding: 0 1rem 1rem 1rem;
 }
 
 .search-form-params input[type="text"].date {
@@ -909,6 +897,10 @@ table.elements tbody > tr.chosen {
 
 .search-form-params input[type="text"].number {
   width: 6rem;
+}
+
+.search-form-params input[type="text"].one {
+  width: 15rem;
 }
 
 .close {
@@ -1370,6 +1362,25 @@ form .file-hidden {
 
 /* Autocomplete */
 
+.one.container {
+  position: relative;
+}
+
+.one.container .reset {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.25rem;
+  width: 1.5rem;
+  height: 2rem;
+  line-height: 2rem;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding-top: 2px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
 .autocomplete-container {
   position: relative;
 }
@@ -1381,7 +1392,7 @@ form .file-hidden {
   border-radius: 2px;
   background: #fff;
   overflow: auto;
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 
 .autocomplete-suggestion {
@@ -1402,12 +1413,12 @@ form .file-hidden {
 }
 
 .autocomplete-group {
-  padding: 2px 5px;
+  padding: 2px 0.5rem;
 }
 
 .autocomplete-group strong {
   display: block;
-  border-bottom: 1px solid #000;
+  text-decoration: underline;
 }
 
 /* Common */
@@ -1440,7 +1451,7 @@ form .file-hidden {
     width: 100%;
   }
 
-  .main .container {
+  .main > .container {
     padding: 1rem 2rem;
   }
 }

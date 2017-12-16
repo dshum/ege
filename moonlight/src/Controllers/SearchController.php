@@ -2,6 +2,7 @@
 
 namespace Moonlight\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Moonlight\Main\LoggedUser;
 use Moonlight\Main\Element;
@@ -10,7 +11,6 @@ use Moonlight\Properties\OrderProperty;
 use Moonlight\Properties\DateProperty;
 use Moonlight\Properties\DatetimeProperty;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class SearchController extends Controller
 {
@@ -87,6 +87,7 @@ class SearchController extends Controller
         $propertyList = $currentItem->getPropertyList();
         
         $properties = [];
+        $actives = [];
         $links = [];
         $views = [];
         $orderProperties = [];
@@ -122,7 +123,20 @@ class SearchController extends Controller
             )->render();
 
             $properties[] = $property;
-		}
+        }
+        
+        $activeSearchProperties = $loggedUser->getParameter('activeSearchProperties') ?: [];
+
+        $activeProperties = 
+            isset($activeSearchProperties[$currentItem->getNameId()])
+            ? $activeSearchProperties[$currentItem->getNameId()] 
+            : [];
+
+        foreach ($propertyList as $property) {
+            if (isset($activeProperties[$property->getName()])) {
+                $actives[$property->getName()] = $activeProperties[$property->getName()];
+            }
+        }
         
         $action = $request->input('action');
         
@@ -137,6 +151,7 @@ class SearchController extends Controller
         $scope['currentItem'] = $currentItem;
         $scope['mainProperty'] = $mainProperty;
         $scope['properties'] = $properties;
+        $scope['actives'] = $actives;
         $scope['links'] = $links;
         $scope['views'] = $views;
         $scope['orderProperties'] = $orderProperties;
@@ -147,6 +162,46 @@ class SearchController extends Controller
             
         return view('moonlight::searchItem', $scope);
     }
+
+    public function active(Request $request, $class, $name)
+	{
+        $scope = [];
+        
+        $loggedUser = LoggedUser::getUser();
+
+        $site = \App::make('site');
+        
+        $item = $site->getItemByName($class);
+        
+        if (! $item) {
+            $scope['message'] = 'Класс не найден.';
+            return response()->json($scope);
+        }
+        
+        $property = $item->getPropertyByName($name);
+        
+        if (! $property) {
+            $scope['message'] = 'Свойство класса не найдено.';
+            return response()->json($scope);
+        }
+        
+        $active = $request->input('active');
+
+        $activeProperties = $loggedUser->getParameter('activeSearchProperties') ?: [];
+        
+        if ( 
+            $active != 'true'
+            && isset($activeProperties[$item->getNameId()][$property->getName()])
+        ) {
+            unset($activeProperties[$item->getNameId()][$property->getName()]);
+        } elseif ($active) {
+            $activeProperties[$item->getNameId()][$property->getName()] = 1;
+        }
+        
+        $loggedUser->setParameter('activeSearchProperties', $activeProperties);
+
+		return response()->json($scope);
+	}
     
     public function index(Request $request)
     {        

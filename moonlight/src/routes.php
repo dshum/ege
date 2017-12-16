@@ -87,6 +87,8 @@ Route::group(['prefix' => 'moonlight'], function() {
         Route::get('/log/next', ['as' => 'moonlight.log.next', 'uses' => 'Moonlight\Controllers\LogController@next']);
         
         Route::get('/search', ['as' => 'moonlight.search', 'uses' => 'Moonlight\Controllers\SearchController@index']);
+
+        Route::post('/search/active/{class}/{name}', ['as' => 'moonlight.search.active', 'uses' => 'Moonlight\Controllers\SearchController@active']); 
         
         Route::get('/search/list', ['as' => 'moonlight.search.list', 'uses' => 'Moonlight\Controllers\SearchController@elements']);
 
