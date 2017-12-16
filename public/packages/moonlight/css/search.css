@@ -1,0 +1,15 @@
+.leaf {
+  width: 80rem;
+}
+
+.main ul.items {
+  margin: 2rem 0;
+}
+
+.main ul.items li {
+  float: left;
+  width: 20rem;
+  margin: 0;
+  margin-bottom: 1rem;
+  padding: 0;
+}

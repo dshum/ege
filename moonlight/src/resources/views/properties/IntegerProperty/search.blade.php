@@ -1,5 +1,5 @@
-<div class="label number" property="{{ $name }}"><span class="glyphicons glyphicons-calculator"></span><span>{{ $title }}</span></div>
-<div{!! $from || $to ? '' : ' class="dnone"' !!} container="property" property="{{ $name }}">
-    <input type="text" name="{{ $name }}-from" value="{{ $from ? $from->format('Y-m-d') : '' }}" class="number" placeholder="от" {!! $from ? '' : ' disabled="disabled"' !!}> &#151;
-    <input type="text" name="{{ $name }}-to" value="{{ $to ? $to->format('Y-m-d') : '' }}" class="number" placeholder="до" {!! $to ? '' : ' disabled="disabled"' !!}>
+<div class="label number"><i class="fa fa-calculator"></i><span>{{ $title }}</span></div>
+<div>
+    <input type="text" name="{{ $name }}_from" value="{{ $from }}" class="number" placeholder="От">
+    <input type="text" name="{{ $name }}_to" value="{{ $to }}" class="number" placeholder="До">
 </div>

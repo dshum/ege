@@ -78,72 +78,17 @@ class SearchController extends Controller
         if ( ! $currentItem) {
             return redirect()->route('search');
         }
-        
-        $search = $loggedUser->getParameter('search') ?: [];
 
-        $search['sortDate'][$class] =
-            Carbon::now()->toDateTimeString();
-
-        if (isset($search['sortRate'][$class])) {
-            $search['sortRate'][$class]++;
-        } else {
-            $search['sortRate'][$class] = 1;
-        }
-        
-        $loggedUser->setParameter('search', $search);
+        $items = $site->getItemList();
         
         $mainPropertyName = $currentItem->getMainProperty();
         $mainProperty = $currentItem->getPropertyByName($mainPropertyName);
         
         $propertyList = $currentItem->getPropertyList();
         
-        $sortProperty = isset($search['sort'])
-            ? $search['sort'] : 'default';
-        $map = [];
-        
-        if ($sortProperty == 'name') {
-			foreach ($propertyList as $property) {
-				$map[$property->getTitle()] = $property;
-			}
-
-			ksort($map);
-		} elseif ($sortProperty == 'date') {
-			$sortPropertyDate =
-				isset($search['sortPropertyDate'][$class])
-				? $search['sortPropertyDate'][$class]
-				: [];
-
-			arsort($sortPropertyDate);
-
-			foreach ($sortPropertyDate as $propertyName => $date) {
-				$map[$propertyName] = $currentItem->getPropertyByName($propertyName);
-			}
-
-			foreach ($propertyList as $property) {
-				$map[$property->getName()] = $property;
-			}
-		} elseif ($sortProperty == 'rate') {
-			$sortPropertyRate =
-				isset($search['sortPropertyRate'][$class])
-				? $search['sortPropertyRate'][$class]
-				: [];
-
-			arsort($sortPropertyRate);
-
-			foreach ($sortPropertyRate as $propertyName => $rate) {
-				$map[$propertyName] = $currentItem->getPropertyByName($propertyName);
-			}
-
-			foreach ($propertyList as $property) {
-				$map[$property->getName()] = $property;
-			}
-		} else {
-            foreach ($propertyList as $property) {
-				$map[] = $property;
-			}
-		}
-        
         $properties = [];
+        $links = [];
+        $views = [];
         $orderProperties = [];
         $ones = [];
         $hasOrderProperty = false;
@@ -160,51 +105,62 @@ class SearchController extends Controller
             $orderProperties[] = $property;
         }
         
-        foreach ($map as $property) {
+        foreach ($propertyList as $property) {
             if ($property->getHidden()) continue;
-            if ($property->isMainProperty()) continue;
             if ($property->getName() == 'deleted_at') continue;
-            
-			$properties[] = $property->setRequest($request);
-            
-            if ($property->isOneToOne()) {
-                $ones[] = $property;
-            }
-		}
 
-		unset($map);
+            $propertyScope = $property->setRequest($request)->getSearchView();
+
+            if (! $propertyScope) continue;
+
+            $links[$property->getName()] = view(
+                'moonlight::properties.'.$property->getClassName().'.link', $propertyScope
+            )->render();
+            
+            $views[$property->getName()] = view(
+                'moonlight::properties.'.$property->getClassName().'.search', $propertyScope
+            )->render();
+
+            $properties[] = $property;
+		}
         
         $action = $request->input('action');
         
         if ($action == 'search') {
-            $elements = $this->elementListView($request, $currentItem);
+            $elements = null; // $this->elementListView($request, $currentItem);
         } else {
             $elements = null;
         }
-        
-        $onesCopy = view('moonlight::onesCopy', ['ones' => $ones])->render();
-        $onesMove = view('moonlight::onesMove', ['ones' => $ones])->render();
         
         $sort = $request->input('sort');
         
         $scope['currentItem'] = $currentItem;
         $scope['mainProperty'] = $mainProperty;
         $scope['properties'] = $properties;
+        $scope['links'] = $links;
+        $scope['views'] = $views;
         $scope['orderProperties'] = $orderProperties;
-        $scope['elementsView'] = $elements;
-        $scope['onesCopy'] = $onesCopy;
-        $scope['onesMove'] = $onesMove;
         $scope['hasOrderProperty'] = $hasOrderProperty;
+        $scope['action'] = $action;
         $scope['sort'] = $sort;
+        $scope['items'] = $items;
             
         return view('moonlight::searchItem', $scope);
     }
     
     public function index(Request $request)
     {        
-        $html = $this->itemListView();
+        $scope = [];
+
+        $loggedUser = LoggedUser::getUser();
+        
+        $site = \App::make('site');
+        
+        $items = $site->getItemList();
+
+		$scope['items'] = $items;
     
-        return view('moonlight::search', ['html' => $html]);
+        return view('moonlight::search', $scope);
     }
     
     protected function itemListView() {

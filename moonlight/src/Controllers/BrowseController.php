@@ -842,6 +842,8 @@ class BrowseController extends Controller
     public function autocomplete(Request $request)
     {
         $scope = [];
+
+        Log::info('12345');
         
         $loggedUser = LoggedUser::getUser();
         
@@ -911,7 +913,7 @@ class BrowseController extends Controller
             );
         }
 
-		if ( ! $loggedUser->isSuperUser()) {
+		if (! $loggedUser->isSuperUser()) {
 			if (
 				$permissionDenied
 				&& sizeof($allowedElementList)
@@ -940,7 +942,7 @@ class BrowseController extends Controller
         foreach ($elements as $element) {
             $scope['suggestions'][] = [
                 'value' => $element->$mainProperty,
-                'classId' => $element->getClassId(),
+                'classId' => Element::getClassId($element),
                 'id' => $element->id,
             ];
         }
