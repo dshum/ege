@@ -34,7 +34,7 @@
                     <div class="row">
                         @foreach ($properties as $property)
                         <div class="block {{ isset($actives[$property->getName()]) ? 'active' : '' }}" name="{{ $property->getName() }}">
-                            <div class="close" name="{{ $property->getName() }}"><i class="fa fa-minus-square-o"></i></div>
+                            <div class="close" item="{{ $currentItem->getNameId() }}" name="{{ $property->getName() }}"><i class="fa fa-minus-square-o"></i></div>
                             {!! $views[$property->getName()] !!}
                         </div>
                         @endforeach

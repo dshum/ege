@@ -37,10 +37,15 @@ $(function() {
     });
 
     $('.search-form-params div.close').click(function() {
+        var item = $(this).attr('item');
         var name = $(this).attr('name');
 
         $('.search-form-links div.link[name="' + name + '"]').removeClass('active');
         $('.search-form-params div.block[name="' + name + '"]').removeClass('active');
+
+        $.post('/moonlight/search/active/' + item + '/' + name, {
+            active: false
+        });
     });
 
     $('input[name].date').calendar({

@@ -22,12 +22,12 @@
             <div class="search-form">
                 <div class="search-form-params log">
                     <div class="row">
-                        <div class="block">
-                            <div class="label">Комментарий</div>
+                        <div class="block active">
+                            <div class="label">Комментарий:</div>
                             <input type="text" name="comments" value="{{ $comments }}" placeholder="Комментарий">
                         </div>
-                        <div class="block">
-                            <div class="label">Пользователь</div>
+                        <div class="block active">
+                            <div class="label">Пользователь:</div>
                             <select name="user">
                                 <option value="">Все пользователи</option>
                                 @foreach ($users as $user)
@@ -35,8 +35,8 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="block">
-                            <div class="label">Тип операции</div>
+                        <div class="block active">
+                            <div class="label">Тип операции:</div>
                             <select name="type">
                                 <option value="">Все операции</option>
                                 @foreach ($userActionTypes as $id => $name)
@@ -44,8 +44,8 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="block">
-                            <div class="label date">Дата</div>
+                        <div class="block active">
+                            <div class="label date">Дата:</div>
                             <div>
                                 <input type="text" name="dateFrom" value="{{ $dateFrom }}" class="date" placeholder="От">
                                 <input type="text" name="dateTo" value="{{ $dateTo }}" class="date" placeholder="До">
