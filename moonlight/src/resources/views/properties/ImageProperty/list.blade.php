@@ -1,3 +1,5 @@
+<td>
 @if ($exists)
-<div><img src="{{ $src }}" width="120" /></div>
+<img src="{{ $src }}" width="120" />
 @endif
+</td>

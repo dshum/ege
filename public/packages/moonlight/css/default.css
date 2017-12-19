@@ -263,11 +263,11 @@ nav .avatar img {
 
 .wide .block-elements {
   float: left;
-  width: 30%;
+  width: 20%;
 }
 
 .wide .block-elements h2 {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   color: steelblue;
 }
 
@@ -501,6 +501,10 @@ ul.header li.checked > span {
   color: white;
 }
 
+div.empty {
+  margin: 2rem 0;
+}
+
 /* Table buttons */
 
 .buttons {
@@ -635,6 +639,7 @@ table.elements th small {
 }
 
 table.elements td {
+  max-width: 25rem;
   padding: 0.5rem 1rem;
   text-align: left;
 }
@@ -663,7 +668,7 @@ table.elements td.browse div.drag .fa {
 
 table.elements td.name {
   min-width: 10rem;
-  max-width: 30rem;
+  max-width: 25rem;
 }
 
 table.elements td.name a {
@@ -721,6 +726,15 @@ table.elements tbody > tr.chosen {
   background-color: #abc;
 }
 
+table.elements img {
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 2px;
+  box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.18), 0 2px 11px 0 rgba(0, 0, 0, 0.15);
+  background-color: white;
+}
+
 /* Tree */
 
 .tree {
@@ -772,9 +786,9 @@ table.elements tbody > tr.chosen {
 
 .tree .fa {
   position: relative;
-  top: -2px;
+  top: 2px;
   color: #3a7;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 .tree .empty {
@@ -1437,6 +1451,10 @@ form .file-hidden {
 
 .red {
   color: orangered;
+}
+
+.grey {
+  color: #999;
 }
 
 /* Media */

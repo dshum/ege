@@ -1,108 +1,209 @@
-@extends('moonlight::base')
+@extends('moonlight::layouts.browse')
 
 @section('title', 'Корень сайта')
 
 @section('css')
-<link media="all" type="text/css" rel="stylesheet" href="/packages/moonlight/touch/css/browse.css">
+<link media="all" type="text/css" rel="stylesheet" href="/packages/moonlight/css/browse.css">
 @endsection
 
 @section('js')
-<script src="/packages/moonlight/touch/js/element.js"></script>
-<script>
-var favoriteUrl = '{{ route('home.favorite') }}';
-var favoritesUrl = '{{ route('home.favorites') }}';
-var homeUrl = '{{ route('home') }}';
-var searchUrl = '{{ route('search') }}';
-var elementsUrl = '{{ route('elements.list') }}';
-var countUrl = '{{ route('elements.count') }}';
-var copyUrl = '{{ route('elements.copy') }}';
-var moveUrl = '{{ route('elements.move') }}';
-var deleteUrl = '{{ route('elements.delete') }}';
-var closeUrl = '{{ route('elements.close') }}';
-var orderUrl = '{{ route('order') }}';
-var title = 'Корень сайта';
-var opened = '{{ $open }}';
-</script>
+<script src="/packages/moonlight/js/browse.js"></script>
 @endsection
 
 @section('body')
-<nav>
-    <left><span class="hamburger"><span class="glyphicons glyphicons-menu-hamburger"></span></span></left>
-    <center><a href="{{ route('home') }}">@yield('title')</a></center>
-    <right><a href="{{ route('search') }}"><span class="glyphicons glyphicons-search"></span></a></right>
-</nav>
-<div class="bottom-context-menu">
-    <div class="button copy"><span class="halflings halflings-duplicate"></span><br>Копировать</div>
-    <div class="button move"><span class="halflings halflings-arrow-right"></span><br>Переместить</div>
-    <div class="button delete"><span class="halflings halflings-trash"></span><br>Удалить</div>
-</div>
-<div class="sidebar">
-    <div class="sidebar-container">
-        <ul class="menu">
-            <li><a href="{{ route('browse') }}">Корень сайта</a></li>
-            <li><a href="{{ route('trash') }}">Корзина</a></li>
-            <li><hr></li>
-            <li><a href="{{ route('users') }}">Пользователи</a></li>
-            <li><a href="{{ route('log') }}">Журнал</a></li>
-            <li><hr></li>
-            <li><a href="{{ route('profile') }}">{{ $loggedUser->first_name }} {{ $loggedUser->last_name }}</a></li>
-            <li><a href="{{ route('logout') }}">Выход</a></li>
-        </ul>
-    </div>
-</div>
-<div class="confirm copy">
-    <div class="container">
-        <div class="content">
-        {!! $onesCopy !!}
-        </div>
-        <div class="buttons">
-            <input type="button" value="Копировать" class="btn copy">
-            <input type="button" value="Отмена" class="btn cancel">
-        </div>
-    </div>
-</div>
-<div class="confirm move">
-    <div class="container">
-        <div class="content">
-        {!! $onesMove !!}
-        </div>
-        <div class="buttons">
-            <input type="button" value="Перенести" class="btn move">
-            <input type="button" value="Отмена" class="btn cancel">
-        </div>
-    </div>
-</div>
-<div class="confirm delete">
-    <div class="container">
-        <div class="content">
-            Удалить в корзину?
-        </div>
-        <div class="buttons">
-            <input type="button" value="Удалить" class="btn danger delete">
-            <input type="button" value="Отмена" class="btn cancel">
-        </div>
-    </div>
-</div>
 <div class="main">
-    @if ($items)
-    <ul class="items">
-        @foreach ($items as $item)
-            @if (isset($openedItem[$item->getNameId()]))
-            <li item="{{ $item->getNameId() }}" state="opened">
-                <span class="a">{{ $item->getTitle() }}</span>
-                <span class="total">{{ $openedItem[$item->getNameId()]['count'] }}</span>
-                <a class="addnew" href="{{ route('element.create', ['classId' => 'root', 'item' => $item->getNameId()]) }}">+</a>
-                <div item="{{ $item->getNameId() }}" class="list-container">{!! $openedItem[$item->getNameId()]['elements'] !!}</div>
-            </li>
-            @else
-            <li item="{{ $item->getNameId() }}" state="closed">
-                <span class="a">{{ $item->getTitle() }}</span>
-                <a class="addnew" href="{{ route('element.create', ['classId' => 'root', 'item' => $item->getNameId()]) }}">+</a>
-            </li>
-            @endif
-        @endforeach
-    </ul>
-    <br>
-    @endif
+    <div class="container">
+        <div class="path">
+            <div class="part"><span>Корень сайта</span></div>
+        </div>
+        <div class="add-element">
+            Добавить: <a href="">Раздел сайта</a>,<a href="">Служебный раздел</a>,<a href="">Настройки сайта</a>
+        </div>
+        <div class="item active">
+            <ul class="header">
+                <li class="h2"><span>Служебный раздел</span></li>
+                <li class="total">
+                    <span class="order-toggler">Всего 4 элемента</span>
+                </li>
+            </ul>
+            <div class="buttons">
+                <div class="button save enabled"><i class="fa fa-floppy-o"></i>Сохранить</div>
+                <div class="button copy enabled"><i class="fa fa-clone"></i>Копировать</div>
+                <div class="button move enabled"><i class="fa fa-arrow-right"></i>Перенести</div>
+                <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
+            </div>
+            <table class="elements">
+                <thead>
+                <tr>
+                    <th class="browse"><i class="fa fa-sort"></i></th>
+                    <th><a href>Название</a></th>
+                    <th class="date"><a href>Создано</a></th>
+                    <th class="check"><div class="check"></div></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="browse"><a href="browse.html"><i class="fa fa-angle-right"></i></a></td>
+                    <td class="name"><a href="edit.html"><i class="fa fa-pencil"></i><span>Ученики</span></a></td>
+                    <td class="date">
+                        <div class="date">11.07.2017</div>
+                        <div class="time">16:08:43</div>
+                    </td>
+                    <td class="check"><div class="check"></div></td>
+                </tr>
+                <tr>
+                    <td class="browse"><a href="browse.html"><i class="fa fa-angle-right"></i></a></td>
+                    <td class="name"><a href="edit.html"><i class="fa fa-pencil"></i><span>Предметы</span></a></td>
+                    <td class="date">
+                        <div class="date">11.07.2017</div>
+                        <div class="time">16:08:43</div>
+                    </td>
+                    <td class="check"><div class="check"></div></td>
+                </tr>
+                <tr>
+                    <td class="browse"><a href="browse.html"><i class="fa fa-angle-right"></i></a></td>
+                    <td class="name"><a href="edit.html"><i class="fa fa-pencil"></i><span>Справочники</span></a></td>
+                    <td class="date">
+                        <div class="date">11.07.2017</div>
+                        <div class="time">16:08:43</div>
+                    </td>
+                    <td class="check"><div class="check"></div></td>
+                </tr>
+                <tr>
+                    <td class="browse"><a href="browse.html"><i class="fa fa-angle-right"></i></a></td>
+                    <td class="name"><a href="edit.html"><i class="fa fa-pencil"></i><span>Загрузка тестов</span></a></td>
+                    <td class="date">
+                        <div class="date">11.07.2017</div>
+                        <div class="time">16:08:43</div>
+                    </td>
+                    <td class="check"><div class="check"></div></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="item active">
+            <ul class="header">
+                <li class="h2"><span>Настройки сайта</span></li>
+                <li class="total">
+                    <span class="order-toggler">Всего 1 элемент</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('sidebar')
+<div class="sidebar">
+    <div class="container">
+        <h2>Ученики</h2>
+        <ul class="elements">
+            <li><a href="">denis-shumeev@yandex.ru</a></li>
+            <li><a href="">vegorova@mail.ru</a></li>
+        </ul>
+        <h2>Тесты</h2>
+        <ul class="elements">
+            <li><a href="">Покори Воробьевы горы 2014-1</a></li>
+            <li><a href="">Покори Воробьевы горы 2014-2</a></li>
+            <li><a href="">Покори Воробьевы горы 2016</a></li>
+        </ul>
+        <h2>Прочее</h2>
+        <ul class="elements">
+            <li><a href="">Загрузка тестов</a></li>
+        </ul>
+        <div class="tree">
+            <div>
+                <div item>
+                    <div class="item">Служебный раздел</div>
+                    <div class="margin">
+                        <div class="plus"><i class="fa fa-caret-right"></i></div>
+                        <span><a href="browse.html">Ученики</a></span>
+                    </div>
+                    <div class="margin">
+                        <div class="plus"><i class="fa fa-caret-right"></i></div>
+                        <span><a href="browse.html">Предметы</a></span>
+                        <div class="dnone">
+                            <div class="padding">
+                                <div item>
+                                    <div class="item">Предмет</div>
+                                    <div class="margin">
+                                        <div class="plus"><i class="fa fa-caret-down"></i></div>
+                                        <span><a href="browse.html">ЕГЭ</a></span>
+                                        <div>
+                                            <div class="padding">
+                                                <div item>
+                                                    <div class="item">Тема</div>
+                                                    <div class="margin">
+                                                        <div class="plus"><i class="fa fa-caret-down"></i></div>
+                                                        <span><a href="browse.html">Олимпиады</a></span>
+                                                        <div>
+                                                            <div class="padding">
+                                                                <div item>
+                                                                    <div class="item">Тест</div>
+                                                                    <div class="margin">
+                                                                    <div v-else class="empty"></div>
+                                                                    <span><a href="browse.html" class="active">Олимпиада 2012</a></span>
+                                                                    </div>
+                                                                    <div class="margin">
+                                                                    <div v-else class="empty"></div>
+                                                                    <span><a href="browse.html">Покори Воробьевы горы 2014-1</a></span>
+                                                                    </div>
+                                                                    <div class="margin">
+                                                                    <div v-else class="empty"></div>
+                                                                    <span><a href="browse.html">Покори Воробьевы горы 2014-2</a></span>
+                                                                    </div>
+                                                                    <div class="margin">
+                                                                    <div v-else class="empty"></div>
+                                                                    <span><a href="browse.html">Покори Воробьевы горы 2015-1</a></span>
+                                                                    </div>
+                                                                    <div class="margin">
+                                                                    <div v-else class="empty"></div>
+                                                                    <span><a href="browse.html">Покори Воробьевы горы 2015-7</a></span>
+                                                                    </div>
+                                                                    <div class="margin">
+                                                                    <div v-else class="empty"></div>
+                                                                    <span><a href="browse.html">Покори Воробьевы горы 2016</a></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="margin">
+                        <div class="plus"><i class="fa fa-caret-right"></i></div>
+                        <span><a href="browse.html">Справочники</a></span>
+                    </div>
+                    <div class="margin">
+                        <div v-else class="empty"></div>
+                        <span><a href="browse.html">Загрузка тестов</a></span>
+                        <div>
+                            <div class="padding">
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div item>
+                    <div class="item">Настройки сайта</div>
+                    <div class="margin">
+                        <div class="empty"></div>
+                        <span><a href="browse.html">Настройки сайта</a></span>
+                        <div>
+                            <div class="padding">
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

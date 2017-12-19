@@ -842,8 +842,6 @@ class BrowseController extends Controller
     public function autocomplete(Request $request)
     {
         $scope = [];
-
-        Log::info('12345');
         
         $loggedUser = LoggedUser::getUser();
         
@@ -905,11 +903,13 @@ class BrowseController extends Controller
 		}
 
         $criteria = $currentItem->getClass()->query();
+
+        $criteria->whereNull('deleted_at');
         
         if ($query) {
             $criteria->whereRaw(
-                "cast(id as text) ilike :query or $mainProperty ilike :query",
-                ['query' => '%'.$query.'%']
+                "id = :id or $mainProperty ilike :query",
+                ['id' => (int)$query, 'query' => '%'.$query.'%']
             );
         }
 
@@ -1095,67 +1095,6 @@ class BrowseController extends Controller
     public function root(Request $request)
     {
         $scope = [];
-        
-        $loggedUser = LoggedUser::getUser();
-        
-        $site = \App::make('site');
-        
-        $itemList = $site->getItemList();
-        $binds = $site->getBinds();
-
-		$items = [];
-        
-        if (isset($binds[Site::ROOT])) {
-            foreach ($binds[Site::ROOT] as $itemNameId) {
-                $item = $site->getItemByName($itemNameId);
-                
-                $items[] = $item;
-            }
-        }
-        
-        $lists = $loggedUser->getParameter('lists');
-        $open = isset($lists['Root']) ? $lists['Root'] : null;
-        
-        $openedItem = [];
-        $ones = [];
-        
-        if ($open) {
-            $item = $site->getItemByName($open);
-            
-            if ($item) {
-                list($count, $elements) = $this->elementListView(null, $item);
-                
-                if ($count) {
-                    $openedItem[$open] = [
-                        'count' => $count,
-                        'elements' => $elements,
-                    ];
-
-                    $propertyList = $item->getPropertyList();
-
-                    foreach ($propertyList as $propertyName => $property) {
-                        if ($property->getHidden()) continue;
-
-                        if ($property->isOneToOne()) {
-                            $ones[] = $property;
-                        }
-                    }
-                } else {
-                    $open = null;
-                }
-            } else {
-                $open = null;
-            }
-        }
-        
-        $onesCopy = view('moonlight::onesCopy', ['ones' => $ones])->render();
-        $onesMove = view('moonlight::onesMove', ['ones' => $ones])->render();
-
-		$scope['items'] = $items;
-        $scope['openedItem'] = $openedItem;
-        $scope['open'] = $open;
-        $scope['onesCopy'] = $onesCopy;
-        $scope['onesMove'] = $onesMove;
             
         return view('moonlight::root', $scope);
     }

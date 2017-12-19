@@ -1,3 +1,1 @@
-@if ($value)
-<div class="label checkbox"><span class="glyphicons glyphicons-ok-2"></span>{{ $title }}</div>
-@endif
+<td>@if ($value)Да@else<span class="grey">Нет</span>@endif</td>

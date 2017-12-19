@@ -109,33 +109,6 @@ class OneToOneProperty extends BaseProperty
 			? true : false;
 	}
 
-	public function getBrowseView()
-	{
-		$site = \App::make('site');
-
-		$relatedClass = $this->getRelatedClass();
-		$relatedItem = $site->getItemByName($relatedClass);
-		$mainProperty = $relatedItem->getMainProperty();
-        
-        $value = $this->value ? [
-            'id' => $this->value->id,
-            'classId' => Element::getClassId($this->value),
-            'name' => $this->value->{$mainProperty},
-        ] : null;
-
-		$scope = [
-			'name' => $this->getName(),
-			'title' => $this->getTitle(),
-			'value' => $value,
-			'item' => [
-				'id' => $relatedItem->getNameId(),
-				'name' => $relatedItem->getTitle(),
-			],
-		];
-
-		return $scope;
-	}
-
 	public function getEditView()
 	{
 		$site = \App::make('site');

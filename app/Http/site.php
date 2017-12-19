@@ -3,6 +3,7 @@
 use Moonlight\Main\Site;
 use Moonlight\Main\Item;
 use Moonlight\Properties\BaseProperty;
+use Moonlight\Properties\MainProperty;
 use Moonlight\Properties\OrderProperty;
 use Moonlight\Properties\CheckboxProperty;
 use Moonlight\Properties\DatetimeProperty;
@@ -30,14 +31,13 @@ $site->
 	addItem(
 		Item::create('App\Section')->
 		setTitle('Раздел сайта')->
-		setMainProperty('name')->
 		setRoot(true)->
         setTree(true)->
         setCreate(true)->
 		setElementPermissions(true)->
 		addOrder()->
 		addProperty(
-			TextfieldProperty::create('name')->
+			MainProperty::create('name')->
 			setTitle('Название')->
 			setRequired(true)
 		)->
@@ -88,14 +88,13 @@ $site->
 	addItem(
 		Item::create('App\ServiceSection')->
 		setTitle('Служебный раздел')->
-		setMainProperty('name')->
 		setRoot(true)->
         setTree(true)->
         setCreate(true)->
 		setElementPermissions(true)->
 		addOrder()->
 		addProperty(
-			TextfieldProperty::create('name')->
+			MainProperty::create('name')->
 			setTitle('Название')->
 			setRequired(true)
 		)->
@@ -117,11 +116,10 @@ $site->
 	addItem(
 		Item::create('App\SiteSettings')->
 		setTitle('Настройки сайта')->
-		setMainProperty('name')->
 		setRoot(true)->
         setTree(true)->
 		addProperty(
-			TextfieldProperty::create('name')->
+			MainProperty::create('name')->
 			setTitle('Название')->
 			setRequired(true)
 		)->
@@ -150,13 +148,12 @@ $site->
 	addItem(
 		Item::create('App\User')->
 		setTitle('Ученик')->
-		setMainProperty('email')->
         setCreate(true)->
 		setTree(true)->
         setPerPage(10)->
         addOrderBy('created_at', 'desc')->
 		addProperty(
-			TextfieldProperty::create('email')->
+			MainProperty::create('email')->
 			setTitle('E-mail')->
 			setRequired(true)
 		)->
@@ -211,12 +208,11 @@ $site->
 	addItem(
 		Item::create('App\Subject')->
 		setTitle('Предмет')->
-		setMainProperty('name')->
         setTree(true)->
         setCreate(true)->
 		addOrder()->
 		addProperty(
-			TextfieldProperty::create('name')->
+			MainProperty::create('name')->
 			setTitle('Название')->
 			setRequired(true)
 		)->
@@ -243,12 +239,11 @@ $site->
 	addItem(
 		Item::create('App\Topic')->
 		setTitle('Тема')->
-		setMainProperty('name')->
         setTree(true)->
         setCreate(true)->
 		addOrder()->
 		addProperty(
-			TextfieldProperty::create('name')->
+			MainProperty::create('name')->
 			setTitle('Название')->
 			setRequired(true)
 		)->
@@ -275,12 +270,11 @@ $site->
 	addItem(
 		Item::create('App\Subtopic')->
 		setTitle('Подтема')->
-		setMainProperty('name')->
         setTree(true)->
         setCreate(true)->
 		addOrder()->
 		addProperty(
-			TextfieldProperty::create('name')->
+			MainProperty::create('name')->
 			setTitle('Название')->
 			setRequired(true)
 		)->
@@ -307,12 +301,11 @@ $site->
 	addItem(
 		Item::create('App\Test')->
 		setTitle('Тест')->
-		setMainProperty('name')->
         setTree(true)->
         setCreate(true)->
 		addOrder()->
 		addProperty(
-			TextfieldProperty::create('name')->
+			MainProperty::create('name')->
 			setTitle('Название')->
 			setRequired(true)
 		)->
@@ -340,7 +333,6 @@ $site->
 	addItem(
 		Item::create('App\Question')->
 		setTitle('Вопрос')->
-		setMainProperty('name')->
         setCreate(true)->
 		addOrderBy('order')->
 		addProperty(
@@ -348,7 +340,7 @@ $site->
 			setRelatedClass('App\Test')
 		)->
 		addProperty(
-			TextfieldProperty::create('name')->
+			MainProperty::create('name')->
 			setTitle('Название')
 		)->
 		addProperty(
@@ -409,11 +401,10 @@ $site->
 	addItem(
 		Item::create('App\Answer')->
 		setTitle('Ответ')->
-		setMainProperty('name')->
         setCreate(true)->
 		addOrder()->
 		addProperty(
-			TextfieldProperty::create('name')->
+			MainProperty::create('name')->
 			setTitle('Название')
 		)->
 		addProperty(
@@ -445,9 +436,8 @@ $site->
 	addItem(
 		Item::create('App\UserTest')->
 		setTitle('Тест ученика')->
-		setMainProperty('name')->
 		addProperty(
-			TextfieldProperty::create('name')->
+			MainProperty::create('name')->
 			setTitle('Название')
 		)->
 		addProperty(
@@ -482,10 +472,9 @@ $site->
 	addItem(
 		Item::create('App\UserQuestion')->
 		setTitle('Вопрос ученика')->
-		setMainProperty('name')->
 		setPerPage(25)->
 		addProperty(
-			TextfieldProperty::create('name')->
+			MainProperty::create('name')->
 			setTitle('Название')
 		)->
 		addProperty(
@@ -526,9 +515,8 @@ $site->
 	addItem(
 		Item::create('App\UserAnswer')->
 		setTitle('Ответ ученика')->
-		setMainProperty('name')->
 		addProperty(
-			TextfieldProperty::create('name')->
+			MainProperty::create('name')->
 			setTitle('Название')
 		)->
 		addProperty(
@@ -558,11 +546,10 @@ $site->
 	addItem(
 		Item::create('App\QuestionType')->
 		setTitle('Тип вопроса')->
-		setMainProperty('name')->
         setCreate(true)->
 		addOrder()->
 		addProperty(
-			TextfieldProperty::create('name')->
+			MainProperty::create('name')->
 			setTitle('Название')->
 			setRequired(true)
 		)->
@@ -577,6 +564,8 @@ $site->
 		addTimestamps()->
 		addSoftDeletes()
 	)->
+
+	addItemPlugin('App.Question', 'App\Http\Plugins\Answers')->
 
 	bind(Site::ROOT, ['App.Section', 'App.ServiceSection', 'App.SiteSettings'])->
 	bind(env('site.subjects', 'App.ServiceSection.2'), 'App.Subject')->

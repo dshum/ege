@@ -164,3 +164,11 @@ Route::group(['prefix' => 'moonlight'], function() {
         });
     });
 });
+
+Route::group(['middleware' => [
+    StartSession::class, 
+    AuthMiddleware::class,
+    VerifyCsrfToken::class,
+]], function () {
+    Route::post('/plugins/answers/{id}', ['uses' => '\App\Http\Plugins\Answers@correct']);
+});

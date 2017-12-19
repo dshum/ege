@@ -141,13 +141,14 @@ class SearchController extends Controller
         $action = $request->input('action');
         
         if ($action == 'search') {
-            $elements = null; // $this->elementListView($request, $currentItem);
+            $elements = $this->elementListView($request, $currentItem);
         } else {
             $elements = null;
         }
         
         $sort = $request->input('sort');
         
+        $scope['items'] = $items;
         $scope['currentItem'] = $currentItem;
         $scope['mainProperty'] = $mainProperty;
         $scope['properties'] = $properties;
@@ -158,7 +159,7 @@ class SearchController extends Controller
         $scope['hasOrderProperty'] = $hasOrderProperty;
         $scope['action'] = $action;
         $scope['sort'] = $sort;
-        $scope['items'] = $items;
+        $scope['elements'] = $elements;
             
         return view('moonlight::searchItem', $scope);
     }
@@ -303,6 +304,25 @@ class SearchController extends Controller
         $scope = [];
         
         $loggedUser = LoggedUser::getUser();
+
+        $site = \App::make('site');
+
+        /*
+         * Item plugin
+         */
+        
+        $itemPluginView = null;
+         
+        $itemPlugin = $site->getItemPlugin($currentItem->getNameId());
+
+        if ($itemPlugin) {
+            $view = \App::make($itemPlugin)->index($currentItem);
+
+            if ($view) {
+                $itemPluginView = is_string($view)
+                    ? $view : $view->render();
+            }
+        }
         
         $propertyList = $currentItem->getPropertyList();
 
@@ -375,16 +395,6 @@ class SearchController extends Controller
                 $loggedUser->setParameter('search', $search);
             }
 		);
-        
-        $search = $request->input('search');
-        $search_id = $request->input('search_id');
-        $mainProperty = $currentItem->getMainProperty();
-        
-        if ($search_id) {
-            $criteria->where('id', $search_id);
-        } elseif ($search) {
-            $criteria->where($mainProperty, 'ilike', "%$search%");
-        }
 
 		if ( ! $loggedUser->isSuperUser()) {
 			if (
@@ -441,28 +451,37 @@ class SearchController extends Controller
 		$currentPage = $elements->currentPage();
         $hasMorePages = $elements->hasMorePages();
         
-        $fields = [];
+        $properties = [];
+        $views = [];
+
+        foreach ($propertyList as $property) {
+            if ($property->getHidden()) continue;
+            if (! $property->getShow()) continue;
+
+            $properties[] = $property;
+        }
 
         foreach ($elements as $element) {
-            foreach ($propertyList as $property) {
-                if ( ! $property->getShow()) continue;
+            foreach ($properties as $property) {
+                $propertyScope = $property->setElement($element)->getListView();
                 
-                $fields[$element->getClassId()][$property->getName()] = $property;
+                $views[Element::getClassId($element)][$property->getName()] = view(
+                    'moonlight::properties.'.$property->getClassName().'.list', $propertyScope
+                )->render();
             }
         }
 
         $scope['currentItem'] = $currentItem;
-        $scope['propertyList'] = $propertyList;
+        $scope['itemPluginView'] = $itemPluginView;
+        $scope['properties'] = $properties;
         $scope['total'] = $total;
         $scope['currentPage'] = $currentPage;
         $scope['hasMorePages'] = $hasMorePages;
         $scope['elements'] = $elements;
-        $scope['fields'] = $fields;
+        $scope['views'] = $views;
         $scope['orders'] = $orders;
         $scope['hasOrderProperty'] = false;
         
-        $html = view('moonlight::elements', $scope)->render();
-        
-        return $html;
+        return view('moonlight::elements', $scope)->render();
     }
 }

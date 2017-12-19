@@ -35,20 +35,8 @@ class Question extends Model
 
     public function getAnswersInfo()
     {
-        $scope = [];
+        $plugin = new \App\Http\Plugins\Answers;
 
-        $scope['answers'] = [];
-
-        $answers = $this->answers()->orderBy('order')->get();
-
-        foreach ($answers as $answer) {
-            $scope['answers'][] = [
-                'id' => $answer->id,
-                'answer' => $answer->answer,
-                'correct' => $answer->correct,
-            ];
-        }
-
-        return $scope;
+        return $plugin->field($this);
     }
 }

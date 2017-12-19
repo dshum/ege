@@ -8,13 +8,14 @@ class Site
 	const TRASH = 'Trash';
 	const SEARCH = 'Search';
 
-	protected $items = array();
-	protected $binds = array();
-	protected $bindsTree = array();
-	protected $browsePlugins = array();
-	protected $searchPlugins = array();
-	protected $editPlugins = array();
-	protected $browseFilters = array();
+	protected $items = [];
+	protected $binds = [];
+	protected $bindsTree = [];
+	protected $itemPlugins = [];
+	protected $browsePlugins = [];
+	protected $searchPlugins = [];
+	protected $editPlugins = [];
+	protected $browseFilters = [];
 
 	protected $initMicroTime = null;
 
@@ -58,6 +59,27 @@ class Site
 	public function getBinds()
 	{
 		return $this->binds;
+	}
+
+	public function addItemPlugin($class, $plugin)
+	{
+		$this->itemPlugins[$class] = $plugin;
+
+		return $this;
+	}
+
+	public function getItemPlugins()
+	{
+		return $this->itemPlugins;
+	}
+
+	public function getItemPlugin($class)
+	{
+		if (isset($this->itemPlugins[$class])) {
+			return $this->itemPlugins[$class];
+		}
+
+		return null;
 	}
 
 	public function bindBrowsePlugin($classId, $plugin)

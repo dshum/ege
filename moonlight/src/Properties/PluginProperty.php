@@ -33,54 +33,6 @@ class PluginProperty extends BaseProperty
 		return $query;
 	}
 
-    public function getBrowseView()
-	{
-		$element = $this->getElement();
-        $item = Element::getItem($element);
-		$mainProperty = $item->getMainProperty();
-
-		$scope = [
-            'name' => $this->getName(),
-			'title' => $this->getTitle(),
-			'value' => $this->getValue(),
-			'element' => $element ? [
-                'id' => $element->id,
-                'classId' => Element::getClassId($element),
-                'name' => $element->{$mainProperty},
-            ] : null,
-            'item' => [
-                'id' => $item->getNameId(),
-                'name' => $item->getTitle(),
-            ],
-		];
-
-		return $scope;
-	}
-
-	public function getEditView()
-	{
-        $element = $this->getElement();
-        $item = Element::getItem($element);
-		$mainProperty = $item->getMainProperty();
-
-		$scope = [
-            'name' => $this->getName(),
-			'title' => $this->getTitle(),
-			'value' => $this->getValue(),
-			'element' => $element ? [
-                'id' => $element->id,
-                'classId' => Element::getClassId($element),
-                'name' => $element->{$mainProperty},
-            ] : null,
-            'item' => [
-                'id' => $item->getNameId(),
-                'name' => $item->getTitle(),
-            ],
-		];
-
-		return $scope;
-	}
-
 	public function getSearchView()
 	{
 		return null;

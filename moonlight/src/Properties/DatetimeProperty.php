@@ -50,10 +50,6 @@ class DatetimeProperty extends BaseProperty
 		if ( ! $this->value && $this->getFillNow()) {
 			$this->value = Carbon::now();
 		}
-        
-        if ($this->value) {
-            $this->value = $this->value->format('c');
-        }
 
 		return $this;
 	}

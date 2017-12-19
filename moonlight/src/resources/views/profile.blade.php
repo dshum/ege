@@ -75,6 +75,7 @@
     </div>
 </div>
 @endsection
+
 @section('sidebar')
 <div class="sidebar">
     <div class="container">

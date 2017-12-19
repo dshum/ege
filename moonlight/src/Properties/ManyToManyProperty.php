@@ -110,7 +110,7 @@ class ManyToManyProperty extends BaseProperty
 		return $this;
 	}
     
-    public function getBrowseView()
+    public function getListView()
 	{
 		$site = \App::make('site');
 		

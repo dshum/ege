@@ -1,44 +1,48 @@
 @if (sizeof($elements))
-    @if ($hasOrderProperty)
-    <span item="{{ $currentItem->getNameId() }}" class="order-toggler"><span class="halflings halflings-sort"></span></span>
-    @endif
-    @if ($currentPage == 1)
-    <div class="count">
-        Всего {{ $total }} {{ Moonlight\Utils\RussianTextUtils::selectCaseForNumber($total, ['элемент', 'элемента', 'элементов']) }}.
-        @if ($orders)
-        Отсортировано по {!! $orders !!}.
-        @endif
-    </div>
-    @else
-    <div class="page">Страница {{ $currentPage }}</div>
-    @endif
-    <ul class="elements sortable" item="{{ $currentItem->getNameId() }}">
-    @foreach ($elements as $element)
-    <li id="element_{{ $element->getClassId() }}" classId="{{ $element->getClassId() }}">
-        <div class="check" classId="{{ $element->getClassId() }}"></div>
-        @if ($element->trashed())
-        <div class="deleted">{{ $element->deleted_at->format('d.m.Y') }}<br><span class="time">{{ $element->deleted_at->format('H:i:s') }}</span></div>
-        @endif
-        <div class="created">{{ $element->created_at->format('d.m.Y') }}<br><span class="time">{{ $element->created_at->format('H:i:s') }}</span></div>
-        @if ($element->trashed())
-        <div>{{ $element->{$currentItem->getMainProperty()} }}</div>
-        @else
-        <div class="edit"><a href="{{ route('element.edit', $element->getClassId()) }}"><span class="halflings halflings-pencil"></span></a></div>
-        <div main="true"><a href="{{ route('browse.element', $element->getClassId()) }}">{{ $element->{$currentItem->getMainProperty()} }}</a></div>
-        @endif
-        @if (isset($fields[$element->getClassId()]))
-            @foreach ($fields[$element->getClassId()] as $property)
-                @if ($view = $property->setElement($element)->getListView())
-                {!! $view !!}
-                @endif
-            @endforeach
-        @endif
-    </li>
-    @endforeach
+@if ($itemPluginView)
+{!! $itemPluginView !!}
+@endif
+<div class="item active">
+    <ul class="header">
+        <li class="h2"><span>{{ $currentItem->getTitle() }}</span></li>
+        <li class="total">
+            <span class="order-toggler">Всего {{ $total }} {{ Moonlight\Utils\RussianTextUtils::selectCaseForNumber($total, ['элемент', 'элемента', 'элементов']) }}.</span>
+            @if ($orders)
+            Отсортировано по {!! $orders !!}.
+            @endif
+        </li>
     </ul>
-    @if ($hasMorePages)
-    <div><span class="next" page="{{ $currentPage + 1 }}" item="{{ $currentItem->getNameId() }}" classId="{{ isset($currentElement) && $currentElement ? $currentElement->getClassId() : null }}">Дальше <span class="halflings halflings-menu-right"></span></span></div>
-    @endif
+    <div class="buttons">
+        <div class="button save enabled"><i class="fa fa-floppy-o"></i>Сохранить</div>
+        <div class="button copy enabled"><i class="fa fa-clone"></i>Копировать</div>
+        <div class="button move enabled"><i class="fa fa-arrow-right"></i>Перенести</div>
+        <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
+    </div>
+    <table class="elements">
+        <thead>
+            <tr>
+                <th class="browse"><i class="fa fa-sort"></i></th>
+                @foreach ($properties as $property)
+                <th><a href>{{ $property->getTitle() }}</a></th>
+                @endforeach
+                <th class="check"><div class="check"></div></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($elements as $element)
+            <tr>
+                <td class="browse"><a href="browse.html"><i class="fa fa-angle-right"></i></a></td>
+                @if (isset($views[Moonlight\Main\Element::getClassId($element)]))
+                    @foreach ($views[Moonlight\Main\Element::getClassId($element)] as $view)
+                        {!! $view !!}
+                    @endforeach
+                @endif
+                <td class="check"><div class="check"></div></td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
 @else
-    <div class="empty">Элементов не найдено.</div>
+<div class="empty">Элементов не найдено.</div>
 @endif

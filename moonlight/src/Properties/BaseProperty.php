@@ -97,14 +97,6 @@ abstract class BaseProperty
 		return $this->title;
 	}
 
-	public function isMainProperty()
-	{
-		return
-			$this->item->getMainProperty() == $this->name
-			? true
-			: false;
-	}
-
 	public function setShow($show)
 	{
 		$this->show = $show;
@@ -272,29 +264,17 @@ abstract class BaseProperty
 
 		$this->element->$name = $value;
 
-		if ($this->isMainProperty() && ! $value) {
-			$this->element->$name = $this->element->id
-				? Element::getClassId($this->element)
-				: 'Element';
-		}
-
 		return $this;
 	}
 
 	public function drop() {}
 
-	public function getBrowseView()
+	public function getListView()
 	{
-		$element = $this->getElement();
-		$classId = $element ? Element::getClassId($element) : null;
-
 		$scope = [
             'name' => $this->getName(),
 			'title' => $this->getTitle(),
 			'value' => $this->getValue(),
-			'isMainProperty' => $this->isMainProperty(),
-			'classId' => $classId,
-			'trashed' => $this->isTrashed(),
 		];
 
 		return $scope;
@@ -305,7 +285,6 @@ abstract class BaseProperty
 		$scope = [
 			'name' => $this->getName(),
 			'title' => $this->getTitle(),
-            'isMainProperty' => $this->isMainProperty(),
 			'value' => $this->getValue(),
 			'readonly' => $this->getReadonly(),
 		];
@@ -330,7 +309,6 @@ abstract class BaseProperty
 			'name' => $this->getName(),
 			'title' => $this->getTitle(),
 			'value' => $value,
-			'isMainProperty' => $this->isMainProperty(),
 		);
 
 		return $scope;

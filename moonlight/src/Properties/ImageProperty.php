@@ -361,7 +361,7 @@ class ImageProperty extends BaseProperty
 		}
 	}
 
-	public function getBrowseView()
+	public function getListView()
 	{
 		$scope = array(
 			'exists' => $this->exists(),
