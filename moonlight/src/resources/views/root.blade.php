@@ -122,7 +122,7 @@
                     <div class="margin">
                         <div class="plus"><i class="fa fa-caret-right"></i></div>
                         <span><a href="browse.html">Предметы</a></span>
-                        <div class="dnone">
+                        <div>
                             <div class="padding">
                                 <div item>
                                     <div class="item">Предмет</div>
@@ -142,7 +142,7 @@
                                                                     <div class="item">Тест</div>
                                                                     <div class="margin">
                                                                     <div v-else class="empty"></div>
-                                                                    <span><a href="browse.html" class="active">Олимпиада 2012</a></span>
+                                                                    <span><a href="browse.html" class="active">Олимпиада 2012 Константин Константинопольский</a></span>
                                                                     </div>
                                                                     <div class="margin">
                                                                     <div v-else class="empty"></div>

@@ -450,6 +450,10 @@ div.item {
   min-width: 40rem;
 }
 
+div.item:last-child {
+  margin-bottom: 3rem;
+}
+
 ul.header {
   margin: 0;
 }
@@ -642,6 +646,7 @@ table.elements td {
   max-width: 25rem;
   padding: 0.5rem 1rem;
   text-align: left;
+  overflow: hidden;
 }
 
 table.elements th.browse,
@@ -729,10 +734,71 @@ table.elements tbody > tr.chosen {
 table.elements img {
   margin: 0;
   padding: 0;
-  border: none;
+  max-width: 20rem;
+  height: auto;
+  border: 1px solid #ccc;
   border-radius: 2px;
   box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.18), 0 2px 11px 0 rgba(0, 0, 0, 0.15);
   background-color: white;
+  padding: 0.5rem;
+}
+
+table.elements div.time {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+/* Pager */
+
+ul.pager {
+  margin: 1rem 0;
+}
+
+ul.pager > li {
+  float: left;
+  margin: 0 0.25rem 0 0;
+  padding: 0;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+ul.pager > li.arrow {
+  width: 4rem;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background-color: #cce7da;
+  font-weight: bold;
+  color: #798;
+}
+
+ul.pager > li.arrow.active {
+  color: black;
+}
+
+.pager .arrow.active:hover {
+  background-color: orange;
+  transition: 0.1s ease;
+}
+
+ul.pager > li.arrow .fa {
+  width: 1rem;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+ul.pager > li.page input {
+  width: 4rem;
+  height: 2.5rem;
+  border: 1px solid silver;
+  border-radius: 2px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1rem;
+  color: black;
 }
 
 /* Tree */

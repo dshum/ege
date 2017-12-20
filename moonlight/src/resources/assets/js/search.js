@@ -3,6 +3,30 @@ jQuery.expr[':'].contains = function(a, i, m) {
 };
 
 $(function() {
+    var getElements = function(item, page) {
+        $.blockUI();
+
+        $('form').ajaxSubmit({
+            url: '/moonlight/search/list',
+            dataType: 'json',
+            data: {
+                item: item,
+                page: page
+            },
+            success: function(data) {
+                $.unblockUI();
+            
+                if (data.html) {
+                    $('.list-container').html(data.html);
+                }
+            },
+            error: function() {
+                $.unblockUI();
+                $.alertDefaultError();
+            }
+        });
+    };
+
     $('#filter').keyup(function () {
         var str = $(this).val();
 
@@ -73,5 +97,56 @@ $(function() {
 
         $('input:hidden[name="' + name + '"]').val('');
         $('input:text[name="' + name + '_autocomplete"]').val('');
+    });
+
+    $('body').on('click', 'ul.pager > li[prev].active', function () {
+        var pager = $(this).parent();
+        var item = pager.attr('item');
+        var page = parseInt(pager.attr('page')) - 1;
+
+        if (page < 1) page = 1;
+
+        getElements(item, page);
+    });
+
+    $('body').on('click', 'ul.pager > li[first].active', function () {
+        var pager = $(this).parent();
+        var item = pager.attr('item');
+
+        getElements(item, 1);
+    });
+
+    $('body').on('keydown', 'ul.pager > li.page > input', function (event) {
+        var pager = $(this).parents('ul.pager');
+        var item = pager.attr('item');
+        var page = parseInt($(this).val());
+        var last = parseInt(pager.attr('last'));
+        var code = event.keyCode || event.which;
+        
+        if (code === 13) {
+            if (page < 1) page = 1;
+            if (page > last) page = last;
+
+            getElements(item, page);
+        }
+    });
+
+    $('body').on('click', 'ul.pager > li[last].active', function () {
+        var pager = $(this).parent();
+        var item = pager.attr('item');
+        var last = pager.attr('last');
+
+        getElements(item, last);
+    });
+
+    $('body').on('click', 'ul.pager > li[next].active', function () {
+        var pager = $(this).parent();
+        var item = pager.attr('item');
+        var page = parseInt(pager.attr('page')) + 1;
+        var last = parseInt(pager.attr('last'));
+
+        if (page > last) page = last;
+
+        getElements(item, page);
     });
 });

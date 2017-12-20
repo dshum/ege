@@ -59,8 +59,8 @@ class DatetimeProperty extends BaseProperty
         $request = $this->getRequest();
 		$name = $this->getName();
 
-		$from = $request->input($name.'-from');
-        $to = $request->input($name.'-to');
+		$from = $request->input($name.'_from');
+        $to = $request->input($name.'_to');
 
 		if ($from) {
 			try {
