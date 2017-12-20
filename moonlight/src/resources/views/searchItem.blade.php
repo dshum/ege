@@ -45,9 +45,11 @@
                 </div>
             </div>
         </form>
-        @if ($action == 'search')
-        {!! $elements !!}
-        @endif
+        <div class="list-container">
+            @if ($action == 'search')
+            {!! $elements !!}
+            @endif
+        </div>
     </div>
 </div>
 @endsection

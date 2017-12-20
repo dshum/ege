@@ -81,9 +81,6 @@ class SearchController extends Controller
 
         $items = $site->getItemList();
         
-        $mainPropertyName = $currentItem->getMainProperty();
-        $mainProperty = $currentItem->getPropertyByName($mainPropertyName);
-        
         $propertyList = $currentItem->getPropertyList();
         
         $properties = [];
@@ -150,7 +147,6 @@ class SearchController extends Controller
         
         $scope['items'] = $items;
         $scope['currentItem'] = $currentItem;
-        $scope['mainProperty'] = $mainProperty;
         $scope['properties'] = $properties;
         $scope['actives'] = $actives;
         $scope['links'] = $links;
@@ -450,6 +446,8 @@ class SearchController extends Controller
         $total = $elements->total();
 		$currentPage = $elements->currentPage();
         $hasMorePages = $elements->hasMorePages();
+        $nextPage = $elements->currentPage() + 1;
+        $lastPage = $elements->lastPage();
         
         $properties = [];
         $views = [];
@@ -477,10 +475,13 @@ class SearchController extends Controller
         $scope['total'] = $total;
         $scope['currentPage'] = $currentPage;
         $scope['hasMorePages'] = $hasMorePages;
+        $scope['nextPage'] = $nextPage;
+        $scope['lastPage'] = $lastPage;
         $scope['elements'] = $elements;
         $scope['views'] = $views;
         $scope['orders'] = $orders;
         $scope['hasOrderProperty'] = false;
+        $scope['mode'] = 'search';
         
         return view('moonlight::elements', $scope)->render();
     }

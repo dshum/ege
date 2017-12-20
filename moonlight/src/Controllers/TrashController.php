@@ -2,28 +2,39 @@
 
 namespace Moonlight\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
 use Moonlight\Main\LoggedUser;
 use Moonlight\Main\Element;
+use Moonlight\Properties\BaseProperty;
 use Moonlight\Properties\OrderProperty;
+use Moonlight\Properties\DateProperty;
+use Moonlight\Properties\DatetimeProperty;
+use Carbon\Carbon;
 
 class TrashController extends Controller
 {
+    /**
+     * Return the total count of element list.
+     *
+     * @return Response
+     */
+    public function total($item)
+    {   
+        return $item->getClass()->onlyTrashed()->count();
+    }
+
     /**
      * Return the count of element list.
      *
      * @return Response
      */
     public function count($item)
-    {
-        $scope = [];
-        
+    {   
         $loggedUser = LoggedUser::getUser(); 
-        
-        $propertyList = $item->getPropertyList();
 
-		if ( ! $loggedUser->isSuperUser()) {
+		if (! $loggedUser->isSuperUser()) {
 			$permissionDenied = true;
 			$deniedElementList = [];
 			$allowedElementList = [];
@@ -88,10 +99,6 @@ class TrashController extends Controller
         $count = $criteria->count();
         
         return $count;
-        
-        // $scope['count'] = $count;
-            
-        // return response()->json($scope);
     }
     
     /**
@@ -119,7 +126,7 @@ class TrashController extends Controller
         
         return response()->json(['html' => $elements]);
     }
-    
+
     public function item(Request $request, $class)
     {
         $scope = [];
@@ -131,17 +138,17 @@ class TrashController extends Controller
         $currentItem = $site->getItemByName($class);
         
         if ( ! $currentItem) {
-            return redirect()->route('search');
+            return redirect()->route('trash');
         }
 
         $itemList = $site->getItemList();
-
+        
         $items = [];
         $totals = [];
 
         foreach ($itemList as $item) {
-            $total = Cache::rememberForever('trashItemTotal['.$item->getNameId().']', function () use ($item) {
-                return $this->count($item);
+            $total = Cache::remember('trashItemTotal['.$item->getNameId().']', 60 * 24, function () use ($item) {
+                return $this->total($item);
             });
 
             if ($total) {
@@ -149,9 +156,6 @@ class TrashController extends Controller
                 $totals[$item->getNameId()] = $total;
             }
         }
-        
-        $mainPropertyName = $currentItem->getMainProperty();
-        $mainProperty = $currentItem->getPropertyByName($mainPropertyName);
         
         $propertyList = $currentItem->getPropertyList();
         
@@ -170,14 +174,12 @@ class TrashController extends Controller
             }
             
             if ($property->getHidden()) continue;
-            if ($property->getName() == 'deleted_at') continue;
             
             $orderProperties[] = $property;
         }
         
         foreach ($propertyList as $property) {
             if ($property->getHidden()) continue;
-            if ($property->getName() == 'deleted_at') continue;
 
             $propertyScope = $property->setRequest($request)->getSearchView();
 
@@ -210,7 +212,7 @@ class TrashController extends Controller
         $action = $request->input('action');
         
         if ($action == 'search') {
-            $elements = null; // $this->elementListView($request, $currentItem);
+            $elements = $this->elementListView($request, $currentItem);
         } else {
             $elements = null;
         }
@@ -218,7 +220,6 @@ class TrashController extends Controller
         $sort = $request->input('sort');
         
         $scope['currentItem'] = $currentItem;
-        $scope['mainProperty'] = $mainProperty;
         $scope['properties'] = $properties;
         $scope['actives'] = $actives;
         $scope['links'] = $links;
@@ -227,6 +228,7 @@ class TrashController extends Controller
         $scope['hasOrderProperty'] = $hasOrderProperty;
         $scope['action'] = $action;
         $scope['sort'] = $sort;
+        $scope['elements'] = $elements;
         $scope['items'] = $items;
         $scope['totals'] = $totals;
             
@@ -247,8 +249,8 @@ class TrashController extends Controller
         $totals = [];
 
         foreach ($itemList as $item) {
-            $total = Cache::rememberForever('trashItemTotal['.$item->getNameId().']', function () use ($item) {
-                return $this->count($item);
+            $total = Cache::remember('trashItemTotal['.$item->getNameId().']', 60 * 24, function () use ($item) {
+                return $this->total($item);
             });
 
             if ($total) {
@@ -268,6 +270,25 @@ class TrashController extends Controller
         $scope = [];
         
         $loggedUser = LoggedUser::getUser();
+
+        $site = \App::make('site');
+
+        /*
+         * Item plugin
+         */
+        
+        $itemPluginView = null;
+         
+        $itemPlugin = $site->getItemPlugin($currentItem->getNameId());
+
+        if ($itemPlugin) {
+            $view = \App::make($itemPlugin)->index($currentItem);
+
+            if ($view) {
+                $itemPluginView = is_string($view)
+                    ? $view : $view->render();
+            }
+        }
         
         $propertyList = $currentItem->getPropertyList();
 
@@ -316,23 +337,30 @@ class TrashController extends Controller
 		}
         
         $criteria = $currentItem->getClass()->onlyTrashed()->where(
-            function($query) use ($currentItem, $propertyList, $request) {
+            function($query) use ($loggedUser, $currentItem, $propertyList, $request) {
+                $search = $loggedUser->getParameter('search');
+
                 foreach ($propertyList as $property) {
                     $property->setRequest($request);
                     $query = $property->searchQuery($query);
+                    
+                    if ($property->searching()) {
+                        $itemName = $currentItem->getNameId();
+                        $propertyName = $property->getName();
+                        $search['sortPropertyDate'][$itemName][$propertyName]
+                            = Carbon::now()->toDateTimeString();
+                        
+                        if (isset($search['sortPropertyRate'][$itemName][$propertyName])) {
+                            $search['sortPropertyRate'][$itemName][$propertyName]++;
+                        } else {
+                            $search['sortPropertyRate'][$itemName][$propertyName] = 1;
+                        }
+                    }
                 }
+                
+                $loggedUser->setParameter('search', $search);
             }
 		);
-        
-        $search = $request->input('search');
-        $search_id = $request->input('search_id');
-        $mainProperty = $currentItem->getMainProperty();
-        
-        if ($search_id) {
-            $criteria->where('id', $search_id);
-        } elseif ($search) {
-            $criteria->where($mainProperty, 'ilike', "%$search%");
-        }
 
 		if ( ! $loggedUser->isSuperUser()) {
 			if (
@@ -350,7 +378,18 @@ class TrashController extends Controller
 			}
 		}
         
-        $orderByList = $currentItem->getOrderByList();
+        $sort = $request->input('sort');
+        $property = $currentItem->getPropertyByName($sort);
+        
+        if ($property instanceof DateProperty) {
+            $orderByList = [$sort => 'desc'];
+        } elseif ($property instanceof DatetimeProperty) {
+            $orderByList = [$sort => 'desc'];
+        } elseif ($property instanceof BaseProperty) {
+            $orderByList = [$sort => 'asc'];
+        } else {
+            $orderByList = $currentItem->getOrderByList();
+        }
         
         $orders = [];
 
@@ -377,28 +416,43 @@ class TrashController extends Controller
         $total = $elements->total();
 		$currentPage = $elements->currentPage();
         $hasMorePages = $elements->hasMorePages();
+        $nextPage = $elements->currentPage() + 1;
+        $lastPage = $elements->lastPage();
         
-        $fields = [];
+        $properties = [];
+        $views = [];
+
+        foreach ($propertyList as $property) {
+            if ($property->getHidden()) continue;
+            if (! $property->getShow() && $property->getName() != 'deleted_at') continue;
+
+            $properties[] = $property;
+        }
 
         foreach ($elements as $element) {
-            foreach ($propertyList as $property) {
-                if ( ! $property->getShow()) continue;
+            foreach ($properties as $property) {
+                $propertyScope = $property->setElement($element)->getListView();
                 
-                $fields[$element->getClassId()][$property->getName()] = $property;
+                $views[Element::getClassId($element)][$property->getName()] = view(
+                    'moonlight::properties.'.$property->getClassName().'.list', $propertyScope
+                )->render();
             }
         }
 
         $scope['currentItem'] = $currentItem;
+        $scope['itemPluginView'] = $itemPluginView;
+        $scope['properties'] = $properties;
         $scope['total'] = $total;
         $scope['currentPage'] = $currentPage;
         $scope['hasMorePages'] = $hasMorePages;
+        $scope['nextPage'] = $nextPage;
+        $scope['lastPage'] = $lastPage;
         $scope['elements'] = $elements;
-        $scope['fields'] = $fields;
+        $scope['views'] = $views;
         $scope['orders'] = $orders;
         $scope['hasOrderProperty'] = false;
+        $scope['mode'] = 'trash';
         
-        $html = view('moonlight::elements', $scope)->render();
-        
-        return $html;
+        return view('moonlight::elements', $scope)->render();
     }
 }

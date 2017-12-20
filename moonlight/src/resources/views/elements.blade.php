@@ -1,7 +1,7 @@
-@if (sizeof($elements))
-@if ($itemPluginView)
+@if ($mode != 'trash' && $itemPluginView)
 {!! $itemPluginView !!}
 @endif
+@if (sizeof($elements))
 <div class="item active">
     <ul class="header">
         <li class="h2"><span>{{ $currentItem->getTitle() }}</span></li>
@@ -13,10 +13,15 @@
         </li>
     </ul>
     <div class="buttons">
+        @if ($mode == 'trash')
+        <div class="button restore enabled"><i class="fa fa-arrow-left"></i>Восстановить</div>
+        <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
+        @else
         <div class="button save enabled"><i class="fa fa-floppy-o"></i>Сохранить</div>
         <div class="button copy enabled"><i class="fa fa-clone"></i>Копировать</div>
         <div class="button move enabled"><i class="fa fa-arrow-right"></i>Перенести</div>
         <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
+        @endif
     </div>
     <table class="elements">
         <thead>
@@ -42,6 +47,15 @@
             @endforeach
         </tbody>
     </table>
+    @if ($lastPage > 1)
+    <ul class="pager" item="{{ $currentItem->getNameId() }}" page="{{ $currentPage }}" last="{{ $lastPage }}">
+        <li prev class="arrow {{ $currentPage > 1 ? 'active' : '' }}"><i class="fa fa-arrow-left"></i></li>
+        <li first class="arrow {{ $currentPage > 1 ? 'active' : '' }}">1</li>
+        <li class="page"><input type="text" value="{{ $currentPage }}"></li>
+        <li last class="arrow {{ $currentPage < $lastPage ? 'active' : '' }}">{{ $lastPage }}</li>
+        <li next class="arrow {{ $currentPage < $lastPage ? 'active' : '' }}"><i class="fa fa-arrow-right"></i></li>
+    </ul>
+    @endif
 </div>
 @else
 <div class="empty">Элементов не найдено.</div>
