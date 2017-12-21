@@ -25,15 +25,20 @@ $(function() {
     };
 
     var getElements = function(item, classId = null, page = 1) {
+        $.blockUI();
+
         $.getJSON('/moonlight/elements/list', {
             item: item,
             classId: classId,
             page: page
         }, function(data) {
+            $.unblockUI();
+
             if (data.html && data.html.length) {
                 $('.main div[item="' + item + '"]').html(data.html);
             }
         }).fail(function() {
+            $.unblockUI();
             $.alertDefaultError();
         });
     };

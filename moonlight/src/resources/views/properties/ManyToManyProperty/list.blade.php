@@ -1,5 +1,5 @@
 <td>
 @foreach ($elements as $element)
-    <div><a href="">{{ $element['name'] }}</a></div>
+    <div><a href="{{ route('moonlight.element.edit', $element['classId']) }}">{{ $element['name'] }}</a></div>
 @endforeach
 </td>
