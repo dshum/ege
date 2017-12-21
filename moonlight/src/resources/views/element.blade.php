@@ -1,159 +1,157 @@
-@extends('moonlight::base')
+@extends('moonlight::layouts.browse')
 
-@section('title', $element->{$currentItem->getMainProperty()})
+@section('title', $element->$mainProperty)
 
 @section('css')
-<link media="all" type="text/css" rel="stylesheet" href="/packages/moonlight/touch/css/browse.css">
+<link media="all" type="text/css" rel="stylesheet" href="/packages/moonlight/css/browse.css">
 @endsection
 
 @section('js')
-<script src="/packages/moonlight/touch/js/element.js"></script>
-<script>
-var favoriteUrl = '{{ route('home.favorite') }}';
-var favoritesUrl = '{{ route('home.favorites') }}';
-var homeUrl = '{{ route('home') }}';
-var searchUrl = '{{ route('search') }}';
-var elementsUrl = '{{ route('elements.list') }}';
-var countUrl = '{{ route('elements.count') }}';;
-var copyUrl = '{{ route('elements.copy') }}';
-var moveUrl = '{{ route('elements.move') }}';
-var deleteUrl = '{{ route('elements.delete') }}';
-var closeUrl = '{{ route('elements.close') }}';
-var orderUrl = '{{ route('order') }}';
-var title = '@yield('title')';
-var opened = '{{ $open }}';
-</script>
+<script src="/packages/moonlight/js/browse.js"></script>
 @endsection
 
 @section('body')
-<nav>
-    <left><span class="hamburger"><span class="glyphicons glyphicons-menu-hamburger"></span></span></left>
-    <center><a href="{{ route('home') }}">@yield('title')</a></center>
-    <right><a href="{{ route('search') }}"><span class="glyphicons glyphicons-search"></span></a></right>
-</nav>
-<div class="sidebar">
-    <div class="sidebar-container">
-        <ul class="menu">
-            <li><a href="{{ route('search') }}">Поиск</a></li>
-            @if ($parent && $parent->getItem()->getNameId() != $currentItem->getNameId())
-            <li><a href="{{ route('search.item', $parent->getItem()->getNameId()) }}">{{ $parent->getItem()->getTitle() }}</a></li>
-            @endif
-            <li><a href="{{ route('search.item', $currentItem->getNameId()) }}">{{ $currentItem->getTitle() }}</a></li>
-            <li><hr></li>
-            <li><a href="{{ route('browse') }}">Корень сайта</a></li>
-            <li><a href="{{ route('trash') }}">Корзина</a></li>
-            <li><hr></li>
-            <li><a href="{{ route('users') }}">Пользователи</a></li>
-            <li><a href="{{ route('log') }}">Журнал</a></li>
-            <li><hr></li>
-            <li><a href="{{ route('profile') }}">{{ $loggedUser->first_name }} {{ $loggedUser->last_name }}</a></li>
-            <li><a href="{{ route('logout') }}">Выход</a></li>
-        </ul>
-    </div>
-</div>
-<div class="bottom-context-menu">
-    <div class="button copy"><span class="halflings halflings-duplicate"></span><br>Копировать</div>
-    <div class="button move"><span class="halflings halflings-arrow-right"></span><br>Переместить</div>
-    <div class="button delete"><span class="halflings halflings-trash"></span><br>Удалить</div>
-</div>
-<div class="confirm favorite">
-<div class="container">
-    <div class="content">
-        <p>Добавить на главную страницу?</p>
-        <p>
-            <input type="text" name="rubric" value="" placeholder="Рубрика">
-            <span name="rubric_auto" class="autocomplete-container"></span>
-        </p>
-    </div>
-    <div class="buttons">
-        <input type="button" value="Добавить" class="btn ok">
-        <input type="button" value="Отмена" class="btn cancel">
-    </div>
-</div>
-</div>
-<div class="confirm copy">
-    <div class="container">
-        <div class="content">
-        {!! $onesCopy !!}
-        </div>
-        <div class="buttons">
-            <input type="button" value="Копировать" class="btn copy">
-            <input type="button" value="Отмена" class="btn cancel">
-        </div>
-    </div>
-</div>
-<div class="confirm move">
-    <div class="container">
-        <div class="content">
-        {!! $onesMove !!}
-        </div>
-        <div class="buttons">
-            <input type="button" value="Перенести" class="btn move">
-            <input type="button" value="Отмена" class="btn cancel">
-        </div>
-    </div>
-</div>
-<div class="confirm delete">
-    <div class="container">
-        <div class="content">
-            Удалить в корзину?
-        </div>
-        <div class="buttons">
-            <input type="button" value="Удалить" class="btn danger delete">
-            <input type="button" value="Отмена" class="btn cancel">
-        </div>
-    </div>
-</div>
 <div class="main">
-    @if ($parent)
-    <div class="path">
-        <a href="{{ route('browse') }}">Корень сайта</a>
-        <span class="halflings halflings-menu-right"></span>
-        <a href="{{ route('browse.element', $parent->getClassId()) }}">{{ $parent->name }}</a>
-        <span class="halflings halflings-menu-right"></span></div>
-    @else
-    <div class="path">
-        <a href="{{ route('browse') }}">Корень сайта</a>
-        <span class="halflings halflings-menu-right"></span>
-    </div>
-    @endif
-    <div id="favorite-toggler" classId="{{ $element->getClassId() }}" {!! $favorite ? 'enabled="true" class="right options active"' : 'class="right options"' !!}><span class="glyphicons glyphicons-pushpin"></span></div>
-    <h2>{{ $element->{$currentItem->getMainProperty()} }}</h2>
-    <ul class="elements">
-        <li>
-            <div class="created">{{ $element->created_at->format('d.m.Y') }}<br><span class="time">{{ $element->created_at->format('H:i:s') }}</span></div>
-            <div class="edit"><a href="{{ route('element.edit', $element->getClassId()) }}"><span class="halflings halflings-pencil"></span></a></div>
-            @if ($element->getTouchListView())
-            {!! $element->getTouchListView() !!}
-            @else
-            <div>{{ $currentItem->getTitle() }}</div>
-            @endif
-        </li>
-    </ul>
-    @if ($browsePluginView)
-    <div class="plugin">
-    {!! $browsePluginView !!}
-    </div>
-    @endif
-    @if ($items)
-    <ul class="items">
+    <div class="container">
+        <div class="path">
+            <div class="part"><a href="{{ route('moonlight.browse.root') }}">Корень сайта</a></div>
+            <div class="divider">/</div>
+            @foreach ($parents as $parent)
+            <div class="part"><a href="{{ route('moonlight.browse.element', $parent['classId']) }}">{{ $parent['name'] }}</a></div>
+            <div class="divider">/</div>
+            @endforeach
+            <div class="part"><span>{{ $element->$mainProperty }}</span></div>
+        </div>
+        @if ($creates)
+        <div class="add-element">
+            Добавить:
+            @foreach ($creates as $index => $create)
+            <a href="">{{ $create['name'] }}</a>{{ $index < sizeof($creates) - 1 ? ',' : '' }}
+            @endforeach
+        </div>
+        @endif
         @foreach ($items as $item)
-            @if (isset($openedItem[$item->getNameId()]))
-            <li item="{{ $item->getNameId() }}" classId="{{ $element->getClassId() }}" state="opened">
-                <span class="a">{{ $item->getTitle() }}</span>
-                <span class="total">{{ $openedItem[$item->getNameId()]['count'] }}</span><a class="addnew" href="{{ route('element.create', ['classId' => $element->getClassId(), 'item' => $item->getNameId()]) }}">+</a>
-                <div item="{{ $item->getNameId() }}" class="list-container">{!! $openedItem[$item->getNameId()]['elements'] !!}</div>
-            </li>
-            @else
-            <li item="{{ $item->getNameId() }}" classId="{{ $element->getClassId() }}" state="closed">
-                <span class="a">{{ $item->getTitle() }}</span>
-                <a class="addnew" href="{{ route('element.create', ['classId' => $element->getClassId(), 'item' => $item->getNameId()]) }}">+</a>
-            </li>
-            @endif
+        <div classId="{{ \Moonlight\Main\Element::getClassId($element) }}" item="{{ $item['id'] }}"></div>
         @endforeach
-    </ul>
-    @else
-    <div class="empty">Элементов не найдено.</div>
-    @endif
+        <div class="empty {{ sizeof($items) > 0 ? 'dnone' : '' }}">
+            <div>Элементов не найдено.</div>
+            <div><b>¯\_(ツ)_/¯</b></div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('sidebar')
+<div class="sidebar">
+    <div class="container">
+        <h2>Ученики</h2>
+        <ul class="elements">
+            <li><a href="">denis-shumeev@yandex.ru</a></li>
+            <li><a href="">vegorova@mail.ru</a></li>
+        </ul>
+        <h2>Тесты</h2>
+        <ul class="elements">
+            <li><a href="">Покори Воробьевы горы 2014-1</a></li>
+            <li><a href="">Покори Воробьевы горы 2014-2</a></li>
+            <li><a href="">Покори Воробьевы горы 2016</a></li>
+        </ul>
+        <h2>Прочее</h2>
+        <ul class="elements">
+            <li><a href="">Загрузка тестов</a></li>
+        </ul>
+        <div class="tree">
+            <div>
+                <div item>
+                    <div class="item">Служебный раздел</div>
+                    <div class="margin">
+                        <div class="plus"><i class="fa fa-caret-right"></i></div>
+                        <span><a href="browse.html">Ученики</a></span>
+                    </div>
+                    <div class="margin">
+                        <div class="plus"><i class="fa fa-caret-right"></i></div>
+                        <span><a href="browse.html">Предметы</a></span>
+                        <div>
+                            <div class="padding">
+                                <div item>
+                                    <div class="item">Предмет</div>
+                                    <div class="margin">
+                                        <div class="plus"><i class="fa fa-caret-down"></i></div>
+                                        <span><a href="browse.html">ЕГЭ</a></span>
+                                        <div>
+                                            <div class="padding">
+                                                <div item>
+                                                    <div class="item">Тема</div>
+                                                    <div class="margin">
+                                                        <div class="plus"><i class="fa fa-caret-down"></i></div>
+                                                        <span><a href="browse.html">Олимпиады</a></span>
+                                                        <div>
+                                                            <div class="padding">
+                                                                <div item>
+                                                                    <div class="item">Тест</div>
+                                                                    <div class="margin">
+                                                                    <div v-else class="empty"></div>
+                                                                    <span><a href="browse.html" class="active">Олимпиада 2012 Константин Константинопольский</a></span>
+                                                                    </div>
+                                                                    <div class="margin">
+                                                                    <div v-else class="empty"></div>
+                                                                    <span><a href="browse.html">Покори Воробьевы горы 2014-1</a></span>
+                                                                    </div>
+                                                                    <div class="margin">
+                                                                    <div v-else class="empty"></div>
+                                                                    <span><a href="browse.html">Покори Воробьевы горы 2014-2</a></span>
+                                                                    </div>
+                                                                    <div class="margin">
+                                                                    <div v-else class="empty"></div>
+                                                                    <span><a href="browse.html">Покори Воробьевы горы 2015-1</a></span>
+                                                                    </div>
+                                                                    <div class="margin">
+                                                                    <div v-else class="empty"></div>
+                                                                    <span><a href="browse.html">Покори Воробьевы горы 2015-7</a></span>
+                                                                    </div>
+                                                                    <div class="margin">
+                                                                    <div v-else class="empty"></div>
+                                                                    <span><a href="browse.html">Покори Воробьевы горы 2016</a></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="margin">
+                        <div class="plus"><i class="fa fa-caret-right"></i></div>
+                        <span><a href="browse.html">Справочники</a></span>
+                    </div>
+                    <div class="margin">
+                        <div v-else class="empty"></div>
+                        <span><a href="browse.html">Загрузка тестов</a></span>
+                        <div>
+                            <div class="padding">
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div item>
+                    <div class="item">Настройки сайта</div>
+                    <div class="margin">
+                        <div class="empty"></div>
+                        <span><a href="browse.html">Настройки сайта</a></span>
+                        <div>
+                            <div class="padding">
+                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

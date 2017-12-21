@@ -103,10 +103,10 @@ Route::group(['prefix' => 'moonlight'], function() {
         Route::get('/trash/{item}', ['as' => 'moonlight.trash.item', 'uses' => 'Moonlight\Controllers\TrashController@item'])->
             where(['item' => '[A-Za-z0-9\.]+']);
         
-        Route::get('/elements/count', ['as' => 'moonlight.elements.count', 'uses' => 'Moonlight\Controllers\BrowseController@count']);
-        
         Route::get('/elements/list', ['as' => 'moonlight.elements.list', 'uses' => 'Moonlight\Controllers\BrowseController@elements']);
         
+        Route::post('/elements/open', ['as' => 'moonlight.elements.open', 'uses' => 'Moonlight\Controllers\BrowseController@open']);
+
         Route::post('/elements/close', ['as' => 'moonlight.elements.close', 'uses' => 'Moonlight\Controllers\BrowseController@close']);
         
         Route::get('/elements/autocomplete', ['as' => 'moonlight.elements.autocomplete', 'uses' => 'Moonlight\Controllers\BrowseController@autocomplete']);

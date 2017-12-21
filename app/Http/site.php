@@ -103,7 +103,8 @@ $site->
 			setTitle('Служебный раздел')->
 			setRelatedClass('App\ServiceSection')->
 			setParent(true)->
-            setOpenItem(true)
+            setOpenItem(true)->
+			setShow(true)
 		)->
 		addTimestamps()->
 		addSoftDeletes()
@@ -131,11 +132,13 @@ $site->
 		)->
         addProperty(
 			TextfieldProperty::create('meta_keywords')->
-			setTitle('META Keywords')
+			setTitle('META Keywords')->
+			setShow(true)
 		)->
 		addProperty(
 			TextareaProperty::create('meta_description')->
-			setTitle('META Description')
+			setTitle('META Description')->
+			setShow(true)
 		)->
 		addTimestamps()->
 		addSoftDeletes()
@@ -218,7 +221,8 @@ $site->
 		)->
 		addProperty(
 			CheckboxProperty::create('hidden')->
-			setTitle('Скрыто')
+			setTitle('Скрыто')->
+			setShow(true)
 		)->
 		addProperty(
 			OneToOneProperty::create('service_section_id')->
@@ -249,7 +253,8 @@ $site->
 		)->
 		addProperty(
 			CheckboxProperty::create('hidden')->
-			setTitle('Скрыто')
+			setTitle('Скрыто')->
+			setShow(true)
 		)->
 		addProperty(
 			OneToOneProperty::create('subject_id')->
@@ -257,7 +262,8 @@ $site->
 			setRequired(true)->
 			setRelatedClass('App\Subject')->
 			setParent(true)->
-            setOpenItem(true)
+            setOpenItem(true)->
+			setShow(true)
 		)->
 		addTimestamps()->
 		addSoftDeletes()
@@ -280,7 +286,8 @@ $site->
 		)->
 		addProperty(
 			CheckboxProperty::create('hidden')->
-			setTitle('Скрыто')
+			setTitle('Скрыто')->
+			setShow(true)
 		)->
 		addProperty(
 			OneToOneProperty::create('topic_id')->
@@ -288,7 +295,8 @@ $site->
 			setRequired(true)->
 			setRelatedClass('App\Topic')->
 			setParent(true)->
-            setOpenItem(true)
+            setOpenItem(true)->
+			setShow(true)
 		)->
 		addTimestamps()->
 		addSoftDeletes()
@@ -314,13 +322,15 @@ $site->
 			setTitle('Тема')->
 			setRelatedClass('App\Topic')->
 			setParent(true)->
-            setOpenItem(true)
+            setOpenItem(true)->
+			setShow(true)
 		)->
 		addProperty(
 			OneToOneProperty::create('subtopic_id')->
 			setTitle('Подтема')->
 			setRelatedClass('App\Subtopic')->
-            setOpenItem(true)
+            setOpenItem(true)->
+			setShow(true)
 		)->
 		addTimestamps()->
 		addSoftDeletes()
@@ -363,7 +373,8 @@ $site->
 		)->
 		addProperty(
 			IntegerProperty::create('mark')->
-			setTitle('Баллы')
+			setTitle('Баллы')->
+			setShow(true)
 		)->
 		addProperty(
 			TextfieldProperty::create('answer')->
@@ -423,7 +434,8 @@ $site->
 			setRequired(true)->
 			setRelatedClass('App\Question')->
 			setParent(true)->
-            setOpenItem(true)
+            setOpenItem(true)->
+			setShow(true)
 		)->
 		addTimestamps()->
 		addSoftDeletes()

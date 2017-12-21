@@ -16,78 +16,20 @@
         <div class="path">
             <div class="part"><span>Корень сайта</span></div>
         </div>
+        @if ($creates)
         <div class="add-element">
-            Добавить: <a href="">Раздел сайта</a>,<a href="">Служебный раздел</a>,<a href="">Настройки сайта</a>
+            Добавить:
+            @foreach ($creates as $index => $create)
+            <a href="">{{ $create['name'] }}</a>{{ $index < sizeof($creates) - 1 ? ',' : '' }}
+            @endforeach
         </div>
-        <div class="item active">
-            <ul class="header">
-                <li class="h2"><span>Служебный раздел</span></li>
-                <li class="total">
-                    <span class="order-toggler">Всего 4 элемента</span>
-                </li>
-            </ul>
-            <div class="buttons">
-                <div class="button save enabled"><i class="fa fa-floppy-o"></i>Сохранить</div>
-                <div class="button copy enabled"><i class="fa fa-clone"></i>Копировать</div>
-                <div class="button move enabled"><i class="fa fa-arrow-right"></i>Перенести</div>
-                <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
-            </div>
-            <table class="elements">
-                <thead>
-                <tr>
-                    <th class="browse"><i class="fa fa-sort"></i></th>
-                    <th><a href>Название</a></th>
-                    <th class="date"><a href>Создано</a></th>
-                    <th class="check"><div class="check"></div></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td class="browse"><a href="browse.html"><i class="fa fa-angle-right"></i></a></td>
-                    <td class="name"><a href="edit.html"><i class="fa fa-pencil"></i><span>Ученики</span></a></td>
-                    <td class="date">
-                        <div class="date">11.07.2017</div>
-                        <div class="time">16:08:43</div>
-                    </td>
-                    <td class="check"><div class="check"></div></td>
-                </tr>
-                <tr>
-                    <td class="browse"><a href="browse.html"><i class="fa fa-angle-right"></i></a></td>
-                    <td class="name"><a href="edit.html"><i class="fa fa-pencil"></i><span>Предметы</span></a></td>
-                    <td class="date">
-                        <div class="date">11.07.2017</div>
-                        <div class="time">16:08:43</div>
-                    </td>
-                    <td class="check"><div class="check"></div></td>
-                </tr>
-                <tr>
-                    <td class="browse"><a href="browse.html"><i class="fa fa-angle-right"></i></a></td>
-                    <td class="name"><a href="edit.html"><i class="fa fa-pencil"></i><span>Справочники</span></a></td>
-                    <td class="date">
-                        <div class="date">11.07.2017</div>
-                        <div class="time">16:08:43</div>
-                    </td>
-                    <td class="check"><div class="check"></div></td>
-                </tr>
-                <tr>
-                    <td class="browse"><a href="browse.html"><i class="fa fa-angle-right"></i></a></td>
-                    <td class="name"><a href="edit.html"><i class="fa fa-pencil"></i><span>Загрузка тестов</span></a></td>
-                    <td class="date">
-                        <div class="date">11.07.2017</div>
-                        <div class="time">16:08:43</div>
-                    </td>
-                    <td class="check"><div class="check"></div></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="item active">
-            <ul class="header">
-                <li class="h2"><span>Настройки сайта</span></li>
-                <li class="total">
-                    <span class="order-toggler">Всего 1 элемент</span>
-                </li>
-            </ul>
+        @endif
+        @foreach ($items as $item)
+        <div classId="" item="{{ $item['id'] }}"></div>
+        @endforeach
+        <div class="empty {{ sizeof($items) > 0 ? 'dnone' : '' }}">
+            <div>Элементов не найдено.</div>
+            <div><b>¯\_(ツ)_/¯</b></div>
         </div>
     </div>
 </div>

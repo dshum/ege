@@ -1,10 +1,10 @@
+@if ($total)
 @if ($mode != 'trash' && $itemPluginView)
-{!! $itemPluginView !!}
+    {!! $itemPluginView !!}
 @endif
-@if (sizeof($elements))
 <div class="item active">
     <ul class="header">
-        <li class="h2"><span>{{ $currentItem->getTitle() }}</span></li>
+        <li class="h2" display="show"><span>{{ $currentItem->getTitle() }}</span></li>
         <li class="total">
             <span class="order-toggler">Всего {{ $total }} {{ Moonlight\Utils\RussianTextUtils::selectCaseForNumber($total, ['элемент', 'элемента', 'элементов']) }}.</span>
             @if ($orders)
@@ -12,51 +12,53 @@
             @endif
         </li>
     </ul>
-    <div class="buttons">
-        @if ($mode == 'trash')
-        <div class="button restore enabled"><i class="fa fa-arrow-left"></i>Восстановить</div>
-        <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
-        @else
-        <div class="button save enabled"><i class="fa fa-floppy-o"></i>Сохранить</div>
-        <div class="button copy enabled"><i class="fa fa-clone"></i>Копировать</div>
-        <div class="button move enabled"><i class="fa fa-arrow-right"></i>Перенести</div>
-        <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
+    <div list>
+        <div class="buttons">
+            @if ($mode == 'trash')
+            <div class="button restore enabled"><i class="fa fa-arrow-left"></i>Восстановить</div>
+            <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
+            @else
+            <div class="button save enabled"><i class="fa fa-floppy-o"></i>Сохранить</div>
+            <div class="button copy enabled"><i class="fa fa-clone"></i>Копировать</div>
+            <div class="button move enabled"><i class="fa fa-arrow-right"></i>Перенести</div>
+            <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
+            @endif
+        </div>
+        <table class="elements">
+            <thead>
+                <tr>
+                    <th class="browse"><i class="fa fa-sort"></i></th>
+                    @foreach ($properties as $property)
+                    <th><a href>{{ $property->getTitle() }}</a></th>
+                    @endforeach
+                    <th class="check"><div class="check"></div></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($elements as $element)
+                <tr>
+                    <td class="browse"><a href="{{ route('moonlight.browse.element', \Moonlight\Main\Element::getClassId($element)) }}"><i class="fa fa-angle-right"></i></a></td>
+                    @if (isset($views[Moonlight\Main\Element::getClassId($element)]))
+                        @foreach ($views[Moonlight\Main\Element::getClassId($element)] as $view)
+                            {!! $view !!}
+                        @endforeach
+                    @endif
+                    <td class="check"><div class="check"></div></td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        @if ($lastPage > 1)
+        <ul class="pager" classId="{{ isset($classId) ? $classId : ''}}" item="{{ $currentItem->getNameId() }}" page="{{ $currentPage }}" last="{{ $lastPage }}">
+            <li prev class="arrow {{ $currentPage > 1 ? 'active' : '' }}"><i class="fa fa-arrow-left"></i></li>
+            <li first class="arrow {{ $currentPage > 1 ? 'active' : '' }}">1</li>
+            <li class="page"><input type="text" value="{{ $currentPage }}"></li>
+            <li last class="arrow {{ $currentPage < $lastPage ? 'active' : '' }}">{{ $lastPage }}</li>
+            <li next class="arrow {{ $currentPage < $lastPage ? 'active' : '' }}"><i class="fa fa-arrow-right"></i></li>
+        </ul>
         @endif
     </div>
-    <table class="elements">
-        <thead>
-            <tr>
-                <th class="browse"><i class="fa fa-sort"></i></th>
-                @foreach ($properties as $property)
-                <th><a href>{{ $property->getTitle() }}</a></th>
-                @endforeach
-                <th class="check"><div class="check"></div></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($elements as $element)
-            <tr>
-                <td class="browse"><a href="browse.html"><i class="fa fa-angle-right"></i></a></td>
-                @if (isset($views[Moonlight\Main\Element::getClassId($element)]))
-                    @foreach ($views[Moonlight\Main\Element::getClassId($element)] as $view)
-                        {!! $view !!}
-                    @endforeach
-                @endif
-                <td class="check"><div class="check"></div></td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-    @if ($lastPage > 1)
-    <ul class="pager" item="{{ $currentItem->getNameId() }}" page="{{ $currentPage }}" last="{{ $lastPage }}">
-        <li prev class="arrow {{ $currentPage > 1 ? 'active' : '' }}"><i class="fa fa-arrow-left"></i></li>
-        <li first class="arrow {{ $currentPage > 1 ? 'active' : '' }}">1</li>
-        <li class="page"><input type="text" value="{{ $currentPage }}"></li>
-        <li last class="arrow {{ $currentPage < $lastPage ? 'active' : '' }}">{{ $lastPage }}</li>
-        <li next class="arrow {{ $currentPage < $lastPage ? 'active' : '' }}"><i class="fa fa-arrow-right"></i></li>
-    </ul>
-    @endif
 </div>
-@else
+@elseif ($mode != 'browse')
 <div class="empty">Элементов не найдено.</div>
 @endif

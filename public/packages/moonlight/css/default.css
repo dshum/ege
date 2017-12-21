@@ -439,19 +439,15 @@ div.path div.divider {
 }
 
 div.add-element a {
-  margin-left: 0.5rem;
+  margin-left: 0.25rem;
 }
 
 /* Table header */
 
 div.item {
   display: table;
-  margin-top: 2rem;
+  margin: 2rem 0 1rem 0;
   min-width: 40rem;
-}
-
-div.item:last-child {
-  margin-bottom: 3rem;
 }
 
 ul.header {
@@ -460,7 +456,6 @@ ul.header {
 
 ul.header li {
   display: inline-block;
-  float: left;
   height: 2rem;
   line-height: 2rem;
   vertical-align: middle;
@@ -507,6 +502,14 @@ ul.header li.checked > span {
 
 div.empty {
   margin: 2rem 0;
+}
+
+div.empty > div:last-child {
+  display: table;
+  background-color: slateblue;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 2px;
 }
 
 /* Table buttons */

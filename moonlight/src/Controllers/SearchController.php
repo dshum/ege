@@ -322,7 +322,7 @@ class SearchController extends Controller
         
         $propertyList = $currentItem->getPropertyList();
 
-		if ( ! $loggedUser->isSuperUser()) {
+		if (! $loggedUser->isSuperUser()) {
 			$permissionDenied = true;
 			$deniedElementList = [];
 			$allowedElementList = [];
