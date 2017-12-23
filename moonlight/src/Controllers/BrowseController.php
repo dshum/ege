@@ -1050,9 +1050,14 @@ class BrowseController extends Controller
             }
         }
 
+        $rubricController = new RubricController;
+
+        $rubrics = $rubricController->index();
+
         $scope['plugin'] = $plugin;
 		$scope['items'] = $items;
         $scope['creates'] = $creates;
+        $scope['rubrics'] = $rubrics;
             
         return view('moonlight::root', $scope);
     }

@@ -2,6 +2,7 @@
 
 use Moonlight\Main\Site;
 use Moonlight\Main\Item;
+use Moonlight\Main\Rubric;
 use Moonlight\Properties\BaseProperty;
 use Moonlight\Properties\MainProperty;
 use Moonlight\Properties\OrderProperty;
@@ -592,5 +593,31 @@ $site->
 	bind('App.User', 'App.UserTest')->
 	bind('App.UserTest', 'App.UserQuestion')->
 	bind('App.UserQuestion', 'App.UserAnswer')->
+
+	addRubric(
+		Rubric::create('students', 'Ученики')->
+		addList('App.User')
+	)->
+	addRubric(
+		Rubric::create('subjects', 'Предметы')->
+		addTree([
+			env('site.subjects', 'App.ServiceSection.2') => 'App.Subject',
+			'App.Subject' => 'App.Topic',
+			'App.Topic' => ['App.Subtopic', 'App.Test'],
+			'App.Subtopic' => 'App.Test',
+		])
+	)->
+	addRubric(
+		Rubric::create('service_sections', 'Служебные разделы')->
+		addList([Site::ROOT => 'App.ServiceSection'])
+	)->
+	addRubric(
+		Rubric::create('dicts', 'Справочники')->
+		addList([env('site.dicts', 'App.ServiceSection.3') => 'App.ServiceSection'])
+	)->
+	addRubric(
+		Rubric::create('site_settings', 'Настройки сайта')->
+		addList('App.SiteSettings')
+	)->
 
 	end();

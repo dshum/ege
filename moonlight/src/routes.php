@@ -102,6 +102,12 @@ Route::group(['prefix' => 'moonlight'], function() {
         
         Route::get('/trash/{item}', ['as' => 'moonlight.trash.item', 'uses' => 'Moonlight\Controllers\TrashController@item'])->
             where(['item' => '[A-Za-z0-9\.]+']);
+
+        Route::get('/rubrics/get', ['as' => 'moonlight.rubrics.get', 'uses' => 'Moonlight\Controllers\RubricController@rubric']);
+        
+        Route::post('/rubrics/open', ['as' => 'moonlight.rubrics.open', 'uses' => 'Moonlight\Controllers\RubricController@open']);
+
+        Route::post('/rubrics/close', ['as' => 'moonlight.rubrics.close', 'uses' => 'Moonlight\Controllers\RubricController@close']);
         
         Route::get('/elements/list', ['as' => 'moonlight.elements.list', 'uses' => 'Moonlight\Controllers\BrowseController@elements']);
         

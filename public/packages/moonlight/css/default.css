@@ -289,30 +289,35 @@ nav .avatar img {
   padding: 2rem;
 }
 
-.sidebar .fade {
-  position: absolute;
-  z-index: 100;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 2rem;
-  background-color: rgba(255, 255, 255, 0.6);
+.sidebar .elements {
+  margin-bottom: 1.5rem;
 }
 
-.sidebar h2 {
+.sidebar .elements .h2 {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar .h2 span {
+  font-size: 1.3rem;
   color: steelblue;
+  border-bottom: 1px dashed #37a;
+  cursor: pointer;
+}
+
+.sidebar .elements ul {
+  margin: -0.25rem 0 0 0;
+  padding: 0;
+}
+
+.sidebar .elements ul li {
+  margin: 0.5rem 0;
+  padding: 0;
 }
 
 .sidebar a {
   color: inherit;
-}
-
-.sidebar ul.elements {
-  margin-bottom: 2rem;
-}
-
-.sidebar ul.elements li {
-  padding: 0.25rem 0;
 }
 
 .sidebar input[type="text"] {
@@ -410,7 +415,6 @@ nav .avatar img {
 div.path {
   margin: 1rem 0 2rem 0;
   font-size: 1.5rem;
-  white-space: nowrap;
 }
 
 div.path div.part {
@@ -436,6 +440,17 @@ div.path div.divider {
   display: inline-block;
   margin: 0 1rem;
   color: silver;
+}
+
+div.path div.part a.edit {
+  margin-left: 1rem;
+  text-decoration: none;
+  border-bottom: none;
+}
+
+div.path div.part a.edit .fa {
+  color: tan;
+  font-size: 1.2rem;
 }
 
 div.add-element a {
@@ -807,20 +822,20 @@ ul.pager > li.page input {
 /* Tree */
 
 .tree {
-  margin: 0.5rem 0 3rem 0;
+  margin: 0.25rem 0 0 0;
 }
 
 .tree > div > div[item] {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .tree .margin {
-  margin: 5px 0 10px 0;
+  margin: 0 0 0.5rem 0;
   white-space: nowrap;
 }
 
 .tree .item {
-  margin: 0.5rem 0 0 0;
+  margin: 0.25rem 0;
   padding-left: 1.5rem;
   font-size: 0.8rem;
   color: #234e9e;

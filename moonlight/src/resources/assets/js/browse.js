@@ -59,27 +59,31 @@ $(function() {
         var classId = div.attr('classId');
 
         if (display == 'show') {
+            h2.attr('display', 'hide');
+            container.hide();
+
             $.post('/moonlight/elements/close', {
                 item: item,
                 classId: classId
-            }, function(data) {
-                h2.attr('display', 'hide');
-                container.hide();
             });
         } else if (display == 'hide') {
+            h2.attr('display', 'show');
+            container.show();
+
             $.post('/moonlight/elements/open', {
                 item: item,
                 classId: classId
-            }, function(data) {
-                h2.attr('display', 'show');
-                container.show();
             });
         } else {
+            $.blockUI();
+
             $.getJSON('/moonlight/elements/list', {
                 item: item,
                 classId: classId,
                 open: true
             }, function(data) {
+                $.unblockUI();
+
                 if (data.html) {
                     $('.main div[item="' + item + '"]').html(data.html);
                 }
@@ -141,5 +145,42 @@ $(function() {
         if (page > last) page = last;
 
         getElements(item, classId, page);
+    });
+
+    $('.sidebar .elements .h2 span').click(function() {
+        var block = $(this).parents('.elements');
+        var rubric = block.attr('rubric');
+        var display = block.attr('display');
+        var ul = block.find('ul');
+
+        if (display == 'show') {
+            block.attr('display', 'hide');
+            ul.hide();
+
+            $.post('/moonlight/rubrics/close', {
+                rubric: rubric
+            });
+            
+        } else if (display == 'hide') {
+            block.attr('display', 'show');
+            ul.show();
+
+            $.post('/moonlight/rubrics/open', {
+                rubric: rubric
+            });
+        } else {
+            $.blockUI();
+
+            $.getJSON('/moonlight/rubrics/get', {
+                rubric: rubric
+            }, function(data) {
+                $.unblockUI();
+
+                if (data.html) {
+                    block.append(data.html);
+                    block.attr('display', 'show');
+                }
+            });
+        }
     });
 });

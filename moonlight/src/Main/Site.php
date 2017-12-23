@@ -10,6 +10,7 @@ class Site
 
 	protected $items = [];
 	protected $binds = [];
+	protected $rubrics = [];
 	protected $bindsTree = [];
 	protected $itemPlugins = [];
 	protected $browsePlugins = [];
@@ -18,6 +19,28 @@ class Site
 	protected $browseFilters = [];
 
 	protected $initMicroTime = null;
+
+	public function addRubric(Rubric $rubric)
+	{
+		$name = $rubric->getName();
+
+		$this->rubrics[$name] = $rubric;
+
+		return $this;
+	}
+
+	public function getRubricList()
+	{
+		return $this->rubrics;
+	}
+
+	public function getRubricByName($name)
+	{
+		return
+			isset($this->rubrics[$name])
+			? $this->rubrics[$name]
+			: null;
+	}
 
 	public function addItem(Item $item)
 	{

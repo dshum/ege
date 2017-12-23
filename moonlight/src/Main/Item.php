@@ -26,7 +26,6 @@ class Item
 	protected $orderBy = [];
 
 	public function __construct($name) {
-
 		static::assertClass($name);
 
 		$this->name = $name;
