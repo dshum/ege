@@ -105,7 +105,7 @@ class Site
 		return null;
 	}
 
-	public function bindBrowsePlugin($classId, $plugin)
+	public function addBrowsePlugin($classId, $plugin)
 	{
 		$this->browsePlugins[$classId] = $plugin;
 

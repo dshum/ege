@@ -1372,6 +1372,7 @@ form .file-hidden {
   left: 0;
   right: 0;
   width: 25rem;
+  overflow: hidden;
   margin: auto;
   padding: 1rem 2rem;
   background-color: white;
@@ -1495,7 +1496,8 @@ form .file-hidden {
 
 /* Common */
 
-.dnone {
+.dnone,
+*.dnone {
   display: none;
 }
 
@@ -1513,6 +1515,21 @@ form .file-hidden {
 
 .grey {
   color: #999;
+}
+
+.ok {
+  display: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ok > .container {
+  display: table;
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  background-color: seagreen;
+  color: white;
+  font-size: 1.2rem;
 }
 
 /* Media */

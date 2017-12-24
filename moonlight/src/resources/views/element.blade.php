@@ -30,13 +30,18 @@
             @endforeach
         </div>
         @endif
+        @if ($browsePluginView)
+            {!! $browsePluginView !!}
+        @endif
         @foreach ($items as $item)
         <div classId="{{ \Moonlight\Main\Element::getClassId($element) }}" item="{{ $item['id'] }}"></div>
         @endforeach
+        @if (! $browsePluginView)
         <div class="empty {{ sizeof($items) > 0 ? 'dnone' : '' }}">
             <div>Элементов не найдено.</div>
             <div><b>¯\_(ツ)_/¯</b></div>
         </div>
+        @endif
     </div>
 </div>
 @endsection

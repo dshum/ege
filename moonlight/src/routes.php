@@ -177,4 +177,6 @@ Route::group(['middleware' => [
     VerifyCsrfToken::class,
 ]], function () {
     Route::post('/plugins/answers/{id}', ['uses' => '\App\Http\Plugins\Answers@correct']);
+
+    Route::post('/plugins/loader', ['uses' => '\App\Http\Plugins\TestLoader@load']);
 });

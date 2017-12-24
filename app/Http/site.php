@@ -581,6 +581,7 @@ $site->
 	)->
 
 	addItemPlugin('App.Question', 'App\Http\Plugins\Answers')->
+	addBrowsePlugin(env('site.loader', 'App.ServiceSection.4'), 'App\Http\Plugins\TestLoader')->
 
 	bind(Site::ROOT, ['App.Section', 'App.ServiceSection', 'App.SiteSettings'])->
 	bind(env('site.subjects', 'App.ServiceSection.2'), 'App.Subject')->
@@ -595,6 +596,10 @@ $site->
 	bind('App.User', 'App.UserTest')->
 	bind('App.UserTest', 'App.UserQuestion')->
 	bind('App.UserQuestion', 'App.UserAnswer')->
+
+	/*
+	 * Рубрики
+	 */
 
 	addRubric(
 		Rubric::create('students', 'Ученики')->

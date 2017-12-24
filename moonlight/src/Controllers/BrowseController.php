@@ -917,11 +917,27 @@ class BrowseController extends Controller
         $mainProperty = $currentItem->getMainProperty();
         
         $site = \App::make('site');
+
+        /*
+         * Browse plugin
+         */
+        
+        $browsePluginView = null;
+         
+        $browsePlugin = $site->getBrowsePlugin($classId);
+
+        if ($browsePlugin) {
+            $view = \App::make($browsePlugin)->index($element);
+
+            if ($view) {
+                $browsePluginView = is_string($view)
+                    ? $view : $view->render();
+            }
+        }
         
         $itemList = $site->getItemList();
         
         $binds = [];
-        $plugin = null;
 		$items = [];
         $creates = [];
         
@@ -1007,7 +1023,7 @@ class BrowseController extends Controller
         $scope['mainProperty'] = $mainProperty;
         $scope['parents'] = $parents;
         $scope['currentItem'] = $currentItem;
-        $scope['plugin'] = $plugin;
+        $scope['browsePluginView'] = $browsePluginView;
 		$scope['items'] = $items;
         $scope['creates'] = $creates;
         $scope['rubrics'] = $rubrics;
