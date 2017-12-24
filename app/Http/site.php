@@ -580,6 +580,7 @@ $site->
 		addSoftDeletes()
 	)->
 
+	// addHomePlugin('App\Http\Plugins\Welcome')->
 	addItemPlugin('App.Question', 'App\Http\Plugins\Answers')->
 	addBrowsePlugin(env('site.loader', 'App.ServiceSection.4'), 'App\Http\Plugins\TestLoader')->
 

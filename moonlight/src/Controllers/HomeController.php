@@ -167,11 +167,31 @@ class HomeController extends Controller
         $scope = [];
         
         $loggedUser = LoggedUser::getUser();
+
+        $site = \App::make('site');
+
+        /*
+         * Home plugin
+         */
+        
+         $homePluginView = null;
+         
+         $homePlugin = $site->getHomePlugin();
+
+        if ($homePlugin) {
+            $view = \App::make($homePlugin)->index();
+
+            if ($view) {
+                $homePluginView = is_string($view)
+                    ? $view : $view->render();
+            }
+        }
         
         $rubricController = new RubricController;
         
         $rubrics = $rubricController->index();
 
+        $scope['homePluginView'] = $homePluginView;
         $scope['rubrics'] = $rubrics;
             
         return view('moonlight::home', $scope);

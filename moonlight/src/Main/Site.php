@@ -12,6 +12,8 @@ class Site
 	protected $binds = [];
 	protected $rubrics = [];
 	protected $bindsTree = [];
+
+	protected $homePlugin = null;
 	protected $itemPlugins = [];
 	protected $browsePlugins = [];
 	protected $searchPlugins = [];
@@ -82,6 +84,22 @@ class Site
 	public function getBinds()
 	{
 		return $this->binds;
+	}
+
+	public function addHomePlugin($plugin)
+	{
+		$this->homePlugin = $plugin;
+
+		return $this;
+	}
+
+	public function getHomePlugin()
+	{
+		if ($this->homePlugin) {
+			return $this->homePlugin;
+		}
+
+		return null;
 	}
 
 	public function addItemPlugin($class, $plugin)

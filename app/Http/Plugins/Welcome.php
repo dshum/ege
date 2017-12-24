@@ -1,6 +1,6 @@
 <?php 
 
-namespace Moonlight\Controllers\Plugins;
+namespace App\Http\Plugins;
 
 use Illuminate\Http\Request;
 use Validator;
@@ -13,7 +13,7 @@ use App\Test;
 use App\Question;
 use App\Answer;
 
-class WelcomeController extends Controller {
+class Welcome extends Controller {
 
 	public function index()
 	{
@@ -49,7 +49,7 @@ class WelcomeController extends Controller {
         $scope['testCount'] = $testCount;
         $scope['questionCount'] = $questionCount;
 
-		return response()->json($scope);
+		return view('plugins.welcome', $scope);
 	}
 
 } 
