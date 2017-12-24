@@ -2,6 +2,7 @@
 
 use Moonlight\Main\Site;
 use Moonlight\Main\Item;
+use Moonlight\Main\Element;
 use Moonlight\Main\Rubric;
 use Moonlight\Properties\BaseProperty;
 use Moonlight\Properties\MainProperty;
@@ -611,6 +612,7 @@ $site->
 		$site->
 		addRubric(
 			Rubric::create('topic_'.$topic->id, $topic->name)->
+			addElement(Element::getClassId($topic), $topic->name)->
 			addList('App.Subtopic')->
 			addList('App.Test')
 		);

@@ -1,24 +1,30 @@
 <style>
-.music {
-    width: 600px;
-    height: 100px;
-    margin-bottom: 3rem;
-    border: 1px solid #ccc;
+.wrapper {
+    z-index: 100;
+    margin: 2rem -2rem 2rem -2rem;
+    width: 60rem;
+    background-image: url(http://yandex.ru/images/today?size=1920x1080);
+    background-size: cover;
+    background-repeat: no-repeat;
     border-radius: 2px;
-    box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.18), 0 2px 11px 0 rgba(0, 0, 0, 0.15);
-    background-color: white;
-    padding: 0.5rem;
+    padding: 0;
 }
 
-.music frame {
-    width: 600px;
-    height: 100px;
-    border: none;
+.wrapper .container {
+    padding: 2rem;
+    background-color: rgba(0, 30, 60, 0.6);
+    color: white;
+    font-size: 1.2rem;
 }
 </style>
-<div class="path">
-    <div class="part"><span>Добро пожаловать!</span></div>
-</div>
-<div class="music">
-    <iframe frameborder="0" width="600" height="100" src="https://music.yandex.ru/iframe/#track/941236/107752/">Слушайте <a href='https://music.yandex.ru/album/107752/track/941236'>The King Of Hearts</a> — <a href='https://music.yandex.ru/artist/4684'>Procol Harum</a> на Яндекс.Музыке</iframe>
+<div class="wrapper">
+    <div class="container">
+        На сайте зарегистрировано пользователей: 2<br>
+        Добавлено тестов: 6<br>
+        Всего вопросов: 120<br>
+        <br>
+        Недавно зарегистрировались:<br>
+        vegorova@mail.ru<br>
+        denis-shumeev@yandex.ru
+    </div>
 </div>

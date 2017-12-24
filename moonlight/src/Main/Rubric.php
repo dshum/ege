@@ -73,10 +73,11 @@ class Rubric
         return $this;
     }
 
-    public function addElement($classId)
+    public function addElement($classId, $name)
     {
         $this->all[] = [
             'classId' => $classId,
+            'name' => $name,
         ];
 
         return $this;

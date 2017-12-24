@@ -152,11 +152,19 @@ class RubricController extends Controller
             foreach ($all as $data) {
                 if (isset($data['classId'])) {
                     $classId = $data['classId'];
+                    $title = isset($data['name']) ? $data['name'] : null;
 
-                    $element = $this->getElement($classId);
+                    if ($title) {
+                        $rubricElements[$name][] = [
+                            'classId' => $classId,
+                            'name' => $title,
+                        ];
+                    } else {
+                        $element = $this->getElement($classId);
 
-                    if ($element) {
-                        $rubricElements[$name][] = $element;
+                        if ($element) {
+                            $rubricElements[$name][] = $element;
+                        }
                     }
                 } elseif (isset($data['className'])) {
                     $parent = isset($data['parent']) ? $data['parent']: null;
@@ -201,11 +209,19 @@ class RubricController extends Controller
             foreach ($all as $data) {
                 if (isset($data['classId'])) {
                     $classId = $data['classId'];
+                    $title = isset($data['name']) ? $data['name'] : null;
 
-                    $element = $this->getElement($classId);
+                    if ($title) {
+                        $rubricElements[$name][] = [
+                            'classId' => $classId,
+                            'name' => $title,
+                        ];
+                    } else {
+                        $element = $this->getElement($classId);
 
-                    if ($element) {
-                        $rubricElements[$name][] = $element;
+                        if ($element) {
+                            $rubricElements[$name][] = $element;
+                        }
                     }
                 } elseif (isset($data['className'])) {
                     $parent = isset($data['parent']) ? $data['parent']: null;
@@ -368,7 +384,6 @@ class RubricController extends Controller
 
         foreach ($elementList as $element) {
             $elements[] = [
-                'id' => $element->id,
                 'classId' => Element::getClassId($element),
                 'name' => $element->{$mainProperty},
             ];
@@ -389,7 +404,6 @@ class RubricController extends Controller
         $mainProperty = $item->getMainProperty();
 
         return [
-            'id' => $element->id,
             'classId' => Element::getClassId($element),
             'name' => $element->{$mainProperty},
         ];
