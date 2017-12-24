@@ -999,6 +999,10 @@ class BrowseController extends Controller
             }
         }
 
+        $rubricController = new RubricController;
+        
+        $rubrics = $rubricController->sidebar();
+
         $scope['element'] = $element;
         $scope['mainProperty'] = $mainProperty;
         $scope['parents'] = $parents;
@@ -1006,6 +1010,7 @@ class BrowseController extends Controller
         $scope['plugin'] = $plugin;
 		$scope['items'] = $items;
         $scope['creates'] = $creates;
+        $scope['rubrics'] = $rubrics;
             
         return view('moonlight::element', $scope);
     }
@@ -1052,7 +1057,7 @@ class BrowseController extends Controller
 
         $rubricController = new RubricController;
 
-        $rubrics = $rubricController->index();
+        $rubrics = $rubricController->sidebar();
 
         $scope['plugin'] = $plugin;
 		$scope['items'] = $items;

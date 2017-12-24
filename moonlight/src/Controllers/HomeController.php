@@ -168,7 +168,11 @@ class HomeController extends Controller
         
         $loggedUser = LoggedUser::getUser();
         
+        $rubricController = new RubricController;
         
+        $rubrics = $rubricController->index();
+
+        $scope['rubrics'] = $rubrics;
             
         return view('moonlight::home', $scope);
     }

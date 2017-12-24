@@ -129,7 +129,7 @@ class RubricController extends Controller
         return response()->json([]);
     }
 
-    public function index()
+    public function sidebar()
     {
         $scope = [];
 
@@ -176,6 +176,58 @@ class RubricController extends Controller
         $scope['rubrics'] = $rubrics;
         $scope['rubricElements'] = $rubricElements;
         $scope['opens'] = $opens;
+
+        return view('moonlight::rubrics.sidebar', $scope);
+    }
+
+    public function index()
+    {
+        $scope = [];
+
+        $loggedUser = LoggedUser::getUser();
+        
+        $site = \App::make('site');
+
+        $rubricList = $site->getRubricList();
+
+        $rubrics = [];
+        $rubricElements = [];
+
+        foreach ($rubricList as $rubric) {
+            $name = $rubric->getName();
+
+            $all = $rubric->getAll();
+
+            foreach ($all as $data) {
+                if (isset($data['classId'])) {
+                    $classId = $data['classId'];
+
+                    $element = $this->getElement($classId);
+
+                    if ($element) {
+                        $rubricElements[$name][] = $element;
+                    }
+                } elseif (isset($data['className'])) {
+                    $parent = isset($data['parent']) ? $data['parent']: null;
+                    $className = $data['className'];
+
+                    $elements = $this->getElements($parent, $className);
+                    
+                    if ($elements) {
+                        foreach ($elements as $element) {
+                            $rubricElements[$name][] = $element;
+                        }
+                    }
+                }
+            }
+
+            if (sizeof($rubricElements[$name])) {
+                $rubrics[] = $rubric;
+            }
+        }
+
+        $scope['rubrics'] = $rubrics;
+        $scope['rubricElements'] = $rubricElements;
 
         return view('moonlight::rubrics.index', $scope);
     }
@@ -285,7 +337,7 @@ class RubricController extends Controller
                 }
             }    
         } else {
-            $criteria = $item->getClass();
+            $criteria = $item->getClass()->query();
         }
 
 		if (! $loggedUser->isSuperUser()) {

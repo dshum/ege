@@ -21,6 +21,8 @@ use Moonlight\Properties\TextfieldProperty;
 use Moonlight\Properties\PluginProperty;
 use Moonlight\Properties\VirtualProperty;
 
+$topics = \App\Topic::orderBy('order')->get();
+
 $site = \App::make('site');
 
 $site->
@@ -597,16 +599,18 @@ $site->
 	addRubric(
 		Rubric::create('students', 'Ученики')->
 		addList('App.User')
-	)->
-	addRubric(
-		Rubric::create('subjects', 'Предметы')->
-		addTree([
-			env('site.subjects', 'App.ServiceSection.2') => 'App.Subject',
-			'App.Subject' => 'App.Topic',
-			'App.Topic' => ['App.Subtopic', 'App.Test'],
-			'App.Subtopic' => 'App.Test',
-		])
-	)->
+	);
+
+	foreach ($topics as $topic) {
+		$site->
+		addRubric(
+			Rubric::create('topic_'.$topic->id, $topic->name)->
+			addList('App.Subtopic')->
+			addList('App.Test')
+		);
+	}
+
+	$site->
 	addRubric(
 		Rubric::create('service_sections', 'Служебные разделы')->
 		addList([Site::ROOT => 'App.ServiceSection'])
