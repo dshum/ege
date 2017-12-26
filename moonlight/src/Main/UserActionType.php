@@ -19,7 +19,7 @@ class UserActionType
 	const ACTION_TYPE_MOVE_ELEMENT_LIST_ID = 62;
 	const ACTION_TYPE_ORDER_ELEMENT_LIST_ID = 71;
 	const ACTION_TYPE_PLUGIN_ID = 101;
-	const ACTION_TYPE_PLUGIN_ACTION_ID = 102;
+	const ACTION_TYPE_ACTION_ID = 102;
 	const ACTION_TYPE_SEARCH_ID = 201;
 	const ACTION_TYPE_ADD_GROUP_ID = 301;
 	const ACTION_TYPE_SAVE_GROUP_ID = 311;
@@ -49,7 +49,7 @@ class UserActionType
 		self::ACTION_TYPE_MOVE_ELEMENT_LIST_ID => 'Перемещение списка элементов',
 		self::ACTION_TYPE_ORDER_ELEMENT_LIST_ID => 'Сортировка списка элементов',
 		self::ACTION_TYPE_PLUGIN_ID => 'Плагин',
-		self::ACTION_TYPE_PLUGIN_ACTION_ID => 'Плагин-экшн',
+		self::ACTION_TYPE_ACTION_ID => 'Действие',
 		self::ACTION_TYPE_SEARCH_ID => 'Поиск элементов',
 		self::ACTION_TYPE_ADD_GROUP_ID => 'Добавление группы',
 		self::ACTION_TYPE_SAVE_GROUP_ID => 'Сохранение группы',

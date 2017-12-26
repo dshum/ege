@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Validator;
 use Carbon\Carbon;
+use Moonlight\Main\UserActionType;
+use Moonlight\Models\UserAction;
 use App\Http\Controllers\Controller;
 use App\Topic;
 use App\Test;
@@ -136,8 +138,13 @@ class TestLoader extends Controller {
 
                 $i++;
             }
+
+            UserAction::log(
+                UserActionType::ACTION_TYPE_PLUGIN_ID,
+                'Загружен тест: '.$title
+            );
         } catch (\Exception $e) {
-            $scope['error'] = 'Произошла ужасная ошибка:<br>'.$e->getMessage();
+            $scope['error'] = 'Что-то пошло не так:<br>'.$e->getMessage();
 
             return response()->json($scope);
         }

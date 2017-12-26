@@ -53,10 +53,8 @@
                         <img src="{{ $loggedUser->getPhotoSrc() }}">
                         @endif
                     </div>
-                    <div>
-                        <small class="red">Максимальный размер файла 1024 Кб</small><br />
-                        <small class="red">Минимальный размер изображения 100&#215;100 пикселей</small>
-                    </div>
+                    <div><small class="red">Максимальный размер файла 1024 Кб</small></div>
+                    <div><small class="red">Минимальный размер изображения 100&#215;100 пикселей</small></div>
                     <div class="loadfile">
                         <div class="file" name="photo">Выберите файл</div>
                         <span class="reset" name="photo">&#215;</span>

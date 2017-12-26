@@ -496,46 +496,62 @@ class EditController extends Controller
         $scope = [];
         
         $loggedUser = LoggedUser::getUser();
+
+        $site = \App::make('site');
         
         $element = Element::getByClassId($classId);
         
         if ( ! $element) {
-            return redirect()->route('browse');
+            return redirect()->route('moonlight.browse');
         }
         
-        $parent = Element::getParent($element);
+        $currentItem = Element::getItem($element);
         
-        $currentItem = $element->getItem();
-        
-        $propertyList = $currentItem->getPropertyList();
-        
-        $properties = [];
-        $ones = [];
-		
-        foreach ($propertyList as $propertyName => $property) {
-			if ($property->getHidden()) continue;
+        $parentList = Element::getParentList($element);
 
-			$properties[] = $property->setElement($element);
-            
-            if ($property->isOneToOne()) {
-                $ones[] = $property;
-            }
-		}
-        
-        $history = $loggedUser->getParameter('history');
-        
-        if ( ! $history) {
-            $history = $parent 
-                ? route('browse.element', $parent->getClassId()) 
-                : route('browse');
+        $parents = [];
+
+        foreach ($parentList as $parent) {
+            $parentItem = Element::getItem($parent);
+            $parentMainProperty = $parentItem->getMainProperty();
+            $parents[] = [
+                'classId' => Element::getClassId($parent),
+                'name' => $parent->$parentMainProperty,
+            ];
         }
+
+        $mainProperty = $currentItem->getMainProperty();
+        $propertyList = $currentItem->getPropertyList();
+
+        $properties = [];
+        $views = [];
+
+        foreach ($propertyList as $property) {
+            if ($property->getHidden()) continue;
+            if ($property->getName() == 'deleted_at') continue;
+
+            $properties[] = $property;
+        }
+
+        foreach ($properties as $property) {
+            $propertyScope = $property->setElement($element)->getEditView();
+            
+            $views[$property->getName()] = view(
+                'moonlight::properties.'.$property->getClassName().'.edit', $propertyScope
+            )->render();
+        }
+
+        $rubricController = new RubricController;
+        
+        $rubrics = $rubricController->sidebar();
 
         $scope['element'] = $element;
-        $scope['parent'] = $parent;
+        $scope['classId'] = $classId;
+        $scope['mainProperty'] = $mainProperty;
+        $scope['parents'] = $parents;
         $scope['currentItem'] = $currentItem;
-        $scope['properties'] = $properties;
-        $scope['ones'] = $ones;
-        $scope['history'] = $history;
+        $scope['views'] = $views;
+        $scope['rubrics'] = $rubrics;
         
         return view('moonlight::edit', $scope);
     }

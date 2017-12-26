@@ -38,7 +38,14 @@
         @endforeach
         @if (! $browsePluginView)
         <div class="empty {{ sizeof($items) > 0 ? 'dnone' : '' }}">
-            Элементов не найдено.
+            <div>Элементов не найдено.</div>
+            <pre>
+                :
+                :
+                :
+            /\('')/\
+            \      /
+            </pre>
         </div>
         @endif
     </div>

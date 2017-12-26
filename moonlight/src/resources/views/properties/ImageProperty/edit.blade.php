@@ -13,18 +13,19 @@
 		@endif
 	@endforeach
 @endif
-@if ( ! $readonly)
+@if (! $readonly)
+@if ($maxFilesize > 0)
+<div><small class="red">Максимальный размер файла {{ $maxFilesize }} Кб</small></div>
+@endif
+@if ($maxWidth > 0 and $maxHeight > 0)
+<div><small class="red">Максимальный размер изображения {{ $maxWidth }}&#215;{{ $maxHeight }} пикселей</small></div>
+@elseif ($maxWidth > 0)
+<div><small class="red">Максимальная ширина изображения {{ $maxWidth }} пикселей</small></div>
+@elseif ($maxHeight > 0)
+<div><small class="red">Максимальная высота изображения {{ $maxHeight }} пикселей</small></div>
+@endif
+<div><small class="red">Допустимые форматы файла: GIF, JPG, PNG</small></div>
 <div class="loadfile">
-    @if ($maxFilesize > 0)
-    <small class="red">Максимальный размер файла {{ $maxFilesize }} Кб</small><br />
-    @endif
-	@if ($maxWidth > 0 and $maxHeight > 0)
-    <small class="red">Максимальный размер изображения {{ $maxWidth }}&#215;{{ $maxHeight }} пикселей</small><br />
-	@elseif ($maxWidth > 0)
-    <small class="red">Максимальная ширина изображения {{ $maxWidth }} пикселей</small><br />
-	@elseif ($maxHeight > 0)
-    <small class="red">Максимальная высота изображения {{ $maxHeight }} пикселей</small><br />
-	@endif
     <div class="file" name="{{ $name }}">Выберите файл</div>
     <span class="reset" name="{{ $name }}" file>&#215;</span>
     <div class="file-hidden"><input type="file" name="{{ $name }}"></div>

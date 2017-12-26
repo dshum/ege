@@ -1101,7 +1101,7 @@ ul.pager > li.page input {
 }
 
 .edit input.one {
-  width: 10rem;
+  width: 20rem;
 }
 
 .edit span.error {
@@ -1331,6 +1331,18 @@ form .file-hidden {
   height: 0;
   width: 0;
   overflow: hidden;
+}
+
+form .loadfile .reset {
+  margin-left: 0.5rem;
+  height: 3rem;
+  line-height: 3rem;
+  font-size: 1.5rem;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 2px solid transparent;
+  color: #333;
+  cursor: pointer;
 }
 
 /* Modal */

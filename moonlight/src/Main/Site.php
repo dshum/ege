@@ -142,9 +142,11 @@ class Site
 		}
 
 		if (strpos($classId, Element::ID_SEPARATOR)) {
-			list($class, $id) = explode(Element::ID_SEPARATOR, $classId);
+			$parts = explode(Element::ID_SEPARATOR, $classId);
+			$id = array_pop($parts);
+			$class = implode(Element::ID_SEPARATOR, $parts);
 		} else {
-			list($class, $id) = array($classId, null);
+			$class = $classId;
 		}
 
 		if (isset($this->browsePlugins[$class])) {
@@ -194,9 +196,11 @@ class Site
 		}
 
 		if (strpos($classId, Element::ID_SEPARATOR)) {
-			list($class, $id) = explode(Element::ID_SEPARATOR, $classId);
+			$parts = explode(Element::ID_SEPARATOR, $classId);
+			$id = array_pop($parts);
+			$class = implode(Element::ID_SEPARATOR, $parts);
 		} else {
-			list($class, $id) = array($classId, null);
+			$class = $classId;
 		}
 
 		if (isset($this->editPlugins[$class])) {

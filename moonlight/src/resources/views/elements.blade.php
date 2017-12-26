@@ -43,7 +43,13 @@
             <tbody>
                 @foreach ($elements as $element)
                 <tr>
+                    @if ($mode == 'browse')
                     <td class="browse"><a href="{{ route('moonlight.browse.element', \Moonlight\Main\Element::getClassId($element)) }}"><i class="fa fa-angle-right"></i></a></td>
+                    @elseif ($mode == 'search')
+                    <td class="browse"><a href="{{ route('moonlight.browse.element', \Moonlight\Main\Element::getClassId($element)) }}"><i class="fa fa-angle-right"></i></a></td>
+                    @else
+                    <td class="browse"><i class="fa fa-angle-right"></i></td>
+                    @endif
                     @if (isset($views[Moonlight\Main\Element::getClassId($element)]))
                         @foreach ($views[Moonlight\Main\Element::getClassId($element)] as $view)
                             {!! $view !!}
