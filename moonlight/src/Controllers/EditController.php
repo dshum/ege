@@ -336,7 +336,7 @@ class EditController extends Controller
         
 		$element = Element::getByClassId($classId);
         
-        if ( ! $element) {
+        if (! $element) {
             $scope['error'] = 'Элемент не найден.';
             
             return response()->json($scope);
@@ -344,12 +344,13 @@ class EditController extends Controller
         
         $site = \App::make('site');
 
-        $currentItem = $site->getItemByName($element->getClass());
+        $currentItem = Element::getItem($element);
+
 		$mainProperty = $currentItem->getMainProperty();
         
         $propertyList = $currentItem->getPropertyList();
 
-        $input = [];
+        $inputs = [];
 		$rules = [];
 		$messages = [];
 
@@ -357,22 +358,24 @@ class EditController extends Controller
 			if (
 				$property->getHidden()
 				|| $property->getReadonly()
-			) continue;
+            ) continue;
             
-            $input[$propertyName] = $property->setRequest($request)->buildInput();
+            $value = $property->setRequest($request)->buildInput();
+            
+            if ($value) $inputs[$propertyName] = $value;
 
 			foreach ($property->getRules() as $rule => $message) {
 				$rules[$propertyName][] = $rule;
 				if (strpos($rule, ':')) {
 					list($name, $value) = explode(':', $rule, 2);
-					$messages[$propertyName.'.'.$name] = '<b>'.$property->getTitle().'.</b> '.$message;
+					$messages[$propertyName.'.'.$name] = $message;
 				} else {
-					$messages[$propertyName.'.'.$rule] = '<b>'.$property->getTitle().'.</b> '.$message;
+					$messages[$propertyName.'.'.$rule] = $message;
 				}
 			}
 		}
         
-        $validator = Validator::make($input, $rules, $messages);
+        $validator = Validator::make($inputs, $rules, $messages);
         
         if ($validator->fails()) {
             $messages = $validator->errors();
@@ -405,18 +408,23 @@ class EditController extends Controller
         
         UserAction::log(
 			UserActionType::ACTION_TYPE_SAVE_ELEMENT_ID,
-			$element->getClassId()
+			$classId
 		);
         
         $views = [];
-        
-        foreach ($propertyList as $propertyName => $property) {
-            if ($view = $property->setElement($element)->getEditView()) {
-                $views[$propertyName] = $view;
-            }
+
+        foreach ($propertyList as $property) {
+            if ($property->getHidden()) continue;
+            if ($property->getName() == 'deleted_at') continue;
+
+            $propertyScope = $property->setElement($element)->getEditView();
+            
+            $views[$property->getName()] = view(
+                'moonlight::properties.'.$property->getClassName().'.edit', $propertyScope
+            )->render();
         }
         
-        $scope['saved'] = $element->getClassId();
+        $scope['saved'] = $classId;
         $scope['views'] = $views;
         
         return response()->json($scope);

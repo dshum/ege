@@ -31,11 +31,13 @@ class MainProperty extends BaseProperty
         $name = $this->getName();
         $value = $this->buildInput();
 
-		$this->element->$name = $value;
-
-		$this->element->$name = $this->element->id
-            ? Element::getClassId($this->element)
-            : 'Element';
+        if ($value) {
+            $this->element->$name = $value;
+        } else {
+            $this->element->$name = $this->element->id
+                ? Element::getClassId($this->element)
+                : 'Element';
+        }
 
 		return $this;
     }

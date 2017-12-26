@@ -249,10 +249,9 @@ abstract class BaseProperty
         $request = $this->getRequest();
         $name = $this->getName();
         
-        $value = $request->input($name);
+		$value = $request->input($name);
         
-        if (! mb_strlen($value)) $value = null;
-        if ($value === 'null') $value = null;
+		if (! mb_strlen($value)) $value = null;
         
         return $value;
     }

@@ -6,6 +6,7 @@
 Не определено
 @endif
 </span>
+<span name="{{ $name }}" class="error"></span>
 @if (! $readonly)
 <br>
 <input type="hidden" name="{{ $name }}" value="{{ $value ? $value['id'] : null }}">

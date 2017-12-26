@@ -34,8 +34,8 @@
             </div>
             <form action="{{ route('moonlight.element.save', $classId) }}" method="POST">
                 <div class="edit">
-                    @foreach ($views as $view)
-                    <div class="row">
+                    @foreach ($views as $name => $view)
+                    <div class="row" name="{{ $name }}">
                         {!! $view !!}
                     </div>
                     @endforeach
