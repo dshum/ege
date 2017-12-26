@@ -4,7 +4,7 @@
 <nav>
     <div class="logo"><a href="{{ route('moonlight.home') }}">Moonlight</a></div>
     <ul class="menu">
-        <li class="active"><a href="{{ route('moonlight.browse') }}">Страницы</a></li>
+        <li class="browse active"><a href="{{ route('moonlight.browse') }}">Страницы</a></li>
         <li><a href="{{ route('moonlight.search') }}">Поиск</a></li>
         <li><a href="{{ route('moonlight.trash') }}">Корзина</a></li>
         <li><a href="{{ route('moonlight.groups') }}">Пользователи</a></li>

@@ -66,7 +66,7 @@ input[type="text"],
 input[type="password"],
 textarea,
 select {
-  background-color: transparent;
+  background-color: white;
   border: 1px solid #999;
   border-radius: 2px;
   outline: none;
@@ -125,11 +125,12 @@ button:focus {
 .btn {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
   border: none;
+  border-top: 1px solid #26a69a;
   border-radius: 2px;
+  outline: none;
   height: 3rem;
   line-height: 3rem;
   font-size: 1rem;
-  outline: 0;
   padding: 0 2rem;
   text-decoration: none;
   text-transform: uppercase;
@@ -141,6 +142,13 @@ button:focus {
   -webkit-appearance: none;
   transition: .2s ease-out;
   cursor: pointer;
+}
+
+.btn.small {
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 0.8rem;
+  padding: 0 1rem;
 }
 
 .btn.danger {
@@ -230,7 +238,7 @@ nav ul.menu li {
 }
 
 nav ul.menu li.active {
-  border-bottom: 2px solid red;
+  border-bottom: 3px solid red;
 }
 
 nav ul.menu li a {
@@ -489,8 +497,26 @@ ul.header li.checked > span {
   color: white;
 }
 
+div.plugin {
+  display: table;
+  margin: 0.5rem 0;
+  padding: 1rem;
+  background-color: #dee;
+  border-radius: 4px;
+}
+
+div.plugin form {
+  margin: 0;
+  padding: 0;
+}
+
+div.plugin input[type="text"] {
+  width: 10rem;
+}
+
 div.empty {
   margin: 2rem 0;
+  clear: both;
 }
 
 div.empty > div:last-child {

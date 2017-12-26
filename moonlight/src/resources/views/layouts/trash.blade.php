@@ -6,7 +6,7 @@
     <ul class="menu">
         <li><a href="{{ route('moonlight.browse') }}">Страницы</a></li>
         <li><a href="{{ route('moonlight.search') }}">Поиск</a></li>
-        <li class="active"><a href="{{ route('moonlight.trash') }}">Корзина</a></li>
+        <li class="trash active"><a href="{{ route('moonlight.trash') }}">Корзина</a></li>
         <li><a href="{{ route('moonlight.groups') }}">Пользователи</a></li>
     </ul>
     <div class="avatar">

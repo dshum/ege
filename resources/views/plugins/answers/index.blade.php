@@ -14,7 +14,8 @@
 }
 
 .answers .answer.correct {
-    background-color: lawngreen;
+    background-color: #acb;
+    color: black;
 }
 </style>
 <script>

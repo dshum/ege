@@ -38,8 +38,7 @@
         @endforeach
         @if (! $browsePluginView)
         <div class="empty {{ sizeof($items) > 0 ? 'dnone' : '' }}">
-            <div>Элементов не найдено.</div>
-            <div><b>¯\_(ツ)_/¯</b></div>
+            Элементов не найдено.
         </div>
         @endif
     </div>

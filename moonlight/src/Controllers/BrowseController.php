@@ -566,7 +566,7 @@ class BrowseController extends Controller
         
         $propertyList = $currentItem->getPropertyList();
 
-		if ( ! $loggedUser->isSuperUser()) {
+		if (! $loggedUser->isSuperUser()) {
 			$permissionDenied = true;
 			$deniedElementList = [];
 			$allowedElementList = [];
@@ -664,6 +664,26 @@ class BrowseController extends Controller
 			}
         }
 
+        /*
+         * Browse filter
+         */
+        
+        $browseFilterView = null;
+
+        $browseFilter = $site->getBrowseFilter($currentItem->getNameId());
+
+        if ($browseFilter) {
+            $view = \App::make($browseFilter)->index($currentItem);
+            $criteria = \App::make($browseFilter)->handle($criteria);
+
+            if ($view) {
+                $browseFilterView = is_string($view)
+                    ? $view : $view->render();
+            }
+
+            $scope['hasBrowseFilter'] = true;
+        }
+
         $open = false;
 
         if ($element) {
@@ -751,6 +771,7 @@ class BrowseController extends Controller
         $scope['classId'] = $classId;
         $scope['currentItem'] = $currentItem;
         $scope['itemPluginView'] = $itemPluginView;
+        $scope['browseFilterView'] = $browseFilterView;
         $scope['properties'] = $properties;
         $scope['total'] = $total;
         $scope['currentPage'] = $currentPage;

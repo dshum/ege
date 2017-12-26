@@ -16,9 +16,9 @@ class Site
 	protected $homePlugin = null;
 	protected $itemPlugins = [];
 	protected $browsePlugins = [];
+	protected $browseFilters = [];
 	protected $searchPlugins = [];
 	protected $editPlugins = [];
-	protected $browseFilters = [];
 
 	protected $initMicroTime = null;
 
@@ -154,7 +154,7 @@ class Site
 		return null;
 	}
 
-	public function bindSearchPlugin($class, $plugin)
+	public function addSearchPlugin($class, $plugin)
 	{
 		$this->searchPlugins[$class] = $plugin;
 
@@ -175,7 +175,7 @@ class Site
 		return null;
 	}
 
-	public function bindEditPlugin($classId, $plugin)
+	public function addEditPlugin($classId, $plugin)
 	{
 		$this->editPlugins[$classId] = $plugin;
 
@@ -206,7 +206,7 @@ class Site
 		return null;
 	}
 
-	public function bindBrowseFilter($class, $plugin)
+	public function addBrowseFilter($class, $plugin)
 	{
 		$this->browseFilters[$class] = $plugin;
 

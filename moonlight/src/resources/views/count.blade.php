@@ -1,4 +1,4 @@
-@if ($total)
+@if ($total || isset($hasBrowseFilter))
 <div class="item active">
     <ul class="header">
         <li class="h2" display="none"><span>{{ $currentItem->getTitle() }}</span></li>

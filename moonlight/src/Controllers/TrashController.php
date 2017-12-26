@@ -147,7 +147,7 @@ class TrashController extends Controller
         $totals = [];
 
         foreach ($itemList as $item) {
-            $total = Cache::remember('trashItemTotal['.$item->getNameId().']', 60 * 24, function () use ($item) {
+            $total = Cache::remember('trashItemTotal['.$item->getNameId().']', 1440, function () use ($item) {
                 return $this->total($item);
             });
 
@@ -249,7 +249,7 @@ class TrashController extends Controller
         $totals = [];
 
         foreach ($itemList as $item) {
-            $total = Cache::remember('trashItemTotal['.$item->getNameId().']', 60 * 24, function () use ($item) {
+            $total = Cache::remember('trashItemTotal['.$item->getNameId().']', 1440, function () use ($item) {
                 return $this->total($item);
             });
 

@@ -406,7 +406,7 @@ class SearchController extends Controller
 			} elseif ($permissionDenied) {
                 return response()->json(['count' => 0]);
 			}
-		}
+        }
         
         $sort = $request->input('sort');
         $property = $currentItem->getPropertyByName($sort);

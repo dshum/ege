@@ -176,6 +176,8 @@ Route::group(['middleware' => [
     AuthMiddleware::class,
     VerifyCsrfToken::class,
 ]], function () {
+    Route::post('/plugins/questions/filter', ['uses' => '\App\Http\Plugins\QuestionFilter@filter']);
+
     Route::post('/plugins/answers/{id}', ['uses' => '\App\Http\Plugins\Answers@correct']);
 
     Route::post('/plugins/loader', ['uses' => '\App\Http\Plugins\TestLoader@load']);

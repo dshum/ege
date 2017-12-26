@@ -6,7 +6,7 @@ $(function() {
     var getElements = function(item, page) {
         $.blockUI();
 
-        $('form').ajaxSubmit({
+        $('form#search-form').ajaxSubmit({
             url: '/moonlight/search/list',
             dataType: 'json',
             data: {

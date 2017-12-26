@@ -1,18 +1,24 @@
-@if ($total)
-@if ($mode != 'trash' && $itemPluginView)
+@if ($itemPluginView)
     {!! $itemPluginView !!}
 @endif
+@if ($total || isset($hasBrowseFilter))
 <div class="item active">
     <ul class="header">
         <li class="h2" display="show"><span>{{ $currentItem->getTitle() }}</span></li>
         <li class="total">
             <span class="order-toggler">Всего {{ $total }} {{ Moonlight\Utils\RussianTextUtils::selectCaseForNumber($total, ['элемент', 'элемента', 'элементов']) }}.</span>
-            @if ($orders)
+            @if ($orders && $total)
             Отсортировано по {!! $orders !!}.
             @endif
         </li>
     </ul>
     <div list>
+        @if (isset($browseFilterView) && $browseFilterView)
+        <div class="plugin">
+            {!! $browseFilterView !!}
+        </div>
+        @endif
+        @if ($total)
         <div class="buttons">
             @if ($mode == 'trash')
             <div class="button restore enabled"><i class="fa fa-arrow-left"></i>Восстановить</div>
@@ -56,6 +62,9 @@
             <li last class="arrow {{ $currentPage < $lastPage ? 'active' : '' }}">{{ $lastPage }}</li>
             <li next class="arrow {{ $currentPage < $lastPage ? 'active' : '' }}"><i class="fa fa-arrow-right"></i></li>
         </ul>
+        @endif
+        @else
+        <div class="empty">Элементов не найдено.</div>
         @endif
     </div>
 </div>

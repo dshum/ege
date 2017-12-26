@@ -583,6 +583,7 @@ $site->
 
 	// addHomePlugin('App\Http\Plugins\Welcome')->
 	addItemPlugin('App.Question', 'App\Http\Plugins\Answers')->
+	// addBrowseFilter('App.Question', 'App\Http\Plugins\QuestionFilter')->
 	addBrowsePlugin(env('site.loader', 'App.ServiceSection.4'), 'App\Http\Plugins\TestLoader')->
 
 	bind(Site::ROOT, ['App.Section', 'App.ServiceSection', 'App.SiteSettings'])->
@@ -622,6 +623,10 @@ $site->
 	addRubric(
 		Rubric::create('service_sections', 'Служебные разделы')->
 		addList([Site::ROOT => 'App.ServiceSection'])
+	)->
+	addRubric(
+		Rubric::create('subjects', 'Предметы')->
+		addList('App.Subject')
 	)->
 	addRubric(
 		Rubric::create('dicts', 'Справочники')->
