@@ -97,11 +97,9 @@ class ManyToManyProperty extends BaseProperty
     public function set()
 	{
         $name = $this->getName();
-        $value = $this->buildInput();
+		$ids = $this->buildInput();
 
 		try {
-			$ids = explode(',', $value);
-
 			if (method_exists($this->element, $name)) {
 				$this->element->{$name}()->sync($ids);
 			}

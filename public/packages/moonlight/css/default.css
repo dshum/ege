@@ -435,7 +435,7 @@ div.path div.part a.edit .fa {
   font-size: 1.2rem;
 }
 
-div.add-element a {
+div.path div.add-element a {
   margin-left: 0.25rem;
 }
 
@@ -1055,6 +1055,7 @@ ul.pager > li.page input {
 
 .edit .row {
   margin: 1rem 0;
+  clear: both;
 }
 
 .edit .row p {
@@ -1101,6 +1102,10 @@ ul.pager > li.page input {
 }
 
 .edit input.one {
+  width: 20rem;
+}
+
+.edit input.many {
   width: 20rem;
 }
 
@@ -1490,6 +1495,20 @@ form .loadfile .reset {
   cursor: pointer;
   padding-top: 2px;
   background-color: rgba(255, 255, 255, 0.8);
+}
+
+.one.container .add {
+  position: absolute;
+  top: 0.25rem;
+  right: -4.5rem;
+  height: 3rem;
+  line-height: 3rem;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.many.elements {
+  margin: 0.5rem 0 0 0;
 }
 
 .autocomplete-container {

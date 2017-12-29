@@ -1,4 +1,6 @@
 $(function() {
+    var element = {};
+
     var init = function() {
         $('input[name].date').calendar({
             dateFormat: '%Y-%m-%d'
@@ -20,12 +22,48 @@ $(function() {
             });
         });
 
+        $('input.many').each(function() {
+            var input = $(this);
+            var item = $(this).attr('item');
+            var name = $(this).attr('property');
+
+            $(this).autocomplete({
+                serviceUrl: '/moonlight/elements/autocomplete',
+                params: {
+                    item: item
+                },
+                onSelect: function (suggestion) {
+                    element = suggestion;
+                },
+                minChars: 0
+            });
+        });
+
         $('div[property].reset').click(function() {
             var name = $(this).attr('property');
     
             $('input:hidden[name="' + name + '"]').val('');
             $('input:text[name="' + name + '_autocomplete"]').val('');
             $('span[container][name="' + name + '"]').html('Не определено');
+        });
+
+        $('div[property].add').click(function() {
+            var name = $(this).attr('property');
+            var elements = $('.many.elements[name="' + name + '"]');
+    
+            if (element.id) {
+                var checkbox = $('input:checkbox[name="' + name + '[]"][id="' + element.classId + '"]');
+
+                if (checkbox.length) {
+                    checkbox.prop('checked', true);
+                } else {
+                    elements.append('<p><input type="checkbox" name="' + name + '[]" id="' + element.classId + '" checked value="' + element.id + '"><label for="' + element.classId + '">' + element.value + '</label></p>');
+                }
+
+                element = {};
+            }
+
+            $('input:text[name="' + name + '_autocomplete"]').val('');
         });
     };
 
@@ -64,6 +102,10 @@ $(function() {
         });
 
         return false;
+    });
+
+    $('.button.save.enabled').click(function() {
+        $('form').submit();
     });
 
     $('.sidebar .elements .h2 span').click(function() {

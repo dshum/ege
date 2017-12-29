@@ -251,7 +251,7 @@ abstract class BaseProperty
         
 		$value = $request->input($name);
         
-		if (! mb_strlen($value)) $value = null;
+		if (is_string($value) && ! mb_strlen($value)) $value = null;
         
         return $value;
     }

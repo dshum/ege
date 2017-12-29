@@ -54,7 +54,7 @@ class CheckboxProperty extends BaseProperty {
 		$request = $this->getRequest();
         $name = $this->getName();
 
-		$value = $request->has($name) && $request->input($name) == 'true'
+		$value = $request->has($name) && $request->input($name)
 			? true : false;
 
 		$this->element->$name = $value;
