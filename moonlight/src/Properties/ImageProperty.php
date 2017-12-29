@@ -328,7 +328,7 @@ class ImageProperty extends BaseProperty
 			}
 		} elseif (
             $request->has($name.'_drop') 
-            && $request->input($name.'_drop') == 'true'
+            && $request->input($name.'_drop')
         ) {
 			$this->drop();
 
