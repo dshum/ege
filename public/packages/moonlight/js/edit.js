@@ -190,4 +190,6 @@ $(function() {
     });
 
     init();
+
+    $('div.item').fadeIn(200);
 });
