@@ -23,4 +23,9 @@ class RichtextProperty extends BaseProperty {
 		return $this->typograph;
 	}
 
+	public function refresh()
+	{
+		return false;
+	}
+
 }

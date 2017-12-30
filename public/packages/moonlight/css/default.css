@@ -1109,6 +1109,12 @@ ul.pager > li.page input {
   width: 20rem;
 }
 
+.edit textarea[tinymce="true"] {
+  display: none;
+  width: 40rem;
+  height: 20rem;
+}
+
 .edit span.error {
   display: none;
   margin-left: 0.5rem;

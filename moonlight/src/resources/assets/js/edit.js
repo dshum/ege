@@ -90,8 +90,29 @@ $(function() {
         $(':file[name="' + name + '"]').val('');
     });
 
+    tinymce.init({
+        selector: 'textarea[tinymce="true"]',
+        language: 'ru',
+        plugins: ['lists', 'link', 'image', 'paste', 'table', 'code', 'preview'],
+        width: '40rem',
+        height: '20rem',
+        convert_urls: false,
+        setup: function(editor) {
+            editor.on('keypress keydown', function(event) {
+                return $.onCtrlS(event);
+            });
+        }
+    });
+
     $('form').submit(function() {
         $('span.error').fadeOut(200);
+
+        $('textarea[tinymce="true"]').each(function() {
+            var name = $(this).attr('name');
+
+			$(this).val(tinyMCE.get(name).getContent());
+		});
+
         $.blockUI();
 
         $(this).ajaxSubmit({

@@ -7,6 +7,7 @@
 @endsection
 
 @section('js')
+<script src="/packages/moonlight/js/tinymce/js/tinymce/tinymce.min.js"></script>
 <script src="/packages/moonlight/js/edit.js"></script>
 @endsection
 
@@ -23,6 +24,9 @@
             <div class="part"><a href="{{ route('moonlight.browse.element', $classId) }}">{{ $element->$mainProperty }}</a></div>
         </div>
         <div class="item active">
+            @if ($itemPluginView)
+                {!! $itemPluginView !!}
+            @endif
             <ul class="header">
                 <li class="h2"><span>Редактирование элемента типа &laquo;{{ $currentItem->getTitle() }}&raquo;</span></li>
             </ul>

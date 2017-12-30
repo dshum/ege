@@ -1,6 +1,6 @@
 <label>{{ $title }}:</label><br>
 @if ($readonly)
-<textarea name="{{ $name }}" placeholder="{{ $title }}" rows="7" readonly>{{ $value }}</textarea>
+<div>{!! $value !!}</div>
 @else
-<textarea name="{{ $name }}" placeholder="{{ $title }}" rows="7">{{ $value }}</textarea>
+<textarea name="{{ $name }}" tinymce="true">{!! $value !!}</textarea>
 @endif

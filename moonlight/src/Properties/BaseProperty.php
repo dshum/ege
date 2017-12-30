@@ -342,6 +342,11 @@ abstract class BaseProperty
 		return false;
 	}
 
+	public function refresh()
+	{
+		return true;
+	}
+
 	protected function setter()
 	{
 		return 'set'.$this->camelize($this->getName());

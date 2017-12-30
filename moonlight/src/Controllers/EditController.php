@@ -415,7 +415,7 @@ class EditController extends Controller
 
         foreach ($propertyList as $property) {
             if ($property->getHidden()) continue;
-            if ($property->getName() == 'deleted_at') continue;
+            if (! $property->refresh()) continue;
 
             $propertyScope = $property->setElement($element)->getEditView();
             
@@ -528,6 +528,40 @@ class EditController extends Controller
             ];
         }
 
+        /*
+         * Item plugin
+         */
+        
+        $itemPluginView = null;
+         
+        $itemPlugin = $site->getItemPlugin($currentItem->getNameId());
+
+        if ($itemPlugin) {
+            $view = \App::make($itemPlugin)->index($currentItem);
+
+            if ($view) {
+                $itemPluginView = is_string($view)
+                    ? $view : $view->render();
+            }
+        }
+
+        /*
+         * Edit plugin
+         */
+        
+        $editPluginView = null;
+         
+        $editPlugin = $site->getEditPlugin($classId);
+
+        if ($editPlugin) {
+            $view = \App::make($editPlugin)->index($element);
+
+            if ($view) {
+                $editPluginView = is_string($view)
+                    ? $view : $view->render();
+            }
+        }
+
         $mainProperty = $currentItem->getMainProperty();
         $propertyList = $currentItem->getPropertyList();
 
@@ -558,6 +592,8 @@ class EditController extends Controller
         $scope['mainProperty'] = $mainProperty;
         $scope['parents'] = $parents;
         $scope['currentItem'] = $currentItem;
+        $scope['itemPluginView'] = $itemPluginView;
+        $scope['editPluginView'] = $editPluginView;
         $scope['views'] = $views;
         $scope['rubrics'] = $rubrics;
         

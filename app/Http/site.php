@@ -179,6 +179,7 @@ $site->
 		addProperty(
 			ImageProperty::create('photo')->
 			setTitle('Фотография')->
+			setResize(200, 200, 100)->
 			setShow(true)
 		)->
         addProperty(
