@@ -20,7 +20,7 @@
         <div class="add-element">
             Добавить:
             @foreach ($creates as $index => $create)
-            <a href="">{{ $create['name'] }}</a>{{ $index < sizeof($creates) - 1 ? ',' : '' }}
+            <a href="{{ route('moonlight.element.create', ['root', $create['id']]) }}">{{ $create['name'] }}</a>{{ $index < sizeof($creates) - 1 ? ',' : '' }}
             @endforeach
         </div>
         @endif

@@ -1041,6 +1041,7 @@ class BrowseController extends Controller
         $rubrics = $rubricController->sidebar();
 
         $scope['element'] = $element;
+        $scope['classId'] = $classId;
         $scope['mainProperty'] = $mainProperty;
         $scope['parents'] = $parents;
         $scope['currentItem'] = $currentItem;

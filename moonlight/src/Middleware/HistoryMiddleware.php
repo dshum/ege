@@ -11,8 +11,6 @@ class HistoryMiddleware
     {   
         $loggedUser = LoggedUser::getUser();
         
-        $history = $loggedUser->getParameter('history');
-        
         $history = config('app.url').$request->getRequestUri();
         
         $loggedUser->setParameter('history', $history);

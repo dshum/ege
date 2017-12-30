@@ -129,8 +129,8 @@ $(function() {
                             .html(data.errors[field])
                             .fadeIn(200);
                     }
-                } else if (data.added) {
-                    
+                } else if (data.added && data.url) {
+                    document.location.href = data.url;
                 } else if (data.views) {
                     for (var field in data.views) {
                         $('div.row[name="' + field + '"]')

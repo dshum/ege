@@ -241,7 +241,7 @@ class EditController extends Controller
         
         $currentItem = $site->getItemByName($class);
         
-        if ( ! $currentItem) {
+        if (! $currentItem) {
             $scope['error'] = 'Класс элемента не найден.';
             
             return response()->json($scope);
@@ -251,7 +251,7 @@ class EditController extends Controller
         
         $propertyList = $currentItem->getPropertyList();
 
-        $input = [];
+        $inputs = [];
 		$rules = [];
 		$messages = [];
 
@@ -261,20 +261,22 @@ class EditController extends Controller
 				|| $property->getReadonly()
 			) continue;
             
-            $input[$propertyName] = $property->setRequest($request)->buildInput();
+            $value = $property->setRequest($request)->buildInput();
 
-			foreach ($property->getRules() as $rule => $message) {
-				$rules[$propertyName][] = $rule;
-				if (strpos($rule, ':')) {
-					list($name, $value) = explode(':', $rule, 2);
-					$messages[$propertyName.'.'.$name] = '<b>'.$property->getTitle().'.</b> '.$message;
-				} else {
-					$messages[$propertyName.'.'.$rule] = '<b>'.$property->getTitle().'.</b> '.$message;
-				}
-			}
+			if ($value) $inputs[$propertyName] = $value;
+            
+            foreach ($property->getRules() as $rule => $message) {
+                $rules[$propertyName][] = $rule;
+                if (strpos($rule, ':')) {
+                    list($name, $value) = explode(':', $rule, 2);
+                    $messages[$propertyName.'.'.$name] = $message;
+                } else {
+                    $messages[$propertyName.'.'.$rule] = $message;
+                }
+            }
 		}
         
-        $validator = Validator::make($input, $rules, $messages);
+        $validator = Validator::make($inputs, $rules, $messages);
         
         if ($validator->fails()) {
             $messages = $validator->errors();
@@ -314,11 +316,13 @@ class EditController extends Controller
         
         UserAction::log(
 			UserActionType::ACTION_TYPE_ADD_ELEMENT_ID,
-			$element->getClassId()
-		);
+			Element::getClassId($element)
+        );
         
-        $scope['added'] = $element->getClassId();
-        $scope['url'] = route('element.edit', $element->getClassId());
+        $history = $loggedUser->getParameter('history');
+        
+        $scope['added'] = Element::getClassId($element);
+        $scope['url'] = $history;
         
         return response()->json($scope);
     }
@@ -446,8 +450,8 @@ class EditController extends Controller
         } else {
             $parent = Element::getByClassId($classId);
             
-            if ( ! $parent) {
-                return redirect()->route('browse');
+            if (! $parent) {
+                return redirect()->route('moonlight.browse');
             }
         }
         
@@ -455,41 +459,59 @@ class EditController extends Controller
         
         $currentItem = $site->getItemByName($class);
         
-        if ( ! $currentItem) {
-            return $parent
-                ? redirect()->route('browse.element', $parent->getClassId())
-                : redirect()->route('browse');
+        if (! $currentItem) {
+            return redirect()->route('moonlight.browse');
         }
         
         $element = $currentItem->getClass();
+
+        $parents = [];
         
         if ($parent) {
-            $element->setParent($parent);
+            Element::setParent($element, $parent);
+
+            $parentList = Element::getParentList($element);
+
+            foreach ($parentList as $parent) {
+                $parentItem = Element::getItem($parent);
+                $parentMainProperty = $parentItem->getMainProperty();
+                $parents[] = [
+                    'classId' => Element::getClassId($parent),
+                    'name' => $parent->$parentMainProperty,
+                ];
+            }
         }
-        
+
         $propertyList = $currentItem->getPropertyList();
         
         $properties = [];
-		
-        foreach ($propertyList as $propertyName => $property) {
-			if ($property->getHidden()) continue;
-            if ($propertyName == 'deleted_at') continue;
+        $views = [];
 
-			$properties[] = $property->setElement($element);
-		}
-        
-        $history = $loggedUser->getParameter('history');
-        
-        if ( ! $history) {
-            $history = $parent 
-                ? route('browse.element', $parent->getClassId()) 
-                : route('browse');
+        foreach ($propertyList as $property) {
+            if ($property->getHidden()) continue;
+            if ($property->getName() == 'deleted_at') continue;
+
+            $properties[] = $property;
         }
 
-        $scope['parent'] = $parent;
+        foreach ($properties as $property) {
+            $propertyScope = $property->setElement($element)->getEditView();
+            
+            $views[$property->getName()] = view(
+                'moonlight::properties.'.$property->getClassName().'.edit', $propertyScope
+            )->render();
+        }
+
+        $rubricController = new RubricController;
+        
+        $rubrics = $rubricController->sidebar();
+
+        $scope['classId'] = $classId;
+        $scope['element'] = $element;
+        $scope['parents'] = $parents;
         $scope['currentItem'] = $currentItem;
-        $scope['properties'] = $properties;
-        $scope['history'] = $history;
+        $scope['views'] = $views;
+        $scope['rubrics'] = $rubrics;
         
         return view('moonlight::create', $scope);
     }
@@ -509,7 +531,7 @@ class EditController extends Controller
         
         $element = Element::getByClassId($classId);
         
-        if ( ! $element) {
+        if (! $element) {
             return redirect()->route('moonlight.browse');
         }
         

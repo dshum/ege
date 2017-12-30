@@ -162,6 +162,7 @@ $site->
 		addProperty(
 			MainProperty::create('email')->
 			setTitle('E-mail')->
+			addRule('email', 'Некорректный адрес электронной почты')->
 			setRequired(true)
 		)->
         addProperty(

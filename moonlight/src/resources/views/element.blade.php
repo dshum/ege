@@ -20,13 +20,13 @@
             <div class="part"><a href="{{ route('moonlight.browse.element', $parent['classId']) }}">{{ $parent['name'] }}</a></div>
             <div class="divider">/</div>
             @endforeach
-            <div class="part"><span>{{ $element->$mainProperty }}</span><a href="{{ route('moonlight.element.edit', \Moonlight\Main\Element::getClassId($element)) }}" class="edit"><i class="fa fa-pencil"></i></a></div>
+            <div class="part"><span>{{ $element->$mainProperty }}</span><a href="{{ route('moonlight.element.edit', $classId) }}" class="edit"><i class="fa fa-pencil"></i></a></div>
         </div>
         @if ($creates)
         <div class="add-element">
             Добавить:
             @foreach ($creates as $index => $create)
-            <a href="">{{ $create['name'] }}</a>{{ $index < sizeof($creates) - 1 ? ',' : '' }}
+            <a href="{{ route('moonlight.element.create', [$classId, $create['id']]) }}">{{ $create['name'] }}</a>{{ $index < sizeof($creates) - 1 ? ',' : '' }}
             @endforeach
         </div>
         @endif
@@ -34,7 +34,7 @@
             {!! $browsePluginView !!}
         @endif
         @foreach ($items as $item)
-        <div classId="{{ \Moonlight\Main\Element::getClassId($element) }}" item="{{ $item['id'] }}"></div>
+        <div classId="{{ $classId }}" item="{{ $item['id'] }}"></div>
         @endforeach
         @if (! $browsePluginView)
         <div class="empty {{ sizeof($items) > 0 ? 'dnone' : '' }}">

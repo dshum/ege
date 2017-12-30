@@ -131,13 +131,13 @@ Route::group(['prefix' => 'moonlight'], function() {
         
         Route::post('/elements/restore', ['as' => 'moonlight.elements.restore', 'uses' => 'Moonlight\Controllers\BrowseController@restore']);
 
-        Route::get('/browse/{classId}/{item}/create', ['as' => 'moonlight.element.create', 'uses' => 'Moonlight\Controllers\EditController@create'])->
+        Route::get('/browse/{classId}/create/{item}', ['as' => 'moonlight.element.create', 'uses' => 'Moonlight\Controllers\EditController@create'])->
             where(['classId' => '[A-Za-z0-9\.]+', 'item' => '[A-Za-z0-9\.]+']);
 
         Route::get('/browse/{classId}/edit', ['as' => 'moonlight.element.edit', 'uses' => 'Moonlight\Controllers\EditController@edit'])->
             where(['classId' => '[A-Za-z0-9\.]+']);
         
-        Route::post('/browse/{item}/add', ['as' => 'moonlight.element.add', 'uses' => 'Moonlight\Controllers\EditController@add'])->
+        Route::post('/browse/add/{item}', ['as' => 'moonlight.element.add', 'uses' => 'Moonlight\Controllers\EditController@add'])->
             where(['item' => '[A-Za-z0-9\.]+']);
         
         Route::post('/browse/{classId}/save', ['as' => 'moonlight.element.save', 'uses' => 'Moonlight\Controllers\EditController@save'])->
