@@ -51,6 +51,17 @@
         </div>
     </div>
 </div>
+<div class="confirm">
+    <div class="container">
+        <div class="content">
+            Удалить элемент &laquo;{{ $element->$mainProperty }}&raquo;?
+        </div>
+        <div class="bottom">
+            <input type="button" value="Удалить" class="btn danger remove" url="{{ route('moonlight.element.delete', $classId) }}">
+            <input type="button" value="Отмена" class="btn cancel">
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('sidebar')

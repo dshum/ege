@@ -152,6 +152,33 @@ $(function() {
         $('form').submit();
     });
 
+    $('.button.delete.enabled').click(function() {
+        $.confirm();
+    });
+
+    $('.confirm .remove').click(function() {
+        var url = $(this).attr('url');
+
+        if (! url) return false;
+
+        $.confirmClose();
+        $.blockUI();
+
+        $.post(
+            url,
+            {},
+            function(data) {
+                $.unblockUI();
+
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.deleted && data.url) {
+                    document.location.href = data.url;
+                }
+            }
+        );
+    });
+
     $('.sidebar .elements .h2 span').click(function() {
         var block = $(this).parents('.elements');
         var rubric = block.attr('rubric');

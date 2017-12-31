@@ -1,4 +1,4 @@
-@if ($itemPluginView)
+@if ($total && $itemPluginView)
     {!! $itemPluginView !!}
 @endif
 @if ($total || isset($hasBrowseFilter))

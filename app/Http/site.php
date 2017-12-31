@@ -329,7 +329,8 @@ $site->
 			setRelatedClass('App\Topic')->
 			setParent(true)->
             setOpenItem(true)->
-			setShow(true)
+			setShow(true)->
+			setRequired(true)
 		)->
 		addProperty(
 			OneToOneProperty::create('subtopic_id')->

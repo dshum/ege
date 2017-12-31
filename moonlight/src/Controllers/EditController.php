@@ -2,9 +2,10 @@
 
 namespace Moonlight\Controllers;
 
-use Log;
 use Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Moonlight\Main\LoggedUser;
 use Moonlight\Main\Element;
 use Moonlight\Main\UserActionType;
@@ -172,13 +173,13 @@ class EditController extends Controller
         
 		$element = Element::getByClassId($classId);
         
-        if ( ! $element) {
+        if (! $element) {
             $scope['error'] = 'Элемент не найден.';
             
             return response()->json($scope);
         }
         
-        if ( ! $loggedUser->hasDeleteAccess($element)) {
+        if (! $loggedUser->hasDeleteAccess($element)) {
 			$scope['error'] = 'Нет прав на удаление элемента.';
             
 			return response()->json($scope);
@@ -186,7 +187,7 @@ class EditController extends Controller
         
         $site = \App::make('site');
 
-		$className = $element->getClass();
+		$currentItem = Element::getItem($element);
         
         $itemList = $site->getItemList();
 
@@ -197,7 +198,7 @@ class EditController extends Controller
 			foreach ($propertyList as $property) {
 				if (
 					$property->isOneToOne()
-					&& $property->getRelatedClass() == $className
+					&& $property->getRelatedClass() == $currentItem->getName()
 				) {
 					$count = $element->
 						hasMany($itemName, $property->getName())->
@@ -215,10 +216,26 @@ class EditController extends Controller
         if ($element->delete()) {
             UserAction::log(
                 UserActionType::ACTION_TYPE_DROP_ELEMENT_TO_TRASH_ID,
-                $element->getClassId()
+                $classId
             );
 
-            $scope['deleted'] = $element->getClassId();
+            if (Cache::has('trashItemTotal['.$currentItem->getNameId().']')) {
+                Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
+            }
+
+            $historyUrl = $loggedUser->getParameter('history');
+            $elementUrl = route('moonlight.browse.element', $classId);
+
+            if (! $historyUrl || $historyUrl == $elementUrl) {
+                $parent = Element::getParent($element);
+
+                $historyUrl = $parent
+                    ? route('moonlight.browse.element', Element::getClassId($parent))
+                    : route('moonlight.browse');
+            }
+            
+            $scope['deleted'] = $classId;
+            $scope['url'] = $historyUrl;
         } else {
             $scope['error'] = 'Не удалось удалить элемент.';
         }
@@ -320,6 +337,14 @@ class EditController extends Controller
         );
         
         $history = $loggedUser->getParameter('history');
+        
+        if (! $history) {
+            $parent = Element::getParent($element);
+
+            $history = $parent
+                ? route('moonlight.browse.element', Element::getClassId($parent))
+                : route('moonlight.browse');
+        }
         
         $scope['added'] = Element::getClassId($element);
         $scope['url'] = $history;
