@@ -37,6 +37,8 @@ $(function() {
 
             if (data.html && data.html.length) {
                 $('.main div[item="' + item + '"]').html(data.html);
+            } else {
+                $('.main div[item="' + item + '"]').fadeOut(200);
             }
         }).fail(function() {
             $.unblockUI();
@@ -138,6 +140,7 @@ $(function() {
 
     $('body').on('click', '.confirm .btn.remove', function() {
         var itemContainer = $(this).parents('div[item]');
+        var classId = itemContainer.attr('classId');
         var item = itemContainer.attr('item');
 
         $.confirmClose();
@@ -155,11 +158,7 @@ $(function() {
                 if (data.error) {
                     $.alert(data.error);
                 } else if (data.deleted) {
-                    for (var index in data.deleted) {
-                        var id = data.deleted[index];
-
-                        $('tr.checked[elementId="' + id + '"]').hide();
-                    }
+                    getElements(item, classId);
                 }
             }
         );
