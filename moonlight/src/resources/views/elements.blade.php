@@ -74,6 +74,17 @@
         @endif
     </div>
 </div>
+<div class="confirm" id="{{ $currentItem->getNameId() }}_restore">
+    <div class="container">
+        <div class="content">
+            Восстановить выбранные элементы?
+        </div>
+        <div class="bottom">
+            <input type="button" value="Восстановить" class="btn restore">
+            <input type="button" value="Отмена" class="btn cancel">
+        </div>
+    </div>
+</div>
 <div class="confirm" id="{{ $currentItem->getNameId() }}_delete">
     <div class="container">
         <div class="content">

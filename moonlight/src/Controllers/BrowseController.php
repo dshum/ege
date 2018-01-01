@@ -398,7 +398,7 @@ class BrowseController extends Controller
             $scope['deleted'][] = $element->id;
         }
         
-        if (isset($scope['deleted'])) {
+        if (sizeof($deleted)) {
             UserAction::log(
                 UserActionType::ACTION_TYPE_DROP_ELEMENT_LIST_ID,
                 implode(', ', $deleted)
@@ -413,7 +413,7 @@ class BrowseController extends Controller
     }
     
     /**
-     * Delete elements from trash.
+     * Restore elements from trash.
      *
      * @return Response
      */
@@ -423,9 +423,23 @@ class BrowseController extends Controller
         
         $loggedUser = LoggedUser::getUser();
         
+        $class = $request->input('item');
+
+        $site = \App::make('site');
+        
+        $currentItem = $site->getItemByName($class);
+        
+        if (! $currentItem) {
+            $scope['error'] = 'Класс элементов не найден.';
+            
+            return response()->json($scope);
+        }
+
+        $mainProperty = $currentItem->getMainProperty();
+
         $checked = $request->input('checked');
         
-        if ( ! is_array($checked) || ! sizeof($checked)) {
+        if (! is_array($checked) || ! sizeof($checked)) {
             $scope['error'] = 'Пустой список элементов.';
             
             return response()->json($scope);
@@ -433,31 +447,40 @@ class BrowseController extends Controller
         
         $elements = [];
         
-        foreach ($checked as $classId) {
-            $element = Element::getOnlyTrashedByClassId($classId);
+        foreach ($checked as $id) {
+            $element = $currentItem->getClass()->onlyTrashed()->find($id);
             
             if ($element && $loggedUser->hasDeleteAccess($element)) {
                 $elements[] = $element;
             }
         }
         
-        if ( ! sizeof($elements)) {
+        if (! sizeof($elements)) {
             $scope['error'] = 'Нет элементов для восстановления.';
             
             return response()->json($scope);
         }
+
+        $restored = [];
         
         foreach ($elements as $element) {
+            $classId = Element::getClassId($element);
+
             $element->restore();
-            
-            $scope['restored'][] = $element->getClassId();
+
+            $restored[] = $classId;
+            $scope['restored'][] = $element->id;
         }
         
-        if (isset($scope['restored'])) {
+        if (sizeof($restored)) {
             UserAction::log(
                 UserActionType::ACTION_TYPE_RESTORE_ELEMENT_LIST_ID,
-                implode(', ', $scope['restored'])
+                implode(', ', $restored)
             );
+
+            if (Cache::has('trashItemTotal['.$currentItem->getNameId().']')) {
+                Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
+            }
         }
         
         return response()->json($scope);

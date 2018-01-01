@@ -4,7 +4,7 @@ jQuery.expr[':'].contains = function(a, i, m) {
 
 $(function() {
     var checked = {};
-    
+
     var getElements = function(item, page) {
         $.blockUI();
 
@@ -191,7 +191,6 @@ $(function() {
 
     $('body').on('click', '.confirm .btn.remove', function() {
         var itemContainer = $(this).parents('div[item]');
-        var classId = itemContainer.attr('classId');
         var item = itemContainer.attr('item');
 
         $.confirmClose();
@@ -209,7 +208,7 @@ $(function() {
                 if (data.error) {
                     $.alert(data.error);
                 } else if (data.deleted) {
-                    getElements(item, classId);
+                    getElements(item);
                 }
             }
         );

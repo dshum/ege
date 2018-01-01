@@ -136,6 +136,8 @@ Route::group(['prefix' => 'moonlight'], function() {
 
         Route::post('/elements/delete', ['as' => 'moonlight.elements.delete', 'uses' => 'Moonlight\Controllers\BrowseController@delete']);
 
+        Route::post('/elements/restore', ['as' => 'moonlight.elements.restore', 'uses' => 'Moonlight\Controllers\BrowseController@restore']);
+
         Route::post('/elements/delete/force', ['as' => 'moonlight.elements.delete.force', 'uses' => 'Moonlight\Controllers\BrowseController@forceDelete']);
 
         Route::get('/browse/{classId}/create/{item}', ['as' => 'moonlight.element.create', 'uses' => 'Moonlight\Controllers\EditController@create'])->

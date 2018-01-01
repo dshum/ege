@@ -178,6 +178,13 @@ $(function() {
         }
     });
 
+    $('body').on('click', '.button.restore.enabled', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        $.confirm(null, '.confirm[id="' + item + '_restore"]');
+    });
+
     $('body').on('click', '.button.delete.enabled', function() {
         var itemContainer = $(this).parents('div[item]');
         var item = itemContainer.attr('item');
@@ -185,9 +192,33 @@ $(function() {
         $.confirm(null, '.confirm[id="' + item + '_delete"]');
     });
 
+    $('body').on('click', '.confirm .btn.restore', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        $.confirmClose();
+        $.blockUI();
+
+        $.post(
+            '/moonlight/elements/restore',
+            {
+                item: item,
+                checked: checked[item]
+            },
+            function(data) {
+                $.unblockUI();
+
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.restored) {
+                    getElements(item);
+                }
+            }
+        );
+    });
+
     $('body').on('click', '.confirm .btn.remove', function() {
         var itemContainer = $(this).parents('div[item]');
-        var classId = itemContainer.attr('classId');
         var item = itemContainer.attr('item');
 
         $.confirmClose();
@@ -205,7 +236,7 @@ $(function() {
                 if (data.error) {
                     $.alert(data.error);
                 } else if (data.deleted) {
-                    getElements(item, classId);
+                    getElements(item);
                 }
             }
         );
