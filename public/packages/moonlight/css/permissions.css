@@ -11,7 +11,7 @@ table.permissions.elements {
 }
 
 table.permissions.elements tr {
-  vertical-align: bottom;
+  vertical-align: middle;
 }
 
 table.permissions.elements th.title,

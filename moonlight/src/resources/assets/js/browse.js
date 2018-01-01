@@ -2,6 +2,7 @@ $(function() {
     var itemTotal = $('.main div[item]').length;
     var itemCount = 0;
     var empty = true;
+    var checked = {};
 
     var loadElements = function(item, classId = null) {
         $.getJSON('/moonlight/elements/list', {
@@ -89,6 +90,79 @@ $(function() {
                 }
             });
         }
+    });
+
+    $('body').on('click', 'td.check', function() {
+        var tr = $(this).parent();
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+        var elementId = tr.attr('elementId');
+
+        if (typeof checked[item] === 'undefined') {
+            checked[item] = [];
+        }
+
+        var index = checked[item].indexOf(elementId);
+
+        if (tr.hasClass('checked')) {
+            if (index > -1) {
+                checked[item].splice(index, 1);
+            }
+
+            tr.removeClass('checked');
+        } else {
+            if (index === -1) {
+                checked[item].push(elementId);
+            }
+
+            tr.addClass('checked');
+        }
+
+        if (checked[item].length) {
+            itemContainer.find('.button.copy').addClass('enabled');
+            itemContainer.find('.button.move').addClass('enabled');
+            itemContainer.find('.button.delete').addClass('enabled');
+        } else {
+            itemContainer.find('.button.copy').removeClass('enabled');
+            itemContainer.find('.button.move').removeClass('enabled');
+            itemContainer.find('.button.delete').removeClass('enabled');
+        }
+    });
+
+    $('body').on('click', '.button.delete.enabled', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        $.confirm(null, '.confirm[id="' + item + '_delete"]');
+    });
+
+    $('body').on('click', '.confirm .btn.remove', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        $.confirmClose();
+        $.blockUI();
+
+        $.post(
+            '/moonlight/elements/delete',
+            {
+                item: item,
+                checked: checked[item]
+            },
+            function(data) {
+                $.unblockUI();
+
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.deleted) {
+                    for (var index in data.deleted) {
+                        var id = data.deleted[index];
+
+                        $('tr.checked[elementId="' + id + '"]').hide();
+                    }
+                }
+            }
+        );
     });
 
     $('body').on('click', 'ul.pager > li[prev].active', function () {

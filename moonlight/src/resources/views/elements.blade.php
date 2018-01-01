@@ -24,10 +24,10 @@
             <div class="button restore"><i class="fa fa-arrow-left"></i>Восстановить</div>
             <div class="button delete"><i class="fa fa-trash-o"></i>Удалить</div>
             @else
-            <div class="button save enabled"><i class="fa fa-floppy-o"></i>Сохранить</div>
-            <div class="button copy enabled"><i class="fa fa-clone"></i>Копировать</div>
-            <div class="button move enabled"><i class="fa fa-arrow-right"></i>Перенести</div>
-            <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
+            <div class="button save"><i class="fa fa-floppy-o"></i>Сохранить</div>
+            <div class="button copy"><i class="fa fa-clone"></i>Копировать</div>
+            <div class="button move"><i class="fa fa-arrow-right"></i>Перенести</div>
+            <div class="button delete"><i class="fa fa-trash-o"></i>Удалить</div>
             @endif
         </div>
         <table class="elements">
@@ -42,7 +42,7 @@
             </thead>
             <tbody>
                 @foreach ($elements as $element)
-                <tr>
+                <tr elementId="{{ $element->id }}">
                     @if ($mode == 'browse')
                     <td class="browse"><a href="{{ route('moonlight.browse.element', \Moonlight\Main\Element::getClassId($element)) }}"><i class="fa fa-angle-right"></i></a></td>
                     @elseif ($mode == 'search')
@@ -72,6 +72,17 @@
         @else
         <div class="empty">Элементов не найдено.</div>
         @endif
+    </div>
+</div>
+<div class="confirm" id="{{ $currentItem->getNameId() }}_delete">
+    <div class="container">
+        <div class="content">
+            Удалить выбранные элементы?
+        </div>
+        <div class="bottom">
+            <input type="button" value="Удалить" class="btn danger remove">
+            <input type="button" value="Отмена" class="btn cancel">
+        </div>
     </div>
 </div>
 @elseif ($mode != 'browse')

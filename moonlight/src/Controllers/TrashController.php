@@ -169,7 +169,7 @@ class TrashController extends Controller
             Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
         }
 
-        $url = route('moonlight.trash.item', [$currentItem->getNameId(), 'action' => 'search']);
+        $url = route('moonlight.trash.item', $currentItem->getNameId());
         
         $scope['restored'] = $classId;
         $scope['url'] = $url;
@@ -223,7 +223,7 @@ class TrashController extends Controller
             Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
         }
 
-        $url = route('moonlight.trash.item', [$currentItem->getNameId(), 'action' => 'search']);
+        $url = route('moonlight.trash.item', $currentItem->getNameId());
         
         $scope['deleted'] = $classId;
         $scope['url'] = $url;
@@ -260,7 +260,6 @@ class TrashController extends Controller
 
         foreach ($propertyList as $property) {
             if ($property->getHidden()) continue;
-            if ($property->getName() == 'deleted_at') continue;
 
             $properties[] = $property;
         }
@@ -310,7 +309,7 @@ class TrashController extends Controller
         
         $currentItem = $site->getItemByName($class);
         
-        if ( ! $currentItem) {
+        if (! $currentItem) {
             return redirect()->route('moonlight.trash');
         }
 
@@ -336,20 +335,6 @@ class TrashController extends Controller
         $actives = [];
         $links = [];
         $views = [];
-        $orderProperties = [];
-        $ones = [];
-        $hasOrderProperty = false;
-        
-        foreach ($propertyList as $property) {
-            if ($property instanceof OrderProperty) {
-                $orderProperties[] = $property;
-                $hasOrderProperty = true;
-            }
-            
-            if ($property->getHidden()) continue;
-            
-            $orderProperties[] = $property;
-        }
         
         foreach ($propertyList as $property) {
             if ($property->getHidden()) continue;
@@ -382,25 +367,13 @@ class TrashController extends Controller
             }
         }
         
-        $action = $request->input('action');
-        
-        if ($action == 'search') {
-            $elements = $this->elementListView($request, $currentItem);
-        } else {
-            $elements = null;
-        }
-        
-        $sort = $request->input('sort');
+        $elements = $this->elementListView($request, $currentItem);
         
         $scope['currentItem'] = $currentItem;
         $scope['properties'] = $properties;
         $scope['actives'] = $actives;
         $scope['links'] = $links;
         $scope['views'] = $views;
-        $scope['orderProperties'] = $orderProperties;
-        $scope['hasOrderProperty'] = $hasOrderProperty;
-        $scope['action'] = $action;
-        $scope['sort'] = $sort;
         $scope['elements'] = $elements;
         $scope['items'] = $items;
         $scope['totals'] = $totals;
@@ -535,7 +508,7 @@ class TrashController extends Controller
             }
 		);
 
-		if ( ! $loggedUser->isSuperUser()) {
+		if (! $loggedUser->isSuperUser()) {
 			if (
 				$permissionDenied
 				&& sizeof($allowedElementList)
@@ -551,7 +524,7 @@ class TrashController extends Controller
 			}
 		}
         
-        $sort = $request->input('sort');
+        $sort = 'deleted_at'; //$request->input('sort');
         $property = $currentItem->getPropertyByName($sort);
         
         if ($property instanceof DateProperty) {

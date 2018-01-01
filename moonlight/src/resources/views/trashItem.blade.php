@@ -46,9 +46,7 @@
             </div>
         </form>
         <div class="list-container">
-            @if ($action == 'search')
-            {!! $elements !!}
-            @endif
+        {!! $elements !!}
         </div>
     </div>
 </div>

@@ -1,10 +1,34 @@
+jQuery.expr[':'].contains = function(a, i, m) {
+    return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+};
+
 $(function() {
+    $('#filter').keyup(function () {
+        var str = $(this).val();
+
+        if (str.length > 0) {
+            $('ul.items > li:not(:contains("' + str + '"))').hide();
+            $('ul.items > li:contains("' + str + '")').show();
+        } else {
+            $('ul.items > li').show();
+        }
+    }).change(function () {
+        var str = $(this).val();
+
+        if (str.length > 0) {
+            $('ul.items > li:not(:contains("' + str + '"))').hide();
+            $('ul.items > li:contains("' + str + '")').show();
+        } else {
+            $('ul.items > li').show();
+        }
+    });
+    
     $('.button.enabled.restore').click(function() {
-        $.confirm('#restore');
+        $.confirm(null, '#restore');
     });
 
     $('.button.enabled.delete').click(function() {
-        $.confirm('#delete');
+        $.confirm(null, '#delete');
     });
 
     $('.confirm .restore').click(function() {

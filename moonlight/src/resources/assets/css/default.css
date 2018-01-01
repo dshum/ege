@@ -125,7 +125,6 @@ button:focus {
 .btn {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
   border: none;
-  border-top: 1px solid #26a69a;
   border-radius: 2px;
   outline: none;
   height: 3rem;
@@ -532,7 +531,7 @@ div.empty > div:last-child {
 .buttons {
   display: table;
   width: 100%;
-  min-width: 21rem;
+  min-width: 22rem;
   margin: 0 0 1rem 0;
   border-bottom: 3px solid purple;
   white-space: nowrap;
@@ -639,11 +638,17 @@ table.elements > tbody > tr:nth-child(odd) {
 }
 
 table.elements > tbody > tr.checked {
-  background-color: #e7faea;
+  background-color: #cee;
 }
 
 table.elements tr:last-child {
   border: none;
+}
+
+table.elements > tbody > tr:not(.checked):hover,
+table.elements > tbody > tr:nth-child(odd):not(.checked):hover,
+table.elements > tbody > tr:nth-child(even):not(.checked):hover {
+  background-color: #e7e8ff;
 }
 
 table.elements th {
@@ -748,7 +753,7 @@ table.elements thead > tr.checked div.check {
 }
 
 table.elements tbody > tr.checked div.check {
-  background-color: #acb;
+  background-color: #395;
 }
 
 table.elements tbody > tr.chosen {

@@ -617,8 +617,8 @@ $site->
 		addRubric(
 			Rubric::create('topic_'.$topic->id, $topic->name)->
 			addElement(Element::getClassId($topic), $topic->name)->
-			addList('App.Subtopic')->
-			addList('App.Test')
+			addList([Element::getClassId($topic) => 'App.Subtopic'])->
+			addList([Element::getClassId($topic) => 'App.Test'])
 		);
 	}
 

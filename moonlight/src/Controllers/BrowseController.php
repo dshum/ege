@@ -2,8 +2,9 @@
 
 namespace Moonlight\Controllers;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Moonlight\Main\LoggedUser;
 use Moonlight\Main\Element;
 use Moonlight\Main\Site;
@@ -16,32 +17,6 @@ use Moonlight\Properties\ImageProperty;
 
 class BrowseController extends Controller
 {
-    /**
-     * Browse plugin.
-     *
-     * @return Response
-     */
-    public function plugin(Request $request, $classId, $method)
-    {
-        $element = Element::getByClassId($classId);
-        
-        if ( ! $element) {
-            $scope['error'] = 'Элемент не найден';
-            
-            return response()->json($scope);
-        }
-        
-        $browsePlugin = \App::make('site')->getBrowsePlugin($classId);
-
-        if ( ! $browsePlugin) {
-            $scope['error'] = 'Плагин не найден';
-            
-            return response()->json($scope);
-        }
-
-        return \App::make($browsePlugin)->$method($request, $element);
-    }
-    
     /**
      * Order elements.
      *
@@ -250,9 +225,23 @@ class BrowseController extends Controller
         
         $loggedUser = LoggedUser::getUser();
         
+        $class = $request->input('item');
+
+        $site = \App::make('site');
+        
+        $currentItem = $site->getItemByName($class);
+        
+        if (! $currentItem) {
+            $scope['error'] = 'Класс элементов не найден.';
+            
+            return response()->json($scope);
+        }
+
+        $mainProperty = $currentItem->getMainProperty();
+
         $checked = $request->input('checked');
         
-        if ( ! is_array($checked) || ! sizeof($checked)) {
+        if (! is_array($checked) || ! sizeof($checked)) {
             $scope['error'] = 'Пустой список элементов.';
             
             return response()->json($scope);
@@ -260,8 +249,8 @@ class BrowseController extends Controller
         
         $elements = [];
         
-        foreach ($checked as $classId) {
-            $element = Element::getByClassId($classId);
+        foreach ($checked as $id) {
+            $element = $currentItem->getClass()->find($id);
             
             if ($element && $loggedUser->hasDeleteAccess($element)) {
                 $elements[] = $element;
@@ -279,9 +268,8 @@ class BrowseController extends Controller
         $itemList = $site->getItemList();
         
         foreach ($elements as $element) {
-            $elementItem = $element->getItem();
-            $className = $element->getClass();
-            
+            $classId = Element::getClassId($element);
+
             foreach ($itemList as $item) {
                 $itemName = $item->getName();
                 $propertyList = $item->getPropertyList();
@@ -289,14 +277,17 @@ class BrowseController extends Controller
                 foreach ($propertyList as $property) {
                     if (
                         $property->isOneToOne()
-                        && $property->getRelatedClass() == $className
+                        && $property->getRelatedClass() == $currentItem->getName()
                     ) {
                         $count = $element->
                             hasMany($itemName, $property->getName())->
                             count();
 
                         if ($count) {
-                            $scope['restricted'][] = $element->{$elementItem->getMainProperty()};
+                            $scope['restricted'][$classId] = 
+                                '<a href="'.route('moonlight.browse.element', $classId).'" target="_blank">'
+                                .$element->{$mainProperty}
+                                .'</a>';
                         }
                     }
                 }
@@ -304,23 +295,32 @@ class BrowseController extends Controller
         }
 
 		if (isset($scope['restricted'])) {
-            $scope['error'] = 'Сначала удалите вложенные элементы следующих элементов: '
-                .implode(', ', $scope['restricted']);
+            $scope['error'] = 'Сначала удалите вложенные элементы следующих элементов:<br>'
+                .implode('<br>', $scope['restricted']);
             
             return response()->json($scope);
         }
+
+        $deleted = [];
         
         foreach ($elements as $element) {
+            $classId = Element::getClassId($element);
+
             if ($element->delete()) {
-                $scope['deleted'][] = $element->getClassId();
+                $deleted[] = $classId;
+                $scope['deleted'][] = $element->id;
             }
         }
         
         if (isset($scope['deleted'])) {
             UserAction::log(
                 UserActionType::ACTION_TYPE_DROP_ELEMENT_LIST_TO_TRASH_ID,
-                implode(', ', $scope['deleted'])
+                implode(', ', $deleted)
             );
+
+            if (Cache::has('trashItemTotal['.$currentItem->getNameId().']')) {
+                Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
+            }
         }
         
         return response()->json($scope);

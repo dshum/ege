@@ -49,7 +49,7 @@ $(function() {
         $('.alert').fadeOut('fast', handle);
     };
     
-    $.confirm = function(selector, content, handle) {
+    $.confirm = function(content, selector, handle) {
         var container = selector ? $(selector) : $('.confirm');
         
         if (content) {
@@ -69,25 +69,21 @@ $(function() {
 		return $.onCtrlS(event);
 	}).keydown(function(event) {
 		return $.onCtrlS(event);
-	});
-    
-    $('.alert .container').click(function(e) {
-        return false;
     });
     
-    $('.alert .hide').click(function() {
+    $('body').on('click', '.alert .container', function(event) {
+        event.stopPropagation();
+    });
+    
+    $('body').on('click', '.alert .hide', function() {
         $('.alert').fadeOut('fast');
     });
     
-    $('.alert').click(function() {
+    $('body').on('click', '.alert', function() {
         $('.alert').fadeOut('fast');
     });
 
-    $('.confirm .container').click(function(e) {
-        return false;
-    });
-    
-    $('.confirm .cancel').click(function() {
+    $('body').on('click', '.confirm .cancel', function() {
         $('.confirm').fadeOut('fast');
     });
 });

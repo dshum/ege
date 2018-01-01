@@ -26,7 +26,7 @@ Route::group(['prefix' => 'moonlight'], function() {
         AuthMiddleware::class,
         VerifyCsrfToken::class,
     ]], function () {
-        Route::get('/', ['as' => 'moonlight.home', 'uses' => 'Moonlight\Controllers\HomeController@show']);
+        Route::get('/', ['as' => 'moonlight.home', 'uses' => 'Moonlight\Controllers\HomeController@index']);
 
         Route::get('/logout', ['as' => 'moonlight.logout', 'uses' => 'Moonlight\Controllers\LoginController@logout']);
        
@@ -133,7 +133,7 @@ Route::group(['prefix' => 'moonlight'], function() {
         Route::post('/elements/copy', ['as' => 'moonlight.elements.copy', 'uses' => 'Moonlight\Controllers\BrowseController@copy']);
         
         Route::post('/elements/move', ['as' => 'moonlight.elements.move', 'uses' => 'Moonlight\Controllers\BrowseController@move']);
-        
+
         Route::post('/elements/delete', ['as' => 'moonlight.elements.delete', 'uses' => 'Moonlight\Controllers\BrowseController@delete']);
 
         Route::get('/browse/{classId}/create/{item}', ['as' => 'moonlight.element.create', 'uses' => 'Moonlight\Controllers\EditController@create'])->
