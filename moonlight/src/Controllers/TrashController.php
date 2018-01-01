@@ -130,6 +130,54 @@ class TrashController extends Controller
     }
 
     /**
+     * Restore element.
+     *
+     * @return Response
+     */
+    public function restore(Request $request, $classId)
+    {
+        $scope = [];
+        
+        $loggedUser = LoggedUser::getUser();
+        
+        $element = Element::getByClassIdOnlyTrashed($classId);
+        
+        if (! $element) {
+            $scope['error'] = 'Элемент не найден.';
+            
+            return response()->json($scope);
+        }
+        
+        if (! $loggedUser->hasDeleteAccess($element)) {
+            $scope['error'] = 'Нет прав на восстановление элемента.';
+            
+            return response()->json($scope);
+        }
+        
+        $site = \App::make('site');
+
+        $currentItem = Element::getItem($element);
+
+        $element->restore();
+
+        UserAction::log(
+            UserActionType::ACTION_TYPE_RESTORE_ELEMENT_ID,
+            $classId
+        );
+
+        if (Cache::has('trashItemTotal['.$currentItem->getNameId().']')) {
+            Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
+        }
+
+        $url = route('moonlight.trash.item', [$currentItem->getNameId(), 'action' => 'search']);
+        
+        $scope['restored'] = $classId;
+        $scope['url'] = $url;
+        
+        return response()->json($scope);
+    }
+
+    /**
      * Delete element.
      *
      * @return Response

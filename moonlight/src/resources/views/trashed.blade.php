@@ -38,7 +38,18 @@
         </div>
     </div>
 </div>
-<div class="confirm">
+<div class="confirm" id="restore">
+    <div class="container">
+        <div class="content">
+            Восстановить элемент &laquo;{{ $element->$mainProperty }}&raquo;?
+        </div>
+        <div class="bottom">
+            <input type="button" value="Восстановить" class="btn restore" url="{{ route('moonlight.trashed.restore', $classId) }}">
+            <input type="button" value="Отмена" class="btn cancel">
+        </div>
+    </div>
+</div>
+<div class="confirm" id="delete">
     <div class="container">
         <div class="content">
             Удалить элемент &laquo;{{ $element->$mainProperty }}&raquo;?

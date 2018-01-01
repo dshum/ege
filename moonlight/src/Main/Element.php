@@ -82,12 +82,7 @@ final class Element
 			$id = array_pop($array);
 			$class = implode('\\', $array);
 
-			return \Cache::rememberForever(
-				"getOnlyTrashedByClassId($classId)",
-				function () use ($class, $id) {
-					return $class::onlyTrashed()->find($id);
-				}
-			);
+			return $class::onlyTrashed()->find($id);
 
 		} catch (\Exception $e) {}
 

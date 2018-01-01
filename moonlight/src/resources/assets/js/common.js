@@ -49,7 +49,7 @@ $(function() {
         $('.alert').fadeOut('fast', handle);
     };
     
-    $.confirm = function(content, selector, handle) {
+    $.confirm = function(selector, content, handle) {
         var container = selector ? $(selector) : $('.confirm');
         
         if (content) {
