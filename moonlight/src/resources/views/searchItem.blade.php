@@ -45,7 +45,7 @@
                 </div>
             </div>
         </form>
-        <div class="list-container">
+        <div class="list-container" item="{{ $currentItem->getNameId() }}">
             @if ($action == 'search')
             {!! $elements !!}
             @endif

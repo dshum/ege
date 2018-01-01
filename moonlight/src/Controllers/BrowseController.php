@@ -263,8 +263,6 @@ class BrowseController extends Controller
             return response()->json($scope);
         }
         
-        $site = \App::make('site');
-        
         $itemList = $site->getItemList();
         
         foreach ($elements as $element) {
@@ -351,9 +349,23 @@ class BrowseController extends Controller
         
         $loggedUser = LoggedUser::getUser();
         
+        $class = $request->input('item');
+
+        $site = \App::make('site');
+        
+        $currentItem = $site->getItemByName($class);
+        
+        if (! $currentItem) {
+            $scope['error'] = 'Класс элементов не найден.';
+            
+            return response()->json($scope);
+        }
+
+        $mainProperty = $currentItem->getMainProperty();
+
         $checked = $request->input('checked');
         
-        if ( ! is_array($checked) || ! sizeof($checked)) {
+        if (! is_array($checked) || ! sizeof($checked)) {
             $scope['error'] = 'Пустой список элементов.';
             
             return response()->json($scope);
@@ -361,39 +373,40 @@ class BrowseController extends Controller
         
         $elements = [];
         
-        foreach ($checked as $classId) {
-            $element = Element::getOnlyTrashedByClassId($classId);
+        foreach ($checked as $id) {
+            $element = $currentItem->getClass()->onlyTrashed()->find($id);
             
             if ($element && $loggedUser->hasDeleteAccess($element)) {
                 $elements[] = $element;
             }
         }
         
-        if ( ! sizeof($elements)) {
+        if (! sizeof($elements)) {
             $scope['error'] = 'Нет элементов для удаления.';
             
             return response()->json($scope);
         }
+
+        $deleted = [];
         
         foreach ($elements as $element) {
-            $item = $element->getItem();
-
-            $propertyList = $item->getPropertyList();
-
-            foreach ($propertyList as $propertyName => $property) {
-                $property->setElement($element)->drop();
-            }
+            $classId = Element::getClassId($element);
 
             $element->forceDelete();
-            
-            $scope['deleted'][] = $element->getClassId();
+
+            $deleted[] = $classId;
+            $scope['deleted'][] = $element->id;
         }
         
         if (isset($scope['deleted'])) {
             UserAction::log(
                 UserActionType::ACTION_TYPE_DROP_ELEMENT_LIST_ID,
-                implode(', ', $scope['deleted'])
+                implode(', ', $deleted)
             );
+
+            if (Cache::has('trashItemTotal['.$currentItem->getNameId().']')) {
+                Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
+            }
         }
         
         return response()->json($scope);

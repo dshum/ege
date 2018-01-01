@@ -3,6 +3,8 @@ jQuery.expr[':'].contains = function(a, i, m) {
 };
 
 $(function() {
+    var checked = {};
+    
     var getElements = function(item, page) {
         $.blockUI();
 
@@ -97,6 +99,120 @@ $(function() {
 
         $('input:hidden[name="' + name + '"]').val('');
         $('input:text[name="' + name + '_autocomplete"]').val('');
+    });
+
+    $('body').on('click', 'th.check', function() {
+        var tr = $(this).parent();
+        var table = tr.parents('table');
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        if (typeof checked[item] === 'undefined') {
+            checked[item] = [];
+        }
+
+        if (tr.hasClass('checked')) {
+            checked[item] = [];
+
+            tr.removeClass('checked');
+
+            table.find('tbody tr').each(function() {
+                $(this).removeClass('checked');
+            });
+        } else {
+            tr.addClass('checked');
+
+            table.find('tbody tr').each(function() {
+                var elementId = $(this).attr('elementId');
+                var index = checked[item].indexOf(elementId);
+
+                if (index === -1) {
+                    checked[item].push(elementId);
+                }
+
+                $(this).addClass('checked');
+            });
+        }
+
+        if (checked[item].length) {
+            itemContainer.find('.button.copy').addClass('enabled');
+            itemContainer.find('.button.move').addClass('enabled');
+            itemContainer.find('.button.delete').addClass('enabled');
+        } else {
+            itemContainer.find('.button.copy').removeClass('enabled');
+            itemContainer.find('.button.move').removeClass('enabled');
+            itemContainer.find('.button.delete').removeClass('enabled');
+        }
+    });
+
+    $('body').on('click', 'td.check', function() {
+        var tr = $(this).parent();
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+        var elementId = tr.attr('elementId');
+
+        if (typeof checked[item] === 'undefined') {
+            checked[item] = [];
+        }
+
+        var index = checked[item].indexOf(elementId);
+
+        if (tr.hasClass('checked')) {
+            if (index > -1) {
+                checked[item].splice(index, 1);
+            }
+
+            tr.removeClass('checked');
+        } else {
+            if (index === -1) {
+                checked[item].push(elementId);
+            }
+
+            tr.addClass('checked');
+        }
+
+        if (checked[item].length) {
+            itemContainer.find('.button.copy').addClass('enabled');
+            itemContainer.find('.button.move').addClass('enabled');
+            itemContainer.find('.button.delete').addClass('enabled');
+        } else {
+            itemContainer.find('.button.copy').removeClass('enabled');
+            itemContainer.find('.button.move').removeClass('enabled');
+            itemContainer.find('.button.delete').removeClass('enabled');
+        }
+    });
+
+    $('body').on('click', '.button.delete.enabled', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        $.confirm(null, '.confirm[id="' + item + '_delete"]');
+    });
+
+    $('body').on('click', '.confirm .btn.remove', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var classId = itemContainer.attr('classId');
+        var item = itemContainer.attr('item');
+
+        $.confirmClose();
+        $.blockUI();
+
+        $.post(
+            '/moonlight/elements/delete',
+            {
+                item: item,
+                checked: checked[item]
+            },
+            function(data) {
+                $.unblockUI();
+
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.deleted) {
+                    getElements(item, classId);
+                }
+            }
+        );
     });
 
     $('body').on('click', 'ul.pager > li[prev].active', function () {
