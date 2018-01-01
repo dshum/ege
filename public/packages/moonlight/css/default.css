@@ -749,15 +749,11 @@ table.elements div.check {
 }
 
 table.elements thead > tr.checked div.check {
-  background-color: #acb;
+  background-color: #395;
 }
 
 table.elements tbody > tr.checked div.check {
   background-color: #395;
-}
-
-table.elements tbody > tr.chosen {
-  background-color: #abc;
 }
 
 table.elements img {

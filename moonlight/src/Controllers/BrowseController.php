@@ -273,6 +273,7 @@ class BrowseController extends Controller
             foreach ($itemList as $item) {
                 $itemName = $item->getName();
                 $propertyList = $item->getPropertyList();
+                $count = 0;
 
                 foreach ($propertyList as $property) {
                     if (
@@ -283,13 +284,26 @@ class BrowseController extends Controller
                             hasMany($itemName, $property->getName())->
                             count();
 
-                        if ($count) {
-                            $scope['restricted'][$classId] = 
-                                '<a href="'.route('moonlight.browse.element', $classId).'" target="_blank">'
-                                .$element->{$mainProperty}
-                                .'</a>';
-                        }
+                        if ($count) break;
+                    } elseif (
+                        $property->isManyToMany()
+                        && $property->getRelatedClass() == $currentItem->getName()
+                    ) {
+                        $count = $element->
+                            {$property->getRelatedMethod()}()->
+                            count();
+
+                        if ($count) break;
                     }
+                }
+
+                if ($count) {
+                    $scope['restricted'][$classId] = 
+                        '<a href="'.route('moonlight.browse.element', $classId).'" target="_blank">'
+                        .$element->{$mainProperty}
+                        .'</a>';
+
+                    break;
                 }
             }
         }
