@@ -57,7 +57,7 @@ final class Element
 		return null;
 	}
 
-	public static function getWithTrashedByClassId($classId)
+	public static function getByClassIdWithTrashed($classId)
 	{
 		if ( ! strpos($classId, static::ID_SEPARATOR)) return null;
 
@@ -72,7 +72,7 @@ final class Element
 		return null;
 	}
 
-	public static function getOnlyTrashedByClassId($classId)
+	public static function getByClassIdOnlyTrashed($classId)
 	{
 		if ( ! strpos($classId, static::ID_SEPARATOR)) return null;
 

@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Moonlight\Main\LoggedUser;
 use Moonlight\Main\Element;
+use Moonlight\Main\UserActionType;
+use Moonlight\Models\UserAction;
 use Moonlight\Properties\BaseProperty;
 use Moonlight\Properties\OrderProperty;
 use Moonlight\Properties\DateProperty;
@@ -127,6 +129,129 @@ class TrashController extends Controller
         return response()->json(['html' => $elements]);
     }
 
+    /**
+     * Delete element.
+     *
+     * @return Response
+     */
+    public function delete(Request $request, $classId)
+    {
+        $scope = [];
+        
+        $loggedUser = LoggedUser::getUser();
+        
+        $element = Element::getByClassIdOnlyTrashed($classId);
+        
+        if (! $element) {
+            $scope['error'] = 'Элемент не найден.';
+            
+            return response()->json($scope);
+        }
+        
+        if (! $loggedUser->hasDeleteAccess($element)) {
+            $scope['error'] = 'Нет прав на удаление элемента.';
+            
+            return response()->json($scope);
+        }
+        
+        $site = \App::make('site');
+
+        $currentItem = Element::getItem($element);
+
+        $propertyList = $currentItem->getPropertyList();        
+
+        foreach ($propertyList as $propertyName => $property) {
+            $property->setElement($element)->drop();
+        }
+
+        $element->forceDelete();
+
+        UserAction::log(
+            UserActionType::ACTION_TYPE_DROP_ELEMENT_ID,
+            $classId
+        );
+
+        if (Cache::has('trashItemTotal['.$currentItem->getNameId().']')) {
+            Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
+        }
+
+        $url = route('moonlight.trash.item', [$currentItem->getNameId(), 'action' => 'search']);
+        
+        $scope['deleted'] = $classId;
+        $scope['url'] = $url;
+        
+        return response()->json($scope);
+    }
+
+    /**
+     * View element.
+     * 
+     * @return View
+     */
+    public function view(Request $request, $classId)
+    {
+        $scope = [];
+        
+        $loggedUser = LoggedUser::getUser();
+
+        $site = \App::make('site');
+        
+        $element = Element::getByClassIdOnlyTrashed($classId);
+        
+        if (! $element) {
+            return redirect()->route('moonlight.trash');
+        }
+        
+        $currentItem = Element::getItem($element);
+
+        $mainProperty = $currentItem->getMainProperty();
+        $propertyList = $currentItem->getPropertyList();
+
+        $properties = [];
+        $views = [];
+
+        foreach ($propertyList as $property) {
+            if ($property->getHidden()) continue;
+            if ($property->getName() == 'deleted_at') continue;
+
+            $properties[] = $property;
+        }
+
+        foreach ($properties as $property) {
+            $propertyScope = $property->setReadonly(true)->setElement($element)->getEditView();
+            
+            $views[$property->getName()] = view(
+                'moonlight::properties.'.$property->getClassName().'.edit', $propertyScope
+            )->render();
+        }
+
+        $itemList = $site->getItemList();
+        
+        $items = [];
+        $totals = [];
+
+        foreach ($itemList as $item) {
+            $total = Cache::remember('trashItemTotal['.$item->getNameId().']', 1440, function () use ($item) {
+                return $this->total($item);
+            });
+
+            if ($total) {
+                $items[$item->getNameId()] = $item;
+                $totals[$item->getNameId()] = $total;
+            }
+        }
+
+        $scope['element'] = $element;
+        $scope['classId'] = $classId;
+        $scope['mainProperty'] = $mainProperty;
+        $scope['currentItem'] = $currentItem;
+        $scope['views'] = $views;
+        $scope['items'] = $items;
+        $scope['totals'] = $totals;
+        
+        return view('moonlight::trashed', $scope);
+    }
+
     public function item(Request $request, $class)
     {
         $scope = [];
@@ -138,7 +263,7 @@ class TrashController extends Controller
         $currentItem = $site->getItemByName($class);
         
         if ( ! $currentItem) {
-            return redirect()->route('trash');
+            return redirect()->route('moonlight.trash');
         }
 
         $itemList = $site->getItemList();

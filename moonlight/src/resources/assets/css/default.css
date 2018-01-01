@@ -532,6 +532,7 @@ div.empty > div:last-child {
 .buttons {
   display: table;
   width: 100%;
+  min-width: 21rem;
   margin: 0 0 1rem 0;
   border-bottom: 3px solid purple;
   white-space: nowrap;
@@ -600,7 +601,12 @@ div.empty > div:last-child {
 }
 
 .buttons .button.enabled.move > .fa {
-  color: goldenrod;
+  color: seagreen;
+  transition: 0.3s;
+}
+
+.buttons .button.enabled.restore > .fa {
+  color: seagreen;
   transition: 0.3s;
 }
 
@@ -1075,7 +1081,8 @@ ul.pager > li.page input {
 
 .edit input[type="text"],
 .edit input[type="password"],
-.edit textarea {
+.edit textarea,
+.edit .richtext {
   margin-top: 0.2rem;
 }
 
@@ -1112,6 +1119,13 @@ ul.pager > li.page input {
 .edit textarea[tinymce="true"] {
   width: 40rem;
   height: 25rem;
+}
+
+.edit .richtext {
+  width: 30rem;
+  border: 1px solid #999;
+  border-radius: 2px;
+  padding: 0.5rem;
 }
 
 .edit span.error {

@@ -1,4 +1,4 @@
-<label>{{ $title }}:</label><br>
+<label>{{ $title }}:</label><span name="{{ $name }}" class="error"></span><br>
 @if ($readonly)
 <textarea name="{{ $name }}" placeholder="{{ $title }}" rows="10" readonly>{!! $value !!}</textarea>
 @else

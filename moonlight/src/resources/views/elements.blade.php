@@ -21,8 +21,8 @@
         @if ($total)
         <div class="buttons">
             @if ($mode == 'trash')
-            <div class="button restore enabled"><i class="fa fa-arrow-left"></i>Восстановить</div>
-            <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
+            <div class="button restore"><i class="fa fa-arrow-left"></i>Восстановить</div>
+            <div class="button delete"><i class="fa fa-trash-o"></i>Удалить</div>
             @else
             <div class="button save enabled"><i class="fa fa-floppy-o"></i>Сохранить</div>
             <div class="button copy enabled"><i class="fa fa-clone"></i>Копировать</div>

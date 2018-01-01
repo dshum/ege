@@ -103,6 +103,15 @@ Route::group(['prefix' => 'moonlight'], function() {
         Route::get('/trash/{item}', ['as' => 'moonlight.trash.item', 'uses' => 'Moonlight\Controllers\TrashController@item'])->
             where(['item' => '[A-Za-z0-9\.]+']);
 
+        Route::get('/trash/{classId}/view', ['as' => 'moonlight.trashed.view', 'uses' => 'Moonlight\Controllers\TrashController@view'])->
+            where(['classId' => '[A-Za-z0-9\.]+']);
+
+        Route::post('/trash/{classId}/delete', ['as' => 'moonlight.trashed.delete', 'uses' => 'Moonlight\Controllers\TrashController@delete'])->
+            where(['classId' => '[A-Za-z0-9\.]+']);
+
+        Route::post('/trash/{classId}/restore', ['as' => 'moonlight.trashed.restore', 'uses' => 'Moonlight\Controllers\TrashController@restore'])->
+            where(['classId' => '[A-Za-z0-9\.]+']);
+
         Route::get('/rubrics/get', ['as' => 'moonlight.rubrics.get', 'uses' => 'Moonlight\Controllers\RubricController@rubric']);
         
         Route::post('/rubrics/open', ['as' => 'moonlight.rubrics.open', 'uses' => 'Moonlight\Controllers\RubricController@open']);
@@ -126,10 +135,6 @@ Route::group(['prefix' => 'moonlight'], function() {
         Route::post('/elements/move', ['as' => 'moonlight.elements.move', 'uses' => 'Moonlight\Controllers\BrowseController@move']);
         
         Route::post('/elements/delete', ['as' => 'moonlight.elements.delete', 'uses' => 'Moonlight\Controllers\BrowseController@delete']);
-        
-        Route::post('/elements/delete/force', ['as' => 'moonlight.elements.delete.force', 'uses' => 'Moonlight\Controllers\BrowseController@forceDelete']);
-        
-        Route::post('/elements/restore', ['as' => 'moonlight.elements.restore', 'uses' => 'Moonlight\Controllers\BrowseController@restore']);
 
         Route::get('/browse/{classId}/create/{item}', ['as' => 'moonlight.element.create', 'uses' => 'Moonlight\Controllers\EditController@create'])->
             where(['classId' => '[A-Za-z0-9\.]+', 'item' => '[A-Za-z0-9\.]+']);
