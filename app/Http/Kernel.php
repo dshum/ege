@@ -40,6 +40,12 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
         ],
+
+        'plugins' => [
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
+            \Moonlight\Middleware\AuthMiddleware::class,
+        ],
     ];
 
     /**

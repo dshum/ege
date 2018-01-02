@@ -1,15 +1,37 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Moonlight\Middleware\GuestMiddleware;
 use Moonlight\Middleware\AuthMiddleware;
 use Moonlight\Middleware\HistoryMiddleware;
-use Moonlight\Main\LoggedUser;
 use Moonlight\Main\Element;
+use Moonlight\Main\LoggedUser;
+use Moonlight\Models\User;
 
 Route::group(['prefix' => 'moonlight'], function() {
+
+    Route::group(['middleware' => [
+        StartSession::class
+    ]], function () {
+        Route::get('/check', function () {
+            if (! Session::get('logged')) {
+                return response()->json([]);
+            }
+            
+            $id = Session::get('logged');
+            
+            $user = User::find($id);
+            
+            if (! $user) {
+                return response()->json([]);
+            }
+    
+            return response()->json(['login' => $user->login]);
+        });
+    });
     
     Route::group(['middleware' => [
         StartSession::class, 
@@ -166,7 +188,9 @@ Route::group(['prefix' => 'moonlight'], function() {
         
         Route::post('/order', ['as' => 'moonlight.order', 'uses' => 'Moonlight\Controllers\BrowseController@order']);
         
-        Route::group(['middleware' => [HistoryMiddleware::class]], function () {
+        Route::group(['middleware' => [
+            HistoryMiddleware::class,
+        ]], function () {
             Route::get('/search/{item}', ['as' => 'moonlight.search.item', 'uses' => 'Moonlight\Controllers\SearchController@item'])->
                 where(['item' => '[A-Za-z0-9\.]+']);
             
@@ -178,16 +202,4 @@ Route::group(['prefix' => 'moonlight'], function() {
                 where(['classId' => '[A-Za-z0-9\.]+']);
         });
     });
-});
-
-Route::group(['middleware' => [
-    StartSession::class, 
-    AuthMiddleware::class,
-    VerifyCsrfToken::class,
-]], function () {
-    Route::post('/plugins/questions/filter', ['uses' => '\App\Http\Plugins\QuestionFilter@filter']);
-
-    Route::post('/plugins/answers/{id}', ['uses' => '\App\Http\Plugins\Answers@correct']);
-
-    Route::post('/plugins/loader', ['uses' => '\App\Http\Plugins\TestLoader@load']);
 });
