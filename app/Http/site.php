@@ -36,7 +36,6 @@ $site->
 		Item::create('App\Section')->
 		setTitle('Раздел сайта')->
 		setRoot(true)->
-        setTree(true)->
         setCreate(true)->
 		setElementPermissions(true)->
 		addOrder()->
@@ -93,7 +92,6 @@ $site->
 		Item::create('App\ServiceSection')->
 		setTitle('Служебный раздел')->
 		setRoot(true)->
-        setTree(true)->
         setCreate(true)->
 		setElementPermissions(true)->
 		addOrder()->
@@ -122,7 +120,6 @@ $site->
 		Item::create('App\SiteSettings')->
 		setTitle('Настройки сайта')->
 		setRoot(true)->
-        setTree(true)->
 		addProperty(
 			MainProperty::create('name')->
 			setTitle('Название')->
@@ -156,7 +153,6 @@ $site->
 		Item::create('App\User')->
 		setTitle('Ученик')->
         setCreate(true)->
-		setTree(true)->
         setPerPage(10)->
         addOrderBy('created_at', 'desc')->
 		addProperty(
@@ -217,7 +213,6 @@ $site->
 	addItem(
 		Item::create('App\Subject')->
 		setTitle('Предмет')->
-        setTree(true)->
         setCreate(true)->
 		addOrder()->
 		addProperty(
@@ -249,7 +244,6 @@ $site->
 	addItem(
 		Item::create('App\Topic')->
 		setTitle('Тема')->
-        setTree(true)->
         setCreate(true)->
 		addOrder()->
 		addProperty(
@@ -282,7 +276,6 @@ $site->
 	addItem(
 		Item::create('App\Subtopic')->
 		setTitle('Подтема')->
-        setTree(true)->
         setCreate(true)->
 		addOrder()->
 		addProperty(
@@ -315,7 +308,6 @@ $site->
 	addItem(
 		Item::create('App\Test')->
 		setTitle('Тест')->
-        setTree(true)->
         setCreate(true)->
 		addOrder()->
 		addProperty(
@@ -588,6 +580,7 @@ $site->
 	addItemPlugin('App.Question', 'App\Http\Plugins\Answers')->
 	// addBrowseFilter('App.Question', 'App\Http\Plugins\QuestionFilter')->
 	addBrowsePlugin(env('site.loader', 'App.ServiceSection.4'), 'App\Http\Plugins\TestLoader')->
+	addBrowsePlugin(env('site.photo', 'App.ServiceSection.17'), 'App\Http\Plugins\PhotoLoader')->
 
 	bind(Site::ROOT, ['App.Section', 'App.ServiceSection', 'App.SiteSettings'])->
 	bind(env('site.subjects', 'App.ServiceSection.2'), 'App.Subject')->

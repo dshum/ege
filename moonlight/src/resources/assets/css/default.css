@@ -1340,14 +1340,15 @@ form .loadfile {
 form .loadfile .file {
   display: inline-block;
   min-width: 6rem;
-  max-width: 50%;
+  max-width: 25rem;
   height: 3rem;
   line-height: 3rem;
-  overflow-x: hidden;
+  overflow: hidden;
   border: 1px solid #999;
   border-radius: 2px;
   vertical-align: middle;
   text-align: center;
+  white-space: nowrap;
   padding: 0 1rem;
   cursor: pointer;
 }
