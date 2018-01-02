@@ -13,7 +13,7 @@
     border-radius: 2px;
     box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.18), 0 2px 11px 0 rgba(0, 0, 0, 0.15);
     padding: 0.5rem;
-    background-color: white;
+    background-color: #cde;
 }
 
 .photo-container .block img {
