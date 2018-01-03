@@ -10,8 +10,6 @@
 @if (! $readonly)
 <br>
 <input type="hidden" name="{{ $name }}" value="{{ $value ? $value['id'] : null }}">
-<div class="one container">
-    <div><input type="text" class="one" item="{{ $relatedClass }}" property="{{ $name }}" name="{{ $name }}_autocomplete" value="" placeholder="ID или название"></div>
-    <div class="reset" property="{{ $name }}">&#215;</div>
-</div>
+<input type="text" class="one" item="{{ $relatedClass }}" property="{{ $name }}" name="{{ $name }}_autocomplete" value="" placeholder="ID или название">
+<span class="addition unset" property="{{ $name }}">Очистить</span>
 @endif

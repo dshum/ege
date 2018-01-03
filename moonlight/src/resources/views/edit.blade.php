@@ -51,7 +51,43 @@
         </div>
     </div>
 </div>
-<div class="confirm">
+<div class="confirm" id="copy">
+    <div class="container">
+        <div class="content">
+            <div>Куда копируем?</div>
+            <div class="edit">
+                @foreach ($ones as $name => $view)
+                <div class="row" name="{{ $name }}">
+                    {!! $view !!}
+                </div>
+                @endforeach
+            </div>
+        </div>
+        <div class="bottom">
+            <input type="button" value="Скопировать" class="btn copy">
+            <input type="button" value="Отмена" class="btn cancel">
+        </div>
+    </div>
+</div>
+<div class="confirm" id="move">
+    <div class="container">
+        <div class="content">
+            <div>Куда переносим?</div>
+            <div class="edit">
+                @foreach ($ones as $name => $view)
+                <div class="row" name="{{ $name }}">
+                    {!! $view !!}
+                </div>
+                @endforeach
+            </div>
+        </div>
+        <div class="bottom">
+            <input type="button" value="Перенести" class="btn move">
+            <input type="button" value="Отмена" class="btn cancel">
+        </div>
+    </div>
+</div>
+<div class="confirm" id="delete">
     <div class="container">
         <div class="content">
             Удалить элемент &laquo;{{ $element->$mainProperty }}&raquo;?

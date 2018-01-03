@@ -614,6 +614,7 @@ class EditController extends Controller
 
         $properties = [];
         $views = [];
+        $ones = [];
 
         foreach ($propertyList as $property) {
             if ($property->getHidden()) continue;
@@ -628,6 +629,12 @@ class EditController extends Controller
             $views[$property->getName()] = view(
                 'moonlight::properties.'.$property->getClassName().'.edit', $propertyScope
             )->render();
+
+            if ($property->isOneToOne()) {
+                $ones[$property->getName()] = view(
+                    'moonlight::properties.'.$property->getClassName().'.move', $propertyScope
+                )->render();
+            }
         }
 
         $rubricController = new RubricController;
@@ -642,6 +649,7 @@ class EditController extends Controller
         $scope['itemPluginView'] = $itemPluginView;
         $scope['editPluginView'] = $editPluginView;
         $scope['views'] = $views;
+        $scope['ones'] = $ones;
         $scope['rubrics'] = $rubrics;
         
         return view('moonlight::edit', $scope);

@@ -34,10 +34,14 @@ div.item.active ul.header li.h2 span {
   top: 0.75rem;
 }
 
-.edit input.date {
-  margin-right: 1rem;
-}
-
 .edit .mce-tinymce {
   margin-top: 0.2rem;
+}
+
+.btn.copy {
+  background-color: teal;
+}
+
+.btn.move {
+  background-color: seagreen;
 }
