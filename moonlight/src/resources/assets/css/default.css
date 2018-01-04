@@ -1549,17 +1549,13 @@ form .loadfile .reset {
   cursor: pointer;
 }
 
-.confirm .addition {
-  margin-left: 0;
-  margin-right: 1rem;
-}
-
 .many.elements {
   margin: 0.5rem 0 0 0;
 }
 
 .confirm .edit .row {
   font-size: 1rem;
+  white-space: nowrap;
 }
 
 .confirm .edit .row:last-child {
@@ -1567,7 +1563,7 @@ form .loadfile .reset {
 }
 
 .confirm .edit .row input.one {
-  width: 18rem;
+  width: 15rem;
 }
 
 /* Common */

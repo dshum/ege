@@ -40,7 +40,7 @@ class OneToOneProperty extends BaseProperty
 		return $this->relatedClass;
 	}
 
-	public function setParent($parent)
+	public function setParent($parent = true)
 	{
 		$this->parent = $parent;
 

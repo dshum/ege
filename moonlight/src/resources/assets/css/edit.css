@@ -26,14 +26,6 @@ div.item.active ul.header li.h2 span {
   margin-bottom: 0.5rem;
 }
 
-.edit .one.container {
-  display: table;
-}
-
-.edit .one.container .reset {
-  top: 0.75rem;
-}
-
 .edit .mce-tinymce {
   margin-top: 0.2rem;
 }

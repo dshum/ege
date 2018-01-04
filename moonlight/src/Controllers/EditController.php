@@ -29,13 +29,13 @@ class EditController extends Controller
         
 		$element = Element::getByClassId($classId);
         
-        if ( ! $element) {
+        if (! $element) {
             $scope['error'] = 'Элемент не найден.';
             
             return response()->json($scope);
         }
         
-        if ( ! $loggedUser->hasViewAccess($element)) {
+        if (! $loggedUser->hasViewAccess($element)) {
 			$scope['error'] = 'Нет прав на копирование элемента.';
             
 			return response()->json($scope);
@@ -43,11 +43,10 @@ class EditController extends Controller
         
         $clone = new $element;
 
-		$ones = $request->input('ones');
+		$name = $request->input('name');
+        $value = $request->input('value');
 
-		$site = \App::make('site');
-
-		$currentItem = $site->getItemByName($element->getClass());
+		$currentItem = Element::getItem($element);
 
 		$propertyList = $currentItem->getPropertyList();
 
@@ -57,40 +56,38 @@ class EditController extends Controller
 				continue;
 			}
 
-			if (
-				$property->getHidden()
-				|| $property->getReadonly()
-			) continue;
+			if ($property->getReadonly()) continue;
 
 			if (
-				(
-					$property instanceof FileProperty
-					|| $property instanceof ImageProperty
-				)
+				$property instanceof FileProperty
+				&& ! $property->getRequired()
+            ) continue;
+            
+            if (
+				$property instanceof ImageProperty
 				&& ! $property->getRequired()
 			) continue;
 
 			if (
 				$property->isOneToOne()
-				&& isset($ones[$propertyName])
-                && $ones[$propertyName]
+				&& $propertyName == $name
 			) {
-				$clone->$propertyName = $ones[$propertyName];
-			} elseif ($element->$propertyName !== null) {
-				$clone->$propertyName = $element->$propertyName;
-			} else {
-                $clone->$propertyName = null;
+                $clone->$propertyName = $value ? $value : null;
+                continue;
             }
+            
+            $clone->$propertyName = $element->$propertyName;
 		}
 
 		$clone->save();
 
 		UserAction::log(
 			UserActionType::ACTION_TYPE_COPY_ELEMENT_ID,
-			$element->getClassId().' -> '.$clone->getClassId()
+			Element::getClassId($element).' -> '.Element::getClassId($clone)
 		);
 
-		$scope['copied'] = $clone->getClassId();
+        $scope['copied'] = Element::getClassId($clone);
+        $scope['url'] = route('moonlight.element.edit', Element::getClassId($clone));
         
         return response()->json($scope);
     }
@@ -108,42 +105,36 @@ class EditController extends Controller
         
 		$element = Element::getByClassId($classId);
         
-        if ( ! $element) {
+        if (! $element) {
             $scope['error'] = 'Элемент не найден.';
             
             return response()->json($scope);
         }
         
-        if ( ! $loggedUser->hasUpdateAccess($element)) {
+        if (! $loggedUser->hasUpdateAccess($element)) {
 			$scope['error'] = 'Нет прав на изменение элемента.';
             
 			return response()->json($scope);
 		}
 
-		$ones = $request->input('ones');
+        $name = $request->input('name');
+        $value = $request->input('value');
 
-		$site = \App::make('site');
-
-		$currentItem = $site->getItemByName($element->getClass());
+		$currentItem = Element::getItem($element);
 
 		$propertyList = $currentItem->getPropertyList();
         
         $changed = false;
 
 		foreach ($propertyList as $propertyName => $property) {
-			if (
-				$property->getHidden()
-				|| $property->getReadonly()
-			) continue;
+            if ($property->getHidden()) continue;
+            if ($property->getReadonly()) continue;
+            if (! $property->isOneToOne()) continue;
+            if ($propertyName != $name) continue;
 
-			if (
-				$property->isOneToOne()
-				&& isset($ones[$propertyName])
-			) {
-				$element->$propertyName = $ones[$propertyName] 
-                    ? $ones[$propertyName] : null;
-                $changed = true;
-			}
+			$element->$propertyName = $value ? $value : null;
+
+            $changed = true;
 		}
 
         if ($changed) {
@@ -151,11 +142,11 @@ class EditController extends Controller
 
             UserAction::log(
                 UserActionType::ACTION_TYPE_MOVE_ELEMENT_ID,
-                $element->getClassId()
+                $classId
             );
         }
 
-		$scope['moved'] = $element->getClassId();
+		$scope['moved'] = $classId;
         
         return response()->json($scope);
     }
@@ -394,7 +385,8 @@ class EditController extends Controller
             if ($value) $inputs[$propertyName] = $value;
 
 			foreach ($property->getRules() as $rule => $message) {
-				$rules[$propertyName][] = $rule;
+                $rules[$propertyName][] = $rule;
+                
 				if (strpos($rule, ':')) {
 					list($name, $value) = explode(':', $rule, 2);
 					$messages[$propertyName.'.'.$name] = $message;
@@ -562,6 +554,9 @@ class EditController extends Controller
         
         $currentItem = Element::getItem($element);
         
+        $parentElement = Element::getParent($element);
+        $parentClass = $parentElement ? Element::getClass($parentElement) : null;
+
         $parentList = Element::getParentList($element);
 
         $parents = [];
@@ -629,12 +624,30 @@ class EditController extends Controller
             $views[$property->getName()] = view(
                 'moonlight::properties.'.$property->getClassName().'.edit', $propertyScope
             )->render();
+        }
 
-            if ($property->isOneToOne()) {
-                $ones[$property->getName()] = view(
-                    'moonlight::properties.'.$property->getClassName().'.move', $propertyScope
-                )->render();
+        $moveProperty = null;
+        $movePropertyView = null;
+
+        foreach ($properties as $property) {
+            if (! $property->isOneToOne()) continue;
+            if (! $property->getParent()) continue;
+
+            if (
+                ($parentClass && $property->getRelatedClass() == $parentClass)
+                || ! $parentClass
+            ) {
+                $moveProperty = $property;
+                break;
             }
+        }
+
+        if ($moveProperty) {
+            $propertyScope = $moveProperty->setElement($element)->getEditView();
+
+            $movePropertyView = view(
+                'moonlight::properties.'.$moveProperty->getClassName().'.move', $propertyScope
+            )->render();
         }
 
         $rubricController = new RubricController;
@@ -649,7 +662,7 @@ class EditController extends Controller
         $scope['itemPluginView'] = $itemPluginView;
         $scope['editPluginView'] = $editPluginView;
         $scope['views'] = $views;
-        $scope['ones'] = $ones;
+        $scope['movePropertyView'] = $movePropertyView;
         $scope['rubrics'] = $rubrics;
         
         return view('moonlight::edit', $scope);

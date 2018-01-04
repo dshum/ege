@@ -83,7 +83,7 @@ $(function() {
         });
     };
 
-    $('body').on('change', ':file', function(e) {
+    $('body').on('change', '.loadfile :file', function(e) {
         var name = $(this).attr('name');
         var path = e.target.files[0] ? e.target.files[0].name : 'Выберите файл';
 
@@ -91,14 +91,14 @@ $(function() {
         $('[name="' + name + '_drop"]').prop('checked', false);
     });
 
-    $('body').on('click', '.file[name]', function() {
+    $('body').on('click', '.loadfile .file[name]', function() {
         var name = $(this).attr('name');
         var fileInput = $(':file[name="' + name + '"]');
 
         fileInput.click();
     });
 
-    $('body').on('click', '.reset', function() {
+    $('body').on('click', '.loadfile .reset', function() {
         var name = $(this).attr('name');
 
         $('[name="' + name + 'drop"]').prop('checked', false);
@@ -180,7 +180,77 @@ $(function() {
         $.confirm(null, '#delete');
     });
 
-    $('.confirm .remove').click(function() {
+    $('.confirm .btn.copy').click(function() {
+        var parent = $(this).parents('.confirm');
+        var url = $(this).attr('url');
+
+        if (! url) return false;
+
+        $.confirmClose();
+        $.blockUI();
+        
+        var one = null;
+        
+        parent.find(':hidden').each(function() {
+            var name = $(this).attr('name');
+            var value = $(this).val();
+            
+            one = {
+                name: name,
+                value: value
+            };
+        });
+        
+        $.post(url, one, function(data) {
+            $.unblockUI();
+            
+            if (data.error) {
+                $.alert(data.error);
+            } else if (data.copied && data.url) {
+                document.location.href = data.url;
+            }
+        }).fail(function() {
+            $.unblockUI();
+            $.alertDefaultError();
+        });
+    });
+
+    $('.confirm .btn.move').click(function() {
+        var parent = $(this).parents('.confirm');
+        var url = $(this).attr('url');
+
+        if (! url) return false;
+
+        $.confirmClose();
+        $.blockUI();
+        
+        var one = null;
+        
+        parent.find(':hidden').each(function() {
+            var name = $(this).attr('name');
+            var value = $(this).val();
+            
+            one = {
+                name: name,
+                value: value
+            };
+        });
+        
+        $.post(url, one, function(data) {
+            $.unblockUI();
+            
+            if (data.error) {
+                $.alert(data.error);
+            } else if (data.moved) {
+                document.location.href = document.location.href;
+            }
+        }).fail(function() {
+            $.unblockUI();
+            $.alertDefaultError();
+        });
+    });
+
+    $('.confirm .btn.remove').click(function() {
         var url = $(this).attr('url');
 
         if (! url) return false;
@@ -188,19 +258,18 @@ $(function() {
         $.confirmClose();
         $.blockUI();
 
-        $.post(
-            url,
-            {},
-            function(data) {
-                $.unblockUI();
+        $.post(url, {}, function(data) {
+            $.unblockUI();
 
-                if (data.error) {
-                    $.alert(data.error);
-                } else if (data.deleted && data.url) {
-                    document.location.href = data.url;
-                }
+            if (data.error) {
+                $.alert(data.error);
+            } else if (data.deleted && data.url) {
+                document.location.href = data.url;
             }
-        );
+        }).fail(function() {
+            $.unblockUI(); 
+            $.alertDefaultError();
+        });
     });
 
     $('.sidebar .elements .h2 span').click(function() {

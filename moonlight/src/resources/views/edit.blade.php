@@ -33,7 +33,11 @@
             <div class="buttons">
                 <div class="button save enabled"><i class="fa fa-floppy-o"></i>Сохранить</div>
                 <div class="button copy enabled"><i class="fa fa-clone"></i>Копировать</div>
+                @if ($movePropertyView)
                 <div class="button move enabled"><i class="fa fa-arrow-right"></i>Перенести</div>
+                @else
+                <div class="button move"><i class="fa fa-arrow-right"></i>Перенести</div>
+                @endif
                 <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
             </div>
             <form action="{{ route('moonlight.element.save', $classId) }}" method="POST">
@@ -56,37 +60,39 @@
         <div class="content">
             <div>Куда копируем?</div>
             <div class="edit">
-                @foreach ($ones as $name => $view)
-                <div class="row" name="{{ $name }}">
-                    {!! $view !!}
+                <div class="row">
+                    @if ($movePropertyView)
+                    {!! $movePropertyView !!}
+                    @else
+                    <a href="{{ route('moonlight.browse') }}">Корень сайта</a>
+                    @endif
                 </div>
-                @endforeach
             </div>
         </div>
         <div class="bottom">
-            <input type="button" value="Скопировать" class="btn copy">
+            <input type="button" value="Скопировать" class="btn copy" url="{{ route('moonlight.element.copy', $classId) }}">
             <input type="button" value="Отмена" class="btn cancel">
         </div>
     </div>
 </div>
+@if ($movePropertyView)
 <div class="confirm" id="move">
     <div class="container">
         <div class="content">
             <div>Куда переносим?</div>
             <div class="edit">
-                @foreach ($ones as $name => $view)
-                <div class="row" name="{{ $name }}">
-                    {!! $view !!}
+                <div class="row">
+                    {!! $movePropertyView !!}
                 </div>
-                @endforeach
             </div>
         </div>
         <div class="bottom">
-            <input type="button" value="Перенести" class="btn move">
+            <input type="button" value="Перенести" class="btn move" url="{{ route('moonlight.element.move', $classId) }}">
             <input type="button" value="Отмена" class="btn cancel">
         </div>
     </div>
 </div>
+@endif
 <div class="confirm" id="delete">
     <div class="container">
         <div class="content">
