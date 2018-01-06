@@ -15,7 +15,7 @@
         <span class="addition unset" property="{{ $name }}">Очистить</span>
     </div>
     @endif
-@elseif ($countPlaces)
+@elseif ($countPlaces > 1)
     @if ($rootPlace)
     <p>
         <input type="radio" name="{{ $name }}_copy" property="{{ $name }}" id="{{ $name }}_copy_null" value="" {{ ! $value ? 'checked' : '' }}>
@@ -27,5 +27,9 @@
         <input type="radio" name="{{ $name }}_copy" property="{{ $name }}" id="{{ $name }}_copy_{{ $element['id'] }}" value="{{ $element['id'] }}" {{ $value && $value['id'] == $element['id'] ? 'checked' : '' }}>
         <label for="{{ $name }}_copy_{{ $element['id'] }}">{{ $element['name'] }}</label>
     </p>
+    @endforeach
+@elseif (sizeof($elementPlaces) == 1)
+    @foreach ($elementPlaces as $element)
+    {{ $element['name'] }}
     @endforeach
 @endif

@@ -95,8 +95,10 @@
             <div>Куда копируем?</div>
             <div class="edit">
                 <div class="row">
-                    @if ($movePropertyView)
-                    {!! $movePropertyView !!}
+                    @if ($copyPropertyView)
+                    {!! $copyPropertyView !!}
+                    @else
+                    {{ $currentElement ? $currentElement->name : 'Корень сайта' }}
                     @endif
                 </div>
             </div>

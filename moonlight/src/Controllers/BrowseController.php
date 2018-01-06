@@ -59,11 +59,22 @@ class BrowseController extends Controller
         $scope = [];
         
         $loggedUser = LoggedUser::getUser();
+
+        $class = $request->input('item');
+
+        $site = \App::make('site');
         
-        $ones = $request->input('ones');
+        $currentItem = $site->getItemByName($class);
+        
+        if (! $currentItem) {
+            $scope['error'] = 'Класс элементов не найден.';
+            
+            return response()->json($scope);
+        }
+
         $checked = $request->input('checked');
-        
-        if ( ! is_array($checked) || ! sizeof($checked)) {
+
+        if (! is_array($checked) || ! sizeof($checked)) {
             $scope['error'] = 'Пустой список элементов.';
             
             return response()->json($scope);
@@ -71,24 +82,29 @@ class BrowseController extends Controller
         
         $elements = [];
         
-        foreach ($checked as $classId) {
-            $element = Element::getByClassId($classId);
+        foreach ($checked as $id) {
+            $element = $currentItem->getClass()->find($id);
             
-            if ($element && $loggedUser->hasViewAccess($element)) {
+            if ($element && $loggedUser->hasUpdateAccess($element)) {
                 $elements[] = $element;
             }
         }
         
-        if ( ! sizeof($elements)) {
+        if (! sizeof($elements)) {
             $scope['error'] = 'Нет элементов для копирования.';
             
             return response()->json($scope);
         }
 
+        $name = $request->input('name');
+        $value = $request->input('value');
+
+        $copied = [];
+        $destination = null;
+
+        $propertyList = $currentItem->getPropertyList();
+
         foreach ($elements as $element) {
-            $elementItem = $element->getItem();
-            $propertyList = $elementItem->getPropertyList();
-            
             $clone = new $element;
             
             foreach ($propertyList as $propertyName => $property) {
@@ -96,44 +112,55 @@ class BrowseController extends Controller
                     $property->setElement($clone)->set();
                     continue;
                 }
-
+    
+                if ($property->getReadonly()) continue;
+    
                 if (
-                    $property->getHidden()
-                    || $property->getReadonly()
-                ) continue;
-
-                if (
-                    (
-                        $property instanceof FileProperty
-                        || $property instanceof ImageProperty
-                    )
+                    $property instanceof FileProperty
                     && ! $property->getRequired()
                 ) continue;
-
+                
+                if (
+                    $property instanceof ImageProperty
+                    && ! $property->getRequired()
+                ) continue;
+    
                 if (
                     $property->isOneToOne()
-                    && isset($ones[$propertyName])
-                    && $ones[$propertyName]
+                    && $propertyName == $name
                 ) {
-                    $clone->$propertyName = $ones[$propertyName];
-                } elseif ($element->$propertyName !== null) {
-                    $clone->$propertyName = $element->$propertyName;
-                } else {
-                    $clone->$propertyName = null;
+                    $relatedClass = $property->getRelatedClass();
+                    $relatedItem = $site->getItemByName($relatedClass);
+                    
+                    if ($value) {
+                        $destination = $relatedItem->getClass()->find($value);
+                    }
+
+                    $clone->$propertyName = $value ? $value : null;
+                    continue;
                 }
+                
+                $clone->$propertyName = $element->$propertyName;
             }
 
             $clone->save();
             
-            $scope['copied'][] = $clone->getClassId();
+            $copied[] = Element::getClassId($clone);
         }
         
-        if (isset($scope['copied'])) {
+        if ($copied) {
             UserAction::log(
                 UserActionType::ACTION_TYPE_COPY_ELEMENT_LIST_ID,
-                implode(', ', $scope['copied'])
+                implode(', ', $copied)
             );
         }
+
+        $url = $destination
+            ? route('moonlight.browse.element', Element::getClassId($destination))
+            : route('moonlight.browse');
+
+        $scope['copied'] = 'ok';
+        $scope['url'] = $url;
         
         return response()->json($scope);
     }
@@ -180,7 +207,7 @@ class BrowseController extends Controller
         }
         
         if (! sizeof($elements)) {
-            $scope['error'] = 'Нет элементов для удаления.';
+            $scope['error'] = 'Нет элементов для переноса.';
             
             return response()->json($scope);
         }
@@ -839,7 +866,7 @@ class BrowseController extends Controller
             }
         }
 
-        $moveProperty = null;
+        $copyPropertyView = null;
         $movePropertyView = null;
 
         $currentElementItem = $currentElement ? Element::getItem($currentElement) : null;
@@ -849,31 +876,31 @@ class BrowseController extends Controller
             if (! $property->isOneToOne()) continue;
 
             if (
-                $currentElementItem
-                && $property->getRelatedClass() == $currentElementItem->getName()
+                ($currentElementItem && $property->getRelatedClass() == $currentElementItem->getName())
+                || (! $currentElementItem && $property->getParent())
             ) {
-                $moveProperty = $property;
-                break;
-            } elseif (
-                ! $currentElementItem
-                && $property->getParent()
-            ) {
-                $moveProperty = $property;
+                $element = $currentItem->getClass();
+
+                if ($currentElement) {
+                    Element::setParent($element, $currentElement);
+                }
+
+                $propertyScope = $property->setElement($element)->getEditView();
+
+                $copyPropertyView = view(
+                    'moonlight::properties.'.$property->getClassName().'.copy', $propertyScope
+                )->render();
+
+                $movePropertyView = view(
+                    'moonlight::properties.'.$property->getClassName().'.move', $propertyScope
+                )->render();
+
                 break;
             }
         }
 
-        if ($moveProperty) {
-            $element = $currentItem->getClass();
-            
-            $propertyScope = $moveProperty->getEditView();
-
-            $movePropertyView = view(
-                'moonlight::properties.'.$moveProperty->getClassName().'.edit', $propertyScope
-            )->render();
-        }
-
         $scope['classId'] = $currentClassId;
+        $scope['currentElement'] = $currentElement;
         $scope['currentItem'] = $currentItem;
         $scope['itemPluginView'] = $itemPluginView;
         $scope['browseFilterView'] = $browseFilterView;
@@ -888,7 +915,7 @@ class BrowseController extends Controller
         $scope['orders'] = $orders;
         $scope['hasOrderProperty'] = false;
         $scope['mode'] = 'browse';
-        $scope['moveProperty'] = $moveProperty;
+        $scope['copyPropertyView'] = $copyPropertyView;
         $scope['movePropertyView'] = $movePropertyView;
         
         return view('moonlight::elements', $scope)->render();

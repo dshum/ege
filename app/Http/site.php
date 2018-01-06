@@ -159,6 +159,7 @@ $site->
 			MainProperty::create('email')->
 			setTitle('E-mail')->
 			addRule('email', 'Некорректный адрес электронной почты')->
+			addRule('unique:users,email', 'Такой адрес уже существует')->
 			setRequired(true)
 		)->
         addProperty(
@@ -587,7 +588,7 @@ $site->
     bind(env('site.dicts', 'App.ServiceSection.3'), 'App.ServiceSection')->
 	bind(env('site.types', 'App.ServiceSection.5'), 'App.QuestionType')->
 	bind(env('site.students', 'App.ServiceSection.1'), 'App.User')->
-	bind(Site::ROOT, 'App.User')->
+	// bind(Site::ROOT, 'App.User')->
 	// bind('App.ServiceSection.1', 'App.User')->
 	// bind('App.ServiceSection.2', 'App.User')->
 	// bind('App.ServiceSection.5', 'App.User')->

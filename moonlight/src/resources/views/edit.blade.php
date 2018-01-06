@@ -55,14 +55,17 @@
         </div>
     </div>
 </div>
-@if ($copyPropertyView)
 <div class="confirm" id="copy">
     <div class="container">
         <div class="content">
             <div>Куда копируем?</div>
             <div class="edit" radiogroup="copy">
                 <div class="row">
+                    @if ($copyPropertyView)
                     {!! $copyPropertyView !!}
+                    @else
+                    {{ $parentElement ? $parentElement['name'] : 'Корень сайта' }}
+                    @endif
                 </div>
             </div>
         </div>
@@ -72,7 +75,6 @@
         </div>
     </div>
 </div>
-@endif
 @if ($movePropertyView)
 <div class="confirm" id="move">
     <div class="container">

@@ -10,6 +10,7 @@ use Moonlight\Main\LoggedUser;
 use Moonlight\Main\Element;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\UserAction;
+use Moonlight\Properties\MainProperty;
 use Moonlight\Properties\OrderProperty;
 use Moonlight\Properties\FileProperty;
 use Moonlight\Properties\ImageProperty;
@@ -144,9 +145,9 @@ class EditController extends Controller
                 UserActionType::ACTION_TYPE_MOVE_ELEMENT_ID,
                 $classId
             );
-        }
 
-		$scope['moved'] = $classId;
+            $scope['moved'] = $classId;
+        }
         
         return response()->json($scope);
     }
@@ -554,8 +555,18 @@ class EditController extends Controller
         
         $currentItem = Element::getItem($element);
         
-        $parentElement = Element::getParent($element);
-        $parentClass = $parentElement ? Element::getClass($parentElement) : null;
+        $parentElement = null;
+        $parent = Element::getParent($element);
+        $parentClass = $parent ? Element::getClass($parent) : null;
+
+        if ($parent) {
+            $parentItem = Element::getItem($parent);
+            $parentMainProperty = $parentItem->getMainProperty();
+            $parentElement = [
+                'classId' => Element::getClassId($parent),
+                'name' => $parent->$parentMainProperty,
+            ];
+        }
 
         $parentList = Element::getParentList($element);
 
@@ -626,33 +637,29 @@ class EditController extends Controller
             )->render();
         }
 
-        $moveProperty = null;
         $movePropertyView = null;
         $copyPropertyView = null;
 
-        foreach ($properties as $property) {
+        foreach ($propertyList as $property) {
+            if ($property->getHidden()) continue;
             if (! $property->isOneToOne()) continue;
-            if (! $property->getParent()) continue;
 
             if (
                 ($parentClass && $property->getRelatedClass() == $parentClass)
-                || ! $parentClass
+                || (! $parentClass && $property->getParent())
             ) {
-                $moveProperty = $property;
+                $propertyScope = $property->setElement($element)->getEditView();
+
+                $copyPropertyView = view(
+                    'moonlight::properties.'.$property->getClassName().'.copy', $propertyScope
+                )->render();
+
+                $movePropertyView = view(
+                    'moonlight::properties.'.$property->getClassName().'.move', $propertyScope
+                )->render();
+
                 break;
             }
-        }
-
-        if ($moveProperty) {
-            $propertyScope = $moveProperty->setElement($element)->getEditView();
-
-            $movePropertyView = view(
-                'moonlight::properties.'.$moveProperty->getClassName().'.move', $propertyScope
-            )->render();
-
-            $copyPropertyView = view(
-                'moonlight::properties.'.$moveProperty->getClassName().'.copy', $propertyScope
-            )->render();
         }
 
         $rubricController = new RubricController;
@@ -662,6 +669,7 @@ class EditController extends Controller
         $scope['element'] = $element;
         $scope['classId'] = $classId;
         $scope['mainProperty'] = $mainProperty;
+        $scope['parentElement'] = $parentElement;
         $scope['parents'] = $parents;
         $scope['currentItem'] = $currentItem;
         $scope['itemPluginView'] = $itemPluginView;

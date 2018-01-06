@@ -232,24 +232,24 @@ $(function() {
         $.confirm(null, '.confirm[id="' + item + '_delete"]');
     });
 
-    $('body').on('click', '.confirm .btn.move', function() {
+    $('body').on('click', '.confirm .btn.copy', function() {
         var itemContainer = $(this).parents('div[item]');
         var parent = $(this).parents('.confirm');
         var classId = itemContainer.attr('classId');
         var item = itemContainer.attr('item');
 
-        $.confirmClose();
-        $.blockUI();
-
         var name, value;
         
-        parent.find(':hidden').each(function() {
-            name = $(this).attr('name');
+        parent.find('input[type="radio"]:checked:not(:disabled), input[type="hidden"]').each(function() {
+            name = $(this).attr('property');
             value = $(this).val();
         });
 
+        $.confirmClose();
+        $.blockUI();
+
         $.post(
-            '/moonlight/elements/move',
+            '/moonlight/elements/copy',
             {
                 item: item,
                 checked: checked[item],
@@ -257,13 +257,60 @@ $(function() {
                 value: value
             },
             function(data) {
-                $.unblockUI();
+                $.unblockUI(function() {
+                    if (data.error) {
+                        $.alert(data.error);
+                    } else if (data.copied) {
+                        if (! value) {
+                            location.reload();
+                        } else if (data.url) {
+                            location.href = data.url;
+                        }
+                    }
+                });
+            }
+        );
+    });
 
-                if (data.error) {
-                    $.alert(data.error);
-                } else if (data.moved && data.url) {
-                    document.location.href = data.url;
-                }
+    $('body').on('click', '.confirm .btn.move', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var parent = $(this).parents('.confirm');
+        var classId = itemContainer.attr('classId');
+        var item = itemContainer.attr('item');
+
+        var one = null;
+        
+        parent.find('input[type="radio"]:checked:not(:disabled), input[type="hidden"]').each(function() {
+            var name = $(this).attr('property');
+            var value = $(this).val();
+            
+            one = {
+                name: name,
+                value: value
+            };
+        });
+
+        if (! one) return false;
+
+        $.confirmClose();
+        $.blockUI();
+
+        $.post(
+            '/moonlight/elements/move',
+            {
+                item: item,
+                checked: checked[item],
+                name: one.name,
+                value: one.value
+            },
+            function(data) {
+                $.unblockUI(function() {
+                    if (data.error) {
+                        $.alert(data.error);
+                    } else if (data.moved && data.url) {
+                        location.href = data.url;
+                    }
+                });
             }
         );
     });
@@ -283,13 +330,13 @@ $(function() {
                 checked: checked[item]
             },
             function(data) {
-                $.unblockUI();
-
-                if (data.error) {
-                    $.alert(data.error);
-                } else if (data.deleted) {
-                    getElements(item, classId);
-                }
+                $.unblockUI(function() {
+                    if (data.error) {
+                        $.alert(data.error);
+                    } else if (data.deleted) {
+                        getElements(item, classId);
+                    }
+                });
             }
         );
     });
