@@ -191,8 +191,8 @@ $(function() {
         
         var one = null;
         
-        parent.find(':hidden').each(function() {
-            var name = $(this).attr('name');
+        parent.find('input[type="radio"]:checked:not(disabled), input[type="hidden"]').each(function() {
+            var name = $(this).attr('property');
             var value = $(this).val();
             
             one = {
@@ -202,13 +202,13 @@ $(function() {
         });
         
         $.post(url, one, function(data) {
-            $.unblockUI();
-            
-            if (data.error) {
-                $.alert(data.error);
-            } else if (data.copied && data.url) {
-                document.location.href = data.url;
-            }
+            $.unblockUI(function() {
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.copied && data.url) {
+                    location.href = data.url;
+                }
+            });
         }).fail(function() {
             $.unblockUI();
             $.alertDefaultError();
@@ -220,14 +220,11 @@ $(function() {
         var url = $(this).attr('url');
 
         if (! url) return false;
-
-        $.confirmClose();
-        $.blockUI();
         
         var one = null;
         
-        parent.find(':hidden').each(function() {
-            var name = $(this).attr('name');
+        parent.find('input[type="radio"]:checked:not(:disabled), input[type="hidden"]').each(function() {
+            var name = $(this).attr('property');
             var value = $(this).val();
             
             one = {
@@ -235,15 +232,20 @@ $(function() {
                 value: value
             };
         });
+
+        if (! one) return false;
+
+        $.confirmClose();
+        $.blockUI();
         
         $.post(url, one, function(data) {
-            $.unblockUI();
-            
-            if (data.error) {
-                $.alert(data.error);
-            } else if (data.moved) {
-                document.location.href = document.location.href;
-            }
+            $.unblockUI(function() {
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.moved) {
+                    location.reload();
+                }
+            });
         }).fail(function() {
             $.unblockUI();
             $.alertDefaultError();
@@ -259,13 +261,13 @@ $(function() {
         $.blockUI();
 
         $.post(url, {}, function(data) {
-            $.unblockUI();
-
-            if (data.error) {
-                $.alert(data.error);
-            } else if (data.deleted && data.url) {
-                document.location.href = data.url;
-            }
+            $.unblockUI(function() {
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.deleted && data.url) {
+                    location.href = data.url;
+                }
+            });
         }).fail(function() {
             $.unblockUI(); 
             $.alertDefaultError();

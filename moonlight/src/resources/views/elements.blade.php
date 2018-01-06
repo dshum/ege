@@ -26,7 +26,11 @@
             @else
             <div class="button save"><i class="fa fa-floppy-o"></i>Сохранить</div>
             <div class="button copy"><i class="fa fa-clone"></i>Копировать</div>
+            @if ($movePropertyView)
             <div class="button move"><i class="fa fa-arrow-right"></i>Перенести</div>
+            @else
+            <div class="button move disabled"><i class="fa fa-arrow-right"></i>Перенести</div>
+            @endif
             <div class="button delete"><i class="fa fa-trash-o"></i>Удалить</div>
             @endif
         </div>
@@ -85,6 +89,42 @@
         </div>
     </div>
 </div>
+<div class="confirm" id="{{ $currentItem->getNameId() }}_copy">
+    <div class="container">
+        <div class="content">
+            <div>Куда копируем?</div>
+            <div class="edit">
+                <div class="row">
+                    @if ($movePropertyView)
+                    {!! $movePropertyView !!}
+                    @endif
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <input type="button" value="Скопировать" class="btn copy">
+            <input type="button" value="Отмена" class="btn cancel">
+        </div>
+    </div>
+</div>
+@if ($movePropertyView)
+<div class="confirm" id="{{ $currentItem->getNameId() }}_move">
+    <div class="container">
+        <div class="content">
+            <div>Куда переносим?</div>
+            <div class="edit">
+                <div class="row">
+                    {!! $movePropertyView !!}
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <input type="button" value="Перенести" class="btn move">
+            <input type="button" value="Отмена" class="btn cancel">
+        </div>
+    </div>
+</div>
+@endif
 <div class="confirm" id="{{ $currentItem->getNameId() }}_delete">
     <div class="container">
         <div class="content">

@@ -628,6 +628,7 @@ class EditController extends Controller
 
         $moveProperty = null;
         $movePropertyView = null;
+        $copyPropertyView = null;
 
         foreach ($properties as $property) {
             if (! $property->isOneToOne()) continue;
@@ -648,6 +649,10 @@ class EditController extends Controller
             $movePropertyView = view(
                 'moonlight::properties.'.$moveProperty->getClassName().'.move', $propertyScope
             )->render();
+
+            $copyPropertyView = view(
+                'moonlight::properties.'.$moveProperty->getClassName().'.copy', $propertyScope
+            )->render();
         }
 
         $rubricController = new RubricController;
@@ -663,6 +668,7 @@ class EditController extends Controller
         $scope['editPluginView'] = $editPluginView;
         $scope['views'] = $views;
         $scope['movePropertyView'] = $movePropertyView;
+        $scope['copyPropertyView'] = $copyPropertyView;
         $scope['rubrics'] = $rubrics;
         
         return view('moonlight::edit', $scope);

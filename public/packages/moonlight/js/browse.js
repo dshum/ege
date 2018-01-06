@@ -4,6 +4,29 @@ $(function() {
     var empty = true;
     var checked = {};
 
+    var init = function(item) {
+        $('div[item="' + item + '"] input.one').each(function() {
+            var parent = $(this).parents('div.row');
+            var relatedItem = $(this).attr('item');
+            var name = $(this).attr('property');
+    
+            $(this).autocomplete({
+                serviceUrl: '/moonlight/elements/autocomplete',
+                params: {
+                    item: relatedItem
+                },
+                formatResult: function(suggestion, currentValue) {
+                    return suggestion.value + ' <small>(' + suggestion.id + ')</small>';
+                },
+                onSelect: function (suggestion) {
+                    parent.find('input:hidden[name="' + name + '"]').val(suggestion.id);
+                    parent.find('span[container][name="' + name + '"]').html(suggestion.value);
+                },
+                minChars: 0
+            });
+        });
+    };
+
     var loadElements = function(item, classId = null) {
         $.getJSON('/moonlight/elements/list', {
             item: item,
@@ -11,6 +34,8 @@ $(function() {
         }, function(data) {
             if (data.html && data.html.length) {
                 $('.main div[item="' + item + '"]').hide().html(data.html).fadeIn(200);
+
+                init(item);
 
                 empty = false;
             }
@@ -37,6 +62,8 @@ $(function() {
 
             if (data.html && data.html.length) {
                 $('.main div[item="' + item + '"]').html(data.html);
+
+                init(item);
             } else {
                 $('.main div[item="' + item + '"]').fadeOut(200);
             }
@@ -128,13 +155,13 @@ $(function() {
         }
 
         if (checked[item].length) {
-            itemContainer.find('.button.copy').addClass('enabled');
-            itemContainer.find('.button.move').addClass('enabled');
-            itemContainer.find('.button.delete').addClass('enabled');
+            itemContainer.find('.button.copy:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.move:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.delete:not(.disabled)').addClass('enabled');
         } else {
-            itemContainer.find('.button.copy').removeClass('enabled');
-            itemContainer.find('.button.move').removeClass('enabled');
-            itemContainer.find('.button.delete').removeClass('enabled');
+            itemContainer.find('.button.copy:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.move:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.delete:not(.disabled)').removeClass('enabled');
         }
     });
 
@@ -165,14 +192,37 @@ $(function() {
         }
 
         if (checked[item].length) {
-            itemContainer.find('.button.copy').addClass('enabled');
-            itemContainer.find('.button.move').addClass('enabled');
-            itemContainer.find('.button.delete').addClass('enabled');
+            itemContainer.find('.button.copy:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.move:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.delete:not(.disabled)').addClass('enabled');
         } else {
-            itemContainer.find('.button.copy').removeClass('enabled');
-            itemContainer.find('.button.move').removeClass('enabled');
-            itemContainer.find('.button.delete').removeClass('enabled');
+            itemContainer.find('.button.copy:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.move:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.delete:not(.disabled)').removeClass('enabled');
         }
+    });
+
+    $('body').on('click', '.addition.unset[property]', function() {
+        var parent = $(this).parents('div.row');
+        var name = $(this).attr('property');
+
+        parent.find('input:hidden[name="' + name + '"]').val('');
+        parent.find('input:text[name="' + name + '_autocomplete"]').val('');
+        parent.find('span[container][name="' + name + '"]').html('Не определено');
+    });
+
+    $('body').on('click', '.button.copy.enabled', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        $.confirm(null, '.confirm[id="' + item + '_copy"]');
+    });
+
+    $('body').on('click', '.button.move.enabled', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        $.confirm(null, '.confirm[id="' + item + '_move"]');
     });
 
     $('body').on('click', '.button.delete.enabled', function() {
@@ -180,6 +230,42 @@ $(function() {
         var item = itemContainer.attr('item');
 
         $.confirm(null, '.confirm[id="' + item + '_delete"]');
+    });
+
+    $('body').on('click', '.confirm .btn.move', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var parent = $(this).parents('.confirm');
+        var classId = itemContainer.attr('classId');
+        var item = itemContainer.attr('item');
+
+        $.confirmClose();
+        $.blockUI();
+
+        var name, value;
+        
+        parent.find(':hidden').each(function() {
+            name = $(this).attr('name');
+            value = $(this).val();
+        });
+
+        $.post(
+            '/moonlight/elements/move',
+            {
+                item: item,
+                checked: checked[item],
+                name: name,
+                value: value
+            },
+            function(data) {
+                $.unblockUI();
+
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.moved && data.url) {
+                    document.location.href = data.url;
+                }
+            }
+        );
     });
 
     $('body').on('click', '.confirm .btn.remove', function() {

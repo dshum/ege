@@ -469,6 +469,26 @@ class SearchController extends Controller
             }
         }
 
+        $moveProperty = null;
+        $movePropertyView = null;
+
+        foreach ($propertyList as $property) {
+            if ($property->getHidden()) continue;
+            if (! $property->isOneToOne()) continue;
+            if (! $property->getParent()) continue;
+
+            $moveProperty = $property;
+            break;
+        }
+
+        if ($moveProperty) {
+            $propertyScope = $moveProperty->getEditView();
+
+            $movePropertyView = view(
+                'moonlight::properties.'.$moveProperty->getClassName().'.move', $propertyScope
+            )->render();
+        }
+
         $scope['currentItem'] = $currentItem;
         $scope['itemPluginView'] = $itemPluginView;
         $scope['properties'] = $properties;
@@ -481,6 +501,7 @@ class SearchController extends Controller
         $scope['views'] = $views;
         $scope['orders'] = $orders;
         $scope['hasOrderProperty'] = false;
+        $scope['movePropertyView'] = $movePropertyView;
         $scope['mode'] = 'search';
         
         return view('moonlight::elements', $scope)->render();

@@ -94,7 +94,7 @@ $(function() {
         });
     });
 
-    $('div[property].reset').click(function() {
+    $('.addition.unset[property]').click(function() {
         var name = $(this).attr('property');
 
         $('input:hidden[name="' + name + '"]').val('');

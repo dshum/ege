@@ -148,11 +148,22 @@ class BrowseController extends Controller
         $scope = [];
         
         $loggedUser = LoggedUser::getUser();
+
+        $class = $request->input('item');
+
+        $site = \App::make('site');
         
-        $ones = $request->input('ones');
+        $currentItem = $site->getItemByName($class);
+        
+        if (! $currentItem) {
+            $scope['error'] = 'Класс элементов не найден.';
+            
+            return response()->json($scope);
+        }
+
         $checked = $request->input('checked');
-        
-        if ( ! is_array($checked) || ! sizeof($checked)) {
+
+        if (! is_array($checked) || ! sizeof($checked)) {
             $scope['error'] = 'Пустой список элементов.';
             
             return response()->json($scope);
@@ -160,56 +171,65 @@ class BrowseController extends Controller
         
         $elements = [];
         
-        foreach ($checked as $classId) {
-            $element = Element::getByClassId($classId);
+        foreach ($checked as $id) {
+            $element = $currentItem->getClass()->find($id);
             
             if ($element && $loggedUser->hasUpdateAccess($element)) {
                 $elements[] = $element;
             }
         }
         
-        if ( ! sizeof($elements)) {
-            $scope['error'] = 'Нет элементов для переноса.';
+        if (! sizeof($elements)) {
+            $scope['error'] = 'Нет элементов для удаления.';
             
             return response()->json($scope);
         }
 
-        foreach ($elements as $element) {
-            $elementItem = $element->getItem();
-            $propertyList = $elementItem->getPropertyList();
+        $name = $request->input('name');
+        $value = $request->input('value');
+
+        $moved = [];
+        $destination = null;
+
+        $propertyList = $currentItem->getPropertyList();
+
+        foreach ($propertyList as $propertyName => $property) {
+            if ($property->getHidden()) continue;
+            if ($property->getReadonly()) continue;
+            if (! $property->isOneToOne()) continue;
+            if ($propertyName != $name) continue;
+
+            $relatedClass = $property->getRelatedClass();
+            $relatedItem = $site->getItemByName($relatedClass);
             
-            $changed = false;
-
-            foreach ($propertyList as $propertyName => $property) {
-                if (
-                    $property->getHidden()
-                    || $property->getReadonly()
-                ) continue;
-
-                if (
-                    $property->isOneToOne()
-                    && isset($ones[$propertyName])
-                ) {
-                    $element->$propertyName = $ones[$propertyName]
-                        ? $ones[$propertyName] : null;
-                    
-                    $changed = true;
-                }
+            if ($value) {
+                $destination = $relatedItem->getClass()->find($value);
             }
-            
-            if ($changed) {
-                $element->save();
-                
-                $scope['moved'][] = $element->getClassId();
+
+            foreach ($elements as $element) {
+                if ($element->$propertyName !== $value) {
+                    $element->$propertyName = $value;
+
+                    $element->save();
+
+                    $moved[] = Element::getClassId($element);
+                }
             }
         }
         
-        if (isset($scope['moved'])) {
+        if ($moved) {
             UserAction::log(
                 UserActionType::ACTION_TYPE_MOVE_ELEMENT_LIST_ID,
-                implode(', ', $scope['moved'])
+                $name.'='.$value.': '.implode(', ', $moved)
             );
         }
+
+        $url = $destination
+            ? route('moonlight.browse.element', Element::getClassId($destination))
+            : route('moonlight.browse');
+
+        $scope['moved'] = 'ok';
+        $scope['url'] = $url;
         
         return response()->json($scope);
     }
@@ -584,7 +604,7 @@ class BrowseController extends Controller
         return response()->json(['html' => $html]);
     }
     
-    protected function elementListView($element, $currentItem)
+    protected function elementListView($currentElement, $currentItem)
     {
         $scope = [];
         
@@ -611,8 +631,8 @@ class BrowseController extends Controller
             }
         }
 
-        $classId = $element ? Element::getClassId($element) : null;
-        $class = $element ? Element::getClass($element) : null;
+        $currentClassId = $currentElement ? Element::getClassId($currentElement) : null;
+        $currentClass = $currentElement ? Element::getClass($currentElement) : null;
         
         $propertyList = $currentItem->getPropertyList();
 
@@ -661,22 +681,22 @@ class BrowseController extends Controller
 		}
 
         $criteria = $currentItem->getClass()->where(
-            function($query) use ($propertyList, $element) {
-                if ($element) {
+            function($query) use ($propertyList, $currentElement, $currentClass) {
+                if ($currentElement) {
                     $query->orWhere('id', null);
                 }
 
                 foreach ($propertyList as $property) {
                     if (
-                        $element
+                        $currentElement
                         && $property->isOneToOne()
-                        && $property->getRelatedClass() == Element::getClass($element)
+                        && $property->getRelatedClass() == $currentClass
                     ) {
                         $query->orWhere(
-                            $property->getName(), $element->id
+                            $property->getName(), $currentElement->id
                         );
                     } elseif (
-                        ! $element
+                        ! $currentElement
                         && $property->isOneToOne()
                     ) {
                         $query->orWhere(
@@ -689,11 +709,11 @@ class BrowseController extends Controller
 
         foreach ($propertyList as $property) {
             if (
-                $element
+                $currentElement
                 && $property->isManyToMany()
-                && $property->getRelatedClass() == Element::getClass($element)
+                && $property->getRelatedClass() == $currentClass
             ) {
-                $criteria = $element->{$property->getRelatedMethod()}();
+                $criteria = $currentElement->{$property->getRelatedMethod()}();
                 break;
             }
         }
@@ -736,16 +756,16 @@ class BrowseController extends Controller
 
         $open = false;
 
-        if ($element) {
+        if ($currentElement) {
             foreach ($propertyList as $property) {
                 if (
                     ($property->isOneToOne() || $property->isManyToMany())
-                    && $property->getRelatedClass() == $class
+                    && $property->getRelatedClass() == $currentClass
                 ) {
                     $defaultOpen = $property->getOpenItem();
                     
-                    $open = isset($lists[$classId][$currentItem->getNameId()])
-                        ? $lists[$classId][$currentItem->getNameId()]
+                    $open = isset($lists[$currentClassId][$currentItem->getNameId()])
+                        ? $lists[$currentClassId][$currentItem->getNameId()]
                         : $defaultOpen;
                     
                     break;
@@ -810,15 +830,50 @@ class BrowseController extends Controller
 
         foreach ($elements as $element) {
             foreach ($properties as $property) {
+                $classId = Element::getClassId($element);
                 $propertyScope = $property->setElement($element)->getListView();
                 
-                $views[Element::getClassId($element)][$property->getName()] = view(
+                $views[$classId][$property->getName()] = view(
                     'moonlight::properties.'.$property->getClassName().'.list', $propertyScope
                 )->render();
             }
         }
 
-        $scope['classId'] = $classId;
+        $moveProperty = null;
+        $movePropertyView = null;
+
+        $currentElementItem = $currentElement ? Element::getItem($currentElement) : null;
+
+        foreach ($propertyList as $property) {
+            if ($property->getHidden()) continue;
+            if (! $property->isOneToOne()) continue;
+
+            if (
+                $currentElementItem
+                && $property->getRelatedClass() == $currentElementItem->getName()
+            ) {
+                $moveProperty = $property;
+                break;
+            } elseif (
+                ! $currentElementItem
+                && $property->getParent()
+            ) {
+                $moveProperty = $property;
+                break;
+            }
+        }
+
+        if ($moveProperty) {
+            $element = $currentItem->getClass();
+            
+            $propertyScope = $moveProperty->getEditView();
+
+            $movePropertyView = view(
+                'moonlight::properties.'.$moveProperty->getClassName().'.edit', $propertyScope
+            )->render();
+        }
+
+        $scope['classId'] = $currentClassId;
         $scope['currentItem'] = $currentItem;
         $scope['itemPluginView'] = $itemPluginView;
         $scope['browseFilterView'] = $browseFilterView;
@@ -833,6 +888,8 @@ class BrowseController extends Controller
         $scope['orders'] = $orders;
         $scope['hasOrderProperty'] = false;
         $scope['mode'] = 'browse';
+        $scope['moveProperty'] = $moveProperty;
+        $scope['movePropertyView'] = $movePropertyView;
         
         return view('moonlight::elements', $scope)->render();
     }

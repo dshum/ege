@@ -10,22 +10,22 @@
     <span name="{{ $name }}" class="error"></span>
     @if (! $readonly)
     <div>
-        <input type="hidden" name="{{ $name }}_move" property="{{ $name }}" value="{{ $value ? $value['id'] : null }}">
+        <input type="hidden" name="{{ $name }}_copy" property="{{ $name }}" value="{{ $value ? $value['id'] : null }}">
         <input type="text" class="one" item="{{ $relatedClass }}" property="{{ $name }}" name="{{ $name }}_autocomplete" value="" placeholder="ID или название">
         <span class="addition unset" property="{{ $name }}">Очистить</span>
     </div>
     @endif
-@elseif ($countPlaces > 1)
+@elseif ($countPlaces)
     @if ($rootPlace)
     <p>
-        <input type="radio" name="{{ $name }}_move" property="{{ $name }}" id="{{ $name }}_move_null" value="" {{ ! $value ? 'checked disabled' : '' }}>
-        <label for="{{ $name }}_move_null">Корень сайта</label>
+        <input type="radio" name="{{ $name }}_copy" property="{{ $name }}" id="{{ $name }}_copy_null" value="" {{ ! $value ? 'checked' : '' }}>
+        <label for="{{ $name }}_copy_null">Корень сайта</label>
     </p>
     @endif
     @foreach ($elementPlaces as $element)
     <p>
-        <input type="radio" name="{{ $name }}_move" property="{{ $name }}" id="{{ $name }}_move_{{ $element['id'] }}" value="{{ $element['id'] }}" {{ $value && $value['id'] == $element['id'] ? 'checked disabled' : '' }}>
-        <label for="{{ $name }}_move_{{ $element['id'] }}">{{ $element['name'] }}</label>
+        <input type="radio" name="{{ $name }}_copy" property="{{ $name }}" id="{{ $name }}_copy_{{ $element['id'] }}" value="{{ $element['id'] }}" {{ $value && $value['id'] == $element['id'] ? 'checked' : '' }}>
+        <label for="{{ $name }}_copy_{{ $element['id'] }}">{{ $element['name'] }}</label>
     </p>
     @endforeach
 @endif

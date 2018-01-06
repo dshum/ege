@@ -3,6 +3,7 @@
 namespace Moonlight\Properties;
 
 use Illuminate\Database\Eloquent\Model;
+use Moonlight\Main\Site;
 use Moonlight\Main\Item;
 use Moonlight\Main\Element;
 
@@ -136,6 +137,7 @@ class OneToOneProperty extends BaseProperty
 	{
 		$site = \App::make('site');
 
+		$currentItem = $this->getItem();
 		$relatedClass = $this->getRelatedClass();
 		$relatedItem = $site->getItemByName($relatedClass);
 		$mainProperty = $relatedItem->getMainProperty();
@@ -144,7 +146,53 @@ class OneToOneProperty extends BaseProperty
             'id' => $this->value->id,
             'classId' => Element::getClassId($this->value),
             'name' => $this->value->{$mainProperty},
-        ] : null;
+		] : null;
+		
+		$binds = $site->getBinds();
+		$itemPlace = null;
+		$rootPlace = null;
+        $elementPlaces = [];
+
+        foreach ($binds as $parent => $items) {
+			foreach ($items as $item) {
+				if ($item != $currentItem->getNameId()) continue;
+
+                if ($parent == Site::ROOT && ! $this->getRequired()) {
+                    $rootPlace = Site::ROOT;
+
+                    continue;
+                }
+
+                $parentItem = $site->getItemByName($parent);
+
+                if ($parentItem && $parentItem->getNameId() == $relatedItem->getNameId()) {
+                    $itemPlace = $parentItem->getName();
+
+                    continue;
+				}
+
+                $parentElement = Element::getByClassId($parent);
+
+                if ($parentElement) {
+					$parentElementItem = Element::getItem($parentElement);
+					$parentElementMainProperty = $parentElementItem->getMainProperty();
+
+					if ($parentElementItem->getNameId() == $relatedItem->getNameId()) {
+						$elementPlaces[] = [
+							'id' => $parentElement->id,
+							'classId' => Element::getClassId($parentElement),
+							'name' => $parentElement->{$parentElementMainProperty},
+						];
+					}
+
+                    continue;
+                }
+            }
+		}
+
+		$countPlaces = sizeof($elementPlaces);
+
+		if ($rootPlace) $countPlaces++;
 
 		$scope = [
 			'name' => $this->getName(),
@@ -153,59 +201,11 @@ class OneToOneProperty extends BaseProperty
 			'readonly' => $this->getReadonly(),
 			'required' => $this->getRequired(),
 			'relatedClass' => $relatedItem->getNameId(),
+			'itemPlace' => $itemPlace,
+			'rootPlace' => $rootPlace,
+			'elementPlaces' => $elementPlaces,
+			'countPlaces' => $countPlaces,
 		];
-
-		return $scope;
-	}
-    
-    public function getCopyView()
-	{
-		$site = \App::make('site');
-
-		$relatedClass = $this->getRelatedClass();
-		$relatedItem = $site->getItemByName($relatedClass);
-		$mainProperty = $relatedItem->getMainProperty();
-        
-        $value = $this->value ? [
-            'id' => $this->value->id,
-            'classId' => Element::getClassId($this->value),
-            'name' => $this->value->{$mainProperty},
-        ] : null;
-
-		$scope = array(
-			'name' => $this->getName().'_copy',
-			'title' => $this->getTitle(),
-			'value' => $value,
-			'readonly' => $this->getReadonly(),
-			'required' => $this->getRequired(),
-			'relatedClass' => $relatedItem->getNameId(),
-		);
-
-		return $scope;
-	}
-
-	public function getMoveView()
-	{
-		$site = \App::make('site');
-
-		$relatedClass = $this->getRelatedClass();
-		$relatedItem = $site->getItemByName($relatedClass);
-		$mainProperty = $relatedItem->getMainProperty();
-        
-        $value = $this->value ? [
-            'id' => $this->value->id,
-            'classId' => Element::getClassId($this->value),
-            'name' => $this->value->{$mainProperty},
-        ] : null;
-
-		$scope = array(
-			'name' => $this->getName().'_move',
-			'title' => $this->getTitle(),
-			'value' => $value,
-			'readonly' => $this->getReadonly(),
-			'required' => $this->getRequired(),
-			'relatedClass' => $relatedItem->getNameId(),
-		);
 
 		return $scope;
 	}

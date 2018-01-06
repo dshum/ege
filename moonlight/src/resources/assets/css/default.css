@@ -1520,9 +1520,17 @@ form .loadfile .reset {
   cursor: pointer;
 }
 
+.autocomplete-suggestion small {
+  font-size: 0.8rem;
+}
+
 .autocomplete-selected {
   background-color: steelblue;
   color: white;
+}
+
+.autocomplete-selected small {
+  color: #def;
 }
 
 .autocomplete-suggestions strong {
@@ -1544,6 +1552,7 @@ form .loadfile .reset {
 .addition {
   display: inline-block;
   margin-left: 1rem;
+  padding: 0;
   font-size: 0.8rem;
   border-bottom: 1px dashed #999;
   cursor: pointer;
