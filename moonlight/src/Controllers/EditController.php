@@ -57,7 +57,10 @@ class EditController extends Controller
 				continue;
 			}
 
-			if ($property->getReadonly()) continue;
+			if (
+                $property->getReadonly()
+                && ! $property->getRequired()
+            ) continue;
 
 			if (
 				$property instanceof FileProperty
@@ -71,7 +74,8 @@ class EditController extends Controller
 
 			if (
 				$property->isOneToOne()
-				&& $propertyName == $name
+                && $propertyName == $name
+                && ($value || ! $property->getRequired())
 			) {
                 $clone->$propertyName = $value ? $value : null;
                 continue;
@@ -132,6 +136,7 @@ class EditController extends Controller
             if ($property->getReadonly()) continue;
             if (! $property->isOneToOne()) continue;
             if ($propertyName != $name) continue;
+            if (! $value && $property->getRequired()) continue;
 
 			$element->$propertyName = $value ? $value : null;
 
@@ -649,6 +654,8 @@ class EditController extends Controller
                 || (! $parentClass && $property->getParent())
             ) {
                 $propertyScope = $property->setElement($element)->getEditView();
+
+                $propertyScope['mode'] = 'edit';
 
                 $copyPropertyView = view(
                     'moonlight::properties.'.$property->getClassName().'.copy', $propertyScope

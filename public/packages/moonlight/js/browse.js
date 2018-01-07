@@ -5,7 +5,7 @@ $(function() {
     var checked = {};
 
     var init = function(item) {
-        $('div[item="' + item + '"] input.one').each(function() {
+        $('input.one').each(function() {
             var parent = $(this).parents('div.row');
             var relatedItem = $(this).attr('item');
             var name = $(this).attr('property');

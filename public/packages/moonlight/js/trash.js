@@ -206,13 +206,13 @@ $(function() {
                 checked: checked[item]
             },
             function(data) {
-                $.unblockUI();
-
-                if (data.error) {
-                    $.alert(data.error);
-                } else if (data.restored) {
-                    getElements(item);
-                }
+                $.unblockUI(function() {
+                    if (data.error) {
+                        $.alert(data.error);
+                    } else if (data.restored) {
+                        getElements(item);
+                    }
+                });
             }
         );
     });
@@ -231,13 +231,13 @@ $(function() {
                 checked: checked[item]
             },
             function(data) {
-                $.unblockUI();
-
-                if (data.error) {
-                    $.alert(data.error);
-                } else if (data.deleted) {
-                    getElements(item);
-                }
+                $.unblockUI(function() {
+                    if (data.error) {
+                        $.alert(data.error);
+                    } else if (data.deleted) {
+                        getElements(item);
+                    }
+                });
             }
         );
     });

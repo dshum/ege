@@ -469,7 +469,7 @@ class SearchController extends Controller
             }
         }
 
-        $moveProperty = null;
+        $copyPropertyView = null;
         $movePropertyView = null;
 
         foreach ($propertyList as $property) {
@@ -477,15 +477,16 @@ class SearchController extends Controller
             if (! $property->isOneToOne()) continue;
             if (! $property->getParent()) continue;
 
-            $moveProperty = $property;
-            break;
-        }
+            $propertyScope = $property->dropElement()->getEditView();
 
-        if ($moveProperty) {
-            $propertyScope = $moveProperty->getEditView();
+            $propertyScope['mode'] = 'search';
+
+            $copyPropertyView = view(
+                'moonlight::properties.'.$property->getClassName().'.copy', $propertyScope
+            )->render();
 
             $movePropertyView = view(
-                'moonlight::properties.'.$moveProperty->getClassName().'.move', $propertyScope
+                'moonlight::properties.'.$property->getClassName().'.move', $propertyScope
             )->render();
         }
 
@@ -501,8 +502,9 @@ class SearchController extends Controller
         $scope['views'] = $views;
         $scope['orders'] = $orders;
         $scope['hasOrderProperty'] = false;
-        $scope['movePropertyView'] = $movePropertyView;
         $scope['mode'] = 'search';
+        $scope['copyPropertyView'] = $copyPropertyView;
+        $scope['movePropertyView'] = $movePropertyView;
         
         return view('moonlight::elements', $scope)->render();
     }

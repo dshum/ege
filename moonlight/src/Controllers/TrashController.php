@@ -438,7 +438,7 @@ class TrashController extends Controller
         
         $propertyList = $currentItem->getPropertyList();
 
-		if ( ! $loggedUser->isSuperUser()) {
+		if (! $loggedUser->isSuperUser()) {
 			$permissionDenied = true;
 			$deniedElementList = [];
 			$allowedElementList = [];
@@ -598,6 +598,8 @@ class TrashController extends Controller
         $scope['orders'] = $orders;
         $scope['hasOrderProperty'] = false;
         $scope['mode'] = 'trash';
+        $scope['copyPropertyView'] = null;
+        $scope['movePropertyView'] = null;
         
         return view('moonlight::elements', $scope)->render();
     }

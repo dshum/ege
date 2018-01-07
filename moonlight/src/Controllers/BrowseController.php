@@ -113,7 +113,10 @@ class BrowseController extends Controller
                     continue;
                 }
     
-                if ($property->getReadonly()) continue;
+                if (
+                    $property->getReadonly()
+                    && ! $property->getRequired()
+                ) continue;
     
                 if (
                     $property instanceof FileProperty
@@ -128,6 +131,7 @@ class BrowseController extends Controller
                 if (
                     $property->isOneToOne()
                     && $propertyName == $name
+                    && ($value || ! $property->getRequired())
                 ) {
                     $relatedClass = $property->getRelatedClass();
                     $relatedItem = $site->getItemByName($relatedClass);
@@ -225,6 +229,7 @@ class BrowseController extends Controller
             if ($property->getReadonly()) continue;
             if (! $property->isOneToOne()) continue;
             if ($propertyName != $name) continue;
+            if (! $value && $property->getRequired()) continue;
 
             $relatedClass = $property->getRelatedClass();
             $relatedItem = $site->getItemByName($relatedClass);
@@ -249,15 +254,15 @@ class BrowseController extends Controller
                 UserActionType::ACTION_TYPE_MOVE_ELEMENT_LIST_ID,
                 $name.'='.$value.': '.implode(', ', $moved)
             );
+
+            $url = $destination
+                ? route('moonlight.browse.element', Element::getClassId($destination))
+                : route('moonlight.browse');
+
+            $scope['moved'] = 'ok';
+            $scope['url'] = $url;
         }
 
-        $url = $destination
-            ? route('moonlight.browse.element', Element::getClassId($destination))
-            : route('moonlight.browse');
-
-        $scope['moved'] = 'ok';
-        $scope['url'] = $url;
-        
         return response()->json($scope);
     }
     
@@ -886,6 +891,8 @@ class BrowseController extends Controller
                 }
 
                 $propertyScope = $property->setElement($element)->getEditView();
+
+                $propertyScope['mode'] = 'browse';
 
                 $copyPropertyView = view(
                     'moonlight::properties.'.$property->getClassName().'.copy', $propertyScope

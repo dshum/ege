@@ -15,7 +15,7 @@
         <span class="addition unset" property="{{ $name }}">Очистить</span>
     </div>
     @endif
-@elseif ($countPlaces > 1)
+@elseif ($countPlaces > 1 && ! $readonly)
     <label>{{ $title }}:</label><span name="{{ $name }}" class="error"></span>
     @if ($rootPlace)
     <p>

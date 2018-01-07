@@ -5,6 +5,29 @@ jQuery.expr[':'].contains = function(a, i, m) {
 $(function() {
     var checked = {};
 
+    var init = function(item) {
+        $('div[item="' + item + '"] input.one').each(function() {
+            var parent = $(this).parents('div.row');
+            var relatedItem = $(this).attr('item');
+            var name = $(this).attr('property');
+    
+            $(this).autocomplete({
+                serviceUrl: '/moonlight/elements/autocomplete',
+                params: {
+                    item: relatedItem
+                },
+                formatResult: function(suggestion, currentValue) {
+                    return suggestion.value + ' <small>(' + suggestion.id + ')</small>';
+                },
+                onSelect: function (suggestion) {
+                    parent.find('input:hidden[name="' + name + '"]').val(suggestion.id);
+                    parent.find('span[container][name="' + name + '"]').html(suggestion.value);
+                },
+                minChars: 0
+            });
+        });
+    };
+
     var getElements = function(item, page) {
         $.blockUI();
 
@@ -20,6 +43,8 @@ $(function() {
             
                 if (data.html) {
                     $('.list-container').html(data.html);
+
+                    init(item);
                 }
             },
             error: function() {
@@ -87,6 +112,9 @@ $(function() {
             params: {
                 item: item
             },
+            formatResult: function(suggestion, currentValue) {
+                return suggestion.value + ' <small>(' + suggestion.id + ')</small>';
+            },
             onSelect: function (suggestion) {
                 $('input:hidden[name="' + name + '"]').val(suggestion.id);
             },
@@ -135,13 +163,13 @@ $(function() {
         }
 
         if (checked[item].length) {
-            itemContainer.find('.button.copy').addClass('enabled');
-            itemContainer.find('.button.move').addClass('enabled');
-            itemContainer.find('.button.delete').addClass('enabled');
+            itemContainer.find('.button.copy:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.move:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.delete:not(.disabled)').addClass('enabled');
         } else {
-            itemContainer.find('.button.copy').removeClass('enabled');
-            itemContainer.find('.button.move').removeClass('enabled');
-            itemContainer.find('.button.delete').removeClass('enabled');
+            itemContainer.find('.button.copy:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.move:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.delete:not(.disabled)').removeClass('enabled');
         }
     });
 
@@ -172,14 +200,28 @@ $(function() {
         }
 
         if (checked[item].length) {
-            itemContainer.find('.button.copy').addClass('enabled');
-            itemContainer.find('.button.move').addClass('enabled');
-            itemContainer.find('.button.delete').addClass('enabled');
+            itemContainer.find('.button.copy:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.move:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.delete:not(.disabled)').addClass('enabled');
         } else {
-            itemContainer.find('.button.copy').removeClass('enabled');
-            itemContainer.find('.button.move').removeClass('enabled');
-            itemContainer.find('.button.delete').removeClass('enabled');
+            itemContainer.find('.button.copy:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.move:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.delete:not(.disabled)').removeClass('enabled');
         }
+    });
+
+    $('body').on('click', '.button.copy.enabled', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        $.confirm(null, '.confirm[id="' + item + '_copy"]');
+    });
+
+    $('body').on('click', '.button.move.enabled', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        $.confirm(null, '.confirm[id="' + item + '_move"]');
     });
 
     $('body').on('click', '.button.delete.enabled', function() {

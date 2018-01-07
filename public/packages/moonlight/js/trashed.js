@@ -43,13 +43,13 @@ $(function() {
             url,
             {},
             function(data) {
-                $.unblockUI();
-
-                if (data.error) {
-                    $.alert(data.error);
-                } else if (data.restored && data.url) {
-                    document.location.href = data.url;
-                }
+                $.unblockUI(function() {
+                    if (data.error) {
+                        $.alert(data.error);
+                    } else if (data.restored && data.url) {
+                        location.href = data.url;
+                    }
+                });
             }
         );
     });
@@ -66,13 +66,13 @@ $(function() {
             url,
             {},
             function(data) {
-                $.unblockUI();
-
-                if (data.error) {
-                    $.alert(data.error);
-                } else if (data.deleted && data.url) {
-                    document.location.href = data.url;
-                }
+                $.unblockUI(function() {
+                    if (data.error) {
+                        $.alert(data.error);
+                    } else if (data.deleted && data.url) {
+                        location.href = data.url;
+                    }
+                });
             }
         );
     });

@@ -16,6 +16,9 @@ $(function() {
                 params: {
                     item: item
                 },
+                formatResult: function(suggestion, currentValue) {
+                    return suggestion.value + ' <small>(' + suggestion.id + ')</small>';
+                },
                 onSelect: function (suggestion) {
                     parent.find('input:hidden[name="' + name + '"]').val(suggestion.id);
                     parent.find('span[container][name="' + name + '"]').html(suggestion.value);
@@ -34,6 +37,9 @@ $(function() {
                 serviceUrl: '/moonlight/elements/autocomplete',
                 params: {
                     item: item
+                },
+                formatResult: function(suggestion, currentValue) {
+                    return suggestion.value + ' <small>(' + suggestion.id + ')</small>';
                 },
                 onSelect: function (suggestion) {
                     element = suggestion;

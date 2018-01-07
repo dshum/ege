@@ -78,6 +78,7 @@
         @endif
     </div>
 </div>
+@if ($mode == 'trash')
 <div class="confirm" id="{{ $currentItem->getNameId() }}_restore">
     <div class="container">
         <div class="content">
@@ -89,6 +90,8 @@
         </div>
     </div>
 </div>
+@endif
+@if ($mode != 'trash')
 <div class="confirm" id="{{ $currentItem->getNameId() }}_copy">
     <div class="container">
         <div class="content">
@@ -109,7 +112,8 @@
         </div>
     </div>
 </div>
-@if ($movePropertyView)
+@endif
+@if ($mode != 'trash' && $movePropertyView)
 <div class="confirm" id="{{ $currentItem->getNameId() }}_move">
     <div class="container">
         <div class="content">
