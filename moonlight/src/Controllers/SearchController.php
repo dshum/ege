@@ -490,6 +490,10 @@ class SearchController extends Controller
             )->render();
         }
 
+        if (! $copyPropertyView && $currentItem->getRoot()) {
+            $copyPropertyView = 'Корень сайта';
+        }
+
         $scope['currentItem'] = $currentItem;
         $scope['itemPluginView'] = $itemPluginView;
         $scope['properties'] = $properties;

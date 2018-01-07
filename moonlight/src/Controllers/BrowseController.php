@@ -14,6 +14,9 @@ use Moonlight\Models\UserAction;
 use Moonlight\Properties\OrderProperty;
 use Moonlight\Properties\FileProperty;
 use Moonlight\Properties\ImageProperty;
+use Moonlight\Properties\ManyToManyProperty;
+use Moonlight\Properties\PluginProperty;
+use Moonlight\Properties\VirtualProperty;
 
 class BrowseController extends Controller
 {
@@ -110,6 +113,14 @@ class BrowseController extends Controller
             foreach ($propertyList as $propertyName => $property) {
                 if ($property instanceof OrderProperty) {
                     $property->setElement($clone)->set();
+                    continue;
+                }
+
+                if (
+                    $property instanceof ManyToManyProperty
+                    || $property instanceof PluginProperty
+                    || $property instanceof VirtualProperty
+                ) {
                     continue;
                 }
     
@@ -904,6 +915,10 @@ class BrowseController extends Controller
 
                 break;
             }
+        }
+
+        if (! $copyPropertyView && $currentItem->getRoot()) {
+            $copyPropertyView = 'Корень сайта';
         }
 
         $scope['classId'] = $currentClassId;

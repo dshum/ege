@@ -25,7 +25,11 @@
             <div class="button delete"><i class="fa fa-trash-o"></i>Удалить</div>
             @else
             <div class="button save"><i class="fa fa-floppy-o"></i>Сохранить</div>
+            @if ($copyPropertyView)
             <div class="button copy"><i class="fa fa-clone"></i>Копировать</div>
+            @else
+            <div class="button copy disabled"><i class="fa fa-arrow-right"></i>Копировать</div>
+            @endif
             @if ($movePropertyView)
             <div class="button move"><i class="fa fa-arrow-right"></i>Перенести</div>
             @else
@@ -91,18 +95,14 @@
     </div>
 </div>
 @endif
-@if ($mode != 'trash')
+@if ($copyPropertyView)
 <div class="confirm" id="{{ $currentItem->getNameId() }}_copy">
     <div class="container">
         <div class="content">
             <div>Куда копируем?</div>
             <div class="edit">
                 <div class="row">
-                    @if ($copyPropertyView)
-                    {!! $copyPropertyView !!}
-                    @else
-                    Корень сайта
-                    @endif
+                {!! $copyPropertyView !!}
                 </div>
             </div>
         </div>
@@ -113,7 +113,7 @@
     </div>
 </div>
 @endif
-@if ($mode != 'trash' && $movePropertyView)
+@if ($movePropertyView)
 <div class="confirm" id="{{ $currentItem->getNameId() }}_move">
     <div class="container">
         <div class="content">

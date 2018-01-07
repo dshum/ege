@@ -32,7 +32,11 @@
             </ul>
             <div class="buttons">
                 <div class="button save enabled"><i class="fa fa-floppy-o"></i>Сохранить</div>
+                @if ($copyPropertyView)
                 <div class="button copy enabled"><i class="fa fa-clone"></i>Копировать</div>
+                @else
+                <div class="button copy"><i class="fa fa-clone"></i>Копировать</div>
+                @endif
                 @if ($movePropertyView)
                 <div class="button move enabled"><i class="fa fa-arrow-right"></i>Перенести</div>
                 @else
@@ -55,17 +59,14 @@
         </div>
     </div>
 </div>
+@if ($copyPropertyView)
 <div class="confirm" id="copy">
     <div class="container">
         <div class="content">
             <div>Куда копируем?</div>
             <div class="edit" radiogroup="copy">
                 <div class="row">
-                    @if ($copyPropertyView)
                     {!! $copyPropertyView !!}
-                    @else
-                    {{ $parentElement ? $parentElement['name'] : 'Корень сайта' }}
-                    @endif
                 </div>
             </div>
         </div>
@@ -75,6 +76,7 @@
         </div>
     </div>
 </div>
+@endif
 @if ($movePropertyView)
 <div class="confirm" id="move">
     <div class="container">

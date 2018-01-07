@@ -14,6 +14,9 @@ use Moonlight\Properties\MainProperty;
 use Moonlight\Properties\OrderProperty;
 use Moonlight\Properties\FileProperty;
 use Moonlight\Properties\ImageProperty;
+use Moonlight\Properties\ManyToManyProperty;
+use Moonlight\Properties\PluginProperty;
+use Moonlight\Properties\VirtualProperty;
 
 class EditController extends Controller
 {
@@ -55,7 +58,15 @@ class EditController extends Controller
 			if ($property instanceof OrderProperty) {
 				$property->setElement($clone)->set();
 				continue;
-			}
+            }
+            
+            if (
+                $property instanceof ManyToManyProperty
+                || $property instanceof PluginProperty
+                || $property instanceof VirtualProperty
+            ) {
+                continue;
+            }
 
 			if (
                 $property->getReadonly()
@@ -667,6 +678,10 @@ class EditController extends Controller
 
                 break;
             }
+        }
+
+        if (! $copyPropertyView && $currentItem->getRoot()) {
+            $copyPropertyView = 'Корень сайта';
         }
 
         $rubricController = new RubricController;
