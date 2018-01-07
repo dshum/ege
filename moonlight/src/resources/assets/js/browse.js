@@ -235,7 +235,6 @@ $(function() {
     $('body').on('click', '.confirm .btn.copy', function() {
         var itemContainer = $(this).parents('div[item]');
         var parent = $(this).parents('.confirm');
-        var classId = itemContainer.attr('classId');
         var item = itemContainer.attr('item');
 
         var name, value;
@@ -275,7 +274,6 @@ $(function() {
     $('body').on('click', '.confirm .btn.move', function() {
         var itemContainer = $(this).parents('div[item]');
         var parent = $(this).parents('.confirm');
-        var classId = itemContainer.attr('classId');
         var item = itemContainer.attr('item');
 
         var one = null;

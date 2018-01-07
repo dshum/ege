@@ -101,7 +101,7 @@
                     @if ($copyPropertyView)
                     {!! $copyPropertyView !!}
                     @else
-                    {{ $currentElement ? $currentElement->name : 'Корень сайта' }}
+                    Корень сайта
                     @endif
                 </div>
             </div>

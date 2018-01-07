@@ -24,7 +24,7 @@
     @endif
     @foreach ($elementPlaces as $element)
     <p>
-        <input type="radio" name="{{ $name }}_move" property="{{ $name }}" id="{{ $name }}_move_{{ $element['id'] }}" value="{{ $element['id'] }}" {{ $value && $value['id'] == $element['id'] ? 'checked' : '' }} {{ $value && $value['id'] == $element['id'] && $mode != 'disabled' ? 'checked' : '' }}>
+        <input type="radio" name="{{ $name }}_move" property="{{ $name }}" id="{{ $name }}_move_{{ $element['id'] }}" value="{{ $element['id'] }}" {{ $value && $value['id'] == $element['id'] ? 'checked' : '' }} {{ $value && $value['id'] == $element['id'] && $mode != 'search' ? 'disabled' : '' }}>
         <label for="{{ $name }}_move_{{ $element['id'] }}">{{ $element['name'] }}</label>
     </p>
     @endforeach
