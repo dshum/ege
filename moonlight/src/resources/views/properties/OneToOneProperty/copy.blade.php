@@ -12,7 +12,9 @@
     <div>
         <input type="hidden" name="{{ $name }}" property="{{ $name }}" value="{{ $value ? $value['id'] : null }}">
         <input type="text" class="one" item="{{ $relatedClass }}" property="{{ $name }}" name="{{ $name }}_autocomplete" value="" placeholder="ID или название">
+        @if (! $required)
         <span class="addition unset" property="{{ $name }}">Очистить</span>
+        @endif
     </div>
     @endif
 @elseif ($countPlaces > 1)

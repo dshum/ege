@@ -138,7 +138,7 @@ class EditController extends Controller
 
 		$currentItem = Element::getItem($element);
 
-		$propertyList = $currentItem->getPropertyList();
+        $propertyList = $currentItem->getPropertyList();
         
         $changed = false;
 

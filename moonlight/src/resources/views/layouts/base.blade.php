@@ -34,9 +34,11 @@ $(function() {
         </div>
     </div>
     <div class="alert">
-        <div class="container">
-            <div class="hide">&#215;</div>
-            <div class="content"></div>
+        <div class="wrapper">
+            <div class="container">
+                <div class="hide">&#215;</div>
+                <div class="content"></div>
+            </div>
         </div>
     </div>
 @section('nav')

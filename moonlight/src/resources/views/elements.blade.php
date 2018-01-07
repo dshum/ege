@@ -84,61 +84,69 @@
 </div>
 @if ($mode == 'trash')
 <div class="confirm" id="{{ $currentItem->getNameId() }}_restore">
-    <div class="container">
-        <div class="content">
-            Восстановить выбранные элементы?
-        </div>
-        <div class="bottom">
-            <input type="button" value="Восстановить" class="btn restore">
-            <input type="button" value="Отмена" class="btn cancel">
+    <div class="wrapper">
+        <div class="container">
+            <div class="content">
+                Восстановить выбранные элементы?
+            </div>
+            <div class="bottom">
+                <input type="button" value="Восстановить" class="btn restore">
+                <input type="button" value="Отмена" class="btn cancel">
+            </div>
         </div>
     </div>
 </div>
 @endif
 @if ($copyPropertyView)
 <div class="confirm" id="{{ $currentItem->getNameId() }}_copy">
-    <div class="container">
-        <div class="content">
-            <div>Куда копируем?</div>
-            <div class="edit">
-                <div class="row">
-                {!! $copyPropertyView !!}
+    <div class="wrapper">
+        <div class="container">
+            <div class="content">
+                <div>Куда копируем?</div>
+                <div class="edit">
+                    <div class="row">
+                    {!! $copyPropertyView !!}
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="bottom">
-            <input type="button" value="Скопировать" class="btn copy">
-            <input type="button" value="Отмена" class="btn cancel">
+            <div class="bottom">
+                <input type="button" value="Скопировать" class="btn copy">
+                <input type="button" value="Отмена" class="btn cancel">
+            </div>
         </div>
     </div>
 </div>
 @endif
 @if ($movePropertyView)
 <div class="confirm" id="{{ $currentItem->getNameId() }}_move">
-    <div class="container">
-        <div class="content">
-            <div>Куда переносим?</div>
-            <div class="edit">
-                <div class="row">
-                    {!! $movePropertyView !!}
+    <div class="wrapper">
+        <div class="container">
+            <div class="content">
+                <div>Куда переносим?</div>
+                <div class="edit">
+                    <div class="row">
+                        {!! $movePropertyView !!}
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="bottom">
-            <input type="button" value="Перенести" class="btn move">
-            <input type="button" value="Отмена" class="btn cancel">
+            <div class="bottom">
+                <input type="button" value="Перенести" class="btn move">
+                <input type="button" value="Отмена" class="btn cancel">
+            </div>
         </div>
     </div>
 </div>
 @endif
 <div class="confirm" id="{{ $currentItem->getNameId() }}_delete">
-    <div class="container">
-        <div class="content">
-            Удалить выбранные элементы?
-        </div>
-        <div class="bottom">
-            <input type="button" value="Удалить" class="btn danger remove">
-            <input type="button" value="Отмена" class="btn cancel">
+    <div class="wrapper">
+        <div class="container">
+            <div class="content">
+                Удалить выбранные элементы?
+            </div>
+            <div class="bottom">
+                <input type="button" value="Удалить" class="btn danger remove">
+                <input type="button" value="Отмена" class="btn cancel">
+            </div>
         </div>
     </div>
 </div>

@@ -59,11 +59,13 @@
     </div>
 </div>
 <div class="confirm">
-    <div class="container">
-        <div class="content"></div>
-        <div class="bottom">
-            <input type="button" value="Удалить" class="btn danger remove">
-            <input type="button" value="Отмена" class="btn cancel">
+    <div class="wrapper">
+        <div class="container">
+            <div class="content"></div>
+            <div class="bottom">
+                <input type="button" value="Удалить" class="btn danger remove">
+                <input type="button" value="Отмена" class="btn cancel">
+            </div>
         </div>
     </div>
 </div>

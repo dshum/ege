@@ -58,15 +58,6 @@ $(function() {
             parent.find('span[container][name="' + name + '"]').html('Не определено');
         });
 
-        $('.addition.reset[property]').click(function() {
-            var parent = $(this).parents('div.row');
-            var name = $(this).attr('property');
-    
-            parent.find('input:hidden[name="' + name + '"]').val(-1);
-            parent.find('input:text[name="' + name + '_autocomplete"]').val('');
-            parent.find('span[container][name="' + name + '"]').html('Не изменять');
-        });
-
         $('.addition.add[property]').click(function() {
             var parent = $(this).parents('div.row');
             var name = $(this).attr('property');
@@ -127,7 +118,9 @@ $(function() {
     });
 
     $('form').submit(function() {
-        $('span.error').fadeOut(200);
+        var form = $(this);
+
+        form.find('span.error').fadeOut(200);
 
         $('textarea[tinymce="true"]').each(function() {
             var name = $(this).attr('name');
@@ -147,7 +140,7 @@ $(function() {
                     $.alert(data.error);
                 } else if (data.errors) {
                     for (var field in data.errors) {
-                        $('span.error[name="' + field + '"]')
+                        form.find('span.error[name="' + field + '"]')
                             .html(data.errors[field])
                             .fadeIn(200);
                     }
@@ -249,6 +242,7 @@ $(function() {
                 if (data.error) {
                     $.alert(data.error);
                 } else if (data.moved) {
+                    $.confirmClose();
                     location.reload();
                 }
             });

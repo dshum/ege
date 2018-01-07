@@ -61,48 +61,54 @@
 </div>
 @if ($copyPropertyView)
 <div class="confirm" id="copy">
-    <div class="container">
-        <div class="content">
-            <div>Куда копируем?</div>
-            <div class="edit" radiogroup="copy">
-                <div class="row">
-                    {!! $copyPropertyView !!}
+    <div class="wrapper">
+        <div class="container">
+            <div class="content">
+                <div>Куда копируем?</div>
+                <div class="edit" radiogroup="copy">
+                    <div class="row">
+                        {!! $copyPropertyView !!}
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="bottom">
-            <input type="button" value="Скопировать" class="btn copy" url="{{ route('moonlight.element.copy', $classId) }}">
-            <input type="button" value="Отмена" class="btn cancel">
+            <div class="bottom">
+                <input type="button" value="Скопировать" class="btn copy" url="{{ route('moonlight.element.copy', $classId) }}">
+                <input type="button" value="Отмена" class="btn cancel">
+            </div>
         </div>
     </div>
 </div>
 @endif
 @if ($movePropertyView)
 <div class="confirm" id="move">
-    <div class="container">
-        <div class="content">
-            <div>Куда переносим?</div>
-            <div class="edit">
-                <div class="row">
-                    {!! $movePropertyView !!}
+    <div class="wrapper">
+        <div class="container">
+            <div class="content">
+                <div>Куда переносим?</div>
+                <div class="edit">
+                    <div class="row">
+                        {!! $movePropertyView !!}
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="bottom">
-            <input type="button" value="Перенести" class="btn move" url="{{ route('moonlight.element.move', $classId) }}">
-            <input type="button" value="Отмена" class="btn cancel">
+            <div class="bottom">
+                <input type="button" value="Перенести" class="btn move" url="{{ route('moonlight.element.move', $classId) }}">
+                <input type="button" value="Отмена" class="btn cancel">
+            </div>
         </div>
     </div>
 </div>
 @endif
 <div class="confirm" id="delete">
-    <div class="container">
-        <div class="content">
-            Удалить элемент &laquo;{{ $element->$mainProperty }}&raquo;?
-        </div>
-        <div class="bottom">
-            <input type="button" value="Удалить" class="btn danger remove" url="{{ route('moonlight.element.delete', $classId) }}">
-            <input type="button" value="Отмена" class="btn cancel">
+    <div class="wrapper">
+        <div class="container">
+            <div class="content">
+                Удалить элемент &laquo;{{ $element->$mainProperty }}&raquo;?
+            </div>
+            <div class="bottom">
+                <input type="button" value="Удалить" class="btn danger remove" url="{{ route('moonlight.element.delete', $classId) }}">
+                <input type="button" value="Отмена" class="btn cancel">
+            </div>
         </div>
     </div>
 </div>
