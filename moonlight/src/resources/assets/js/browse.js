@@ -4,8 +4,26 @@ $(function() {
     var empty = true;
     var checked = {};
 
+    if (typeof jQuery !== 'undefined') {
+        jQuery.fn.sortable = function (options) {
+          return this.each(function () {
+              var $el = $(this);
+              var sortable = $el.data('sortable');
+    
+              if (!sortable && options instanceof Object) {
+                  sortable = new Sortable(this, options);
+                  $el.data('sortable', sortable);
+              }
+    
+              if (sortable && (options in sortable)) {
+                   sortable[sortable].apply(sortable, [].slice.call(arguments, 1));
+              }
+          }) 
+        };
+    }
+
     var init = function(item) {
-        $('input.one').each(function() {
+        $('.main div[item="' + item + '"]input.one').each(function() {
             var parent = $(this).parents('div.row');
             var relatedItem = $(this).attr('item');
             var name = $(this).attr('property');
@@ -23,6 +41,36 @@ $(function() {
                     parent.find('span[container][name="' + name + '"]').html(suggestion.value);
                 },
                 minChars: 0
+            });
+        });
+
+        $('.main div[item="' + item + '"] table.elements tbody').each(function() {
+            var tbody = $(this);
+
+            tbody.sortable({
+                handle: '.drag',
+                chosenClass: 'chosen',
+                dragClass: 'dragging',
+                onEnd: function (event) {
+                    if (event.newIndex === event.oldIndex) return false;
+
+                    var order = [];
+
+                    $(event.to).find('tr').each(function() {
+                        var id = $(this).attr('elementId');
+
+                        order.push(id);
+                    });
+
+                    $.blockUI();
+
+                    $.post('/moonlight/elements/order', {
+                        item: item,
+                        elements: order
+                    }, function(data) {
+                        $.unblockUI();
+                    });
+                }
             });
         });
     };
@@ -116,9 +164,23 @@ $(function() {
 
                 if (data.html) {
                     $('.main div[item="' + item + '"]').html(data.html);
+
+                    init(item);
                 }
             });
         }
+    });
+
+    $('body').on('mouseover', 'table.elements td.check', function() {
+        var tr = $(this).parent();
+
+        tr.addClass('hover');
+    });
+
+    $('body').on('mouseout', 'table.elements td.check', function() {
+        var tr = $(this).parent();
+
+        tr.removeClass('hover');
     });
 
     $('body').on('click', 'th.check', function() {
@@ -429,6 +491,22 @@ $(function() {
                     block.attr('display', 'show');
                 }
             });
+        }
+    });
+
+    $('body').on('click', '.sort-toggler', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var th = itemContainer.find('th.browse');
+        var sort = th.attr('sort');
+
+        if (sort == 'true') {
+            th.attr('sort', 'false');
+            itemContainer.find('td.browse a').show();
+            itemContainer.find('td.browse .drag').hide();
+        } else {
+            th.attr('sort', 'true');
+            itemContainer.find('td.browse a').hide();
+            itemContainer.find('td.browse .drag').show();
         }
     });
 });

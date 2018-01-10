@@ -8,7 +8,11 @@
         <li class="total">
             <span class="order-toggler">Всего {{ $total }} {{ Moonlight\Utils\RussianTextUtils::selectCaseForNumber($total, ['элемент', 'элемента', 'элементов']) }}.</span>
             @if ($orders && $total)
-            Отсортировано по {!! $orders !!}.
+                @if ($hasOrderProperty)
+                <span class="sort-toggler">Отсортировано по {!! $orders !!}.</span>
+                @else
+                Отсортировано по {!! $orders !!}.
+                @endif
             @endif
         </li>
     </ul>
@@ -52,7 +56,10 @@
                 @foreach ($elements as $element)
                 <tr elementId="{{ $element->id }}">
                     @if ($mode == 'browse')
-                    <td class="browse"><a href="{{ route('moonlight.browse.element', \Moonlight\Main\Element::getClassId($element)) }}"><i class="fa fa-angle-right"></i></a></td>
+                    <td class="browse">
+                        <a href="{{ route('moonlight.browse.element', \Moonlight\Main\Element::getClassId($element)) }}"><i class="fa fa-angle-right"></i></a>
+                        <span class="drag"><i class="fa fa-arrows-alt"></i></span>
+                    </td>
                     @elseif ($mode == 'search')
                     <td class="browse"><a href="{{ route('moonlight.browse.element', \Moonlight\Main\Element::getClassId($element)) }}"><i class="fa fa-angle-right"></i></a></td>
                     @else

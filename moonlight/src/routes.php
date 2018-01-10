@@ -147,6 +147,8 @@ Route::group(['prefix' => 'moonlight'], function() {
         Route::post('/elements/close', ['as' => 'moonlight.elements.close', 'uses' => 'Moonlight\Controllers\BrowseController@close']);
         
         Route::get('/elements/autocomplete', ['as' => 'moonlight.elements.autocomplete', 'uses' => 'Moonlight\Controllers\BrowseController@autocomplete']);
+
+        Route::post('/elements/order', ['as' => 'moonlight.elements.order', 'uses' => 'Moonlight\Controllers\BrowseController@order']);
         
         Route::get('/elements/favorites', ['as' => 'moonlight.home.favorites', 'uses' => 'Moonlight\Controllers\HomeController@favorites']);
         

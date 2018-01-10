@@ -199,7 +199,7 @@ $site->
 			OneToOneProperty::create('service_section_id')->
 			setTitle('Служебный раздел')->
 			setRelatedClass('App\ServiceSection')->
-			// setRequired(true)->
+			setRequired(true)->
 			setParent(true)->
             setOpenItem(true)
 		)->
@@ -393,13 +393,15 @@ $site->
 			OneToOneProperty::create('topic_id')->
 			setTitle('Тема')->
 			setRelatedClass('App\Topic')->
-			setParent(true)
+			setParent(true)->
+			setRequired(true)
 		)->
 		addProperty(
 			OneToOneProperty::create('question_type_id')->
 			setTitle('Тип вопроса')->
 			setRelatedClass('App\QuestionType')->
-			setShow(true)
+			setShow(true)->
+			setRequired(true)
 		)->
 		addTimestamps()->
 		addSoftDeletes()
@@ -448,6 +450,7 @@ $site->
 	addItem(
 		Item::create('App\UserTest')->
 		setTitle('Тест ученика')->
+		addOrderBy('created_at', 'desc')->
 		addProperty(
 			MainProperty::create('name')->
 			setTitle('Название')
@@ -588,12 +591,6 @@ $site->
     bind(env('site.dicts', 'App.ServiceSection.3'), 'App.ServiceSection')->
 	bind(env('site.types', 'App.ServiceSection.5'), 'App.QuestionType')->
 	bind(env('site.students', 'App.ServiceSection.1'), 'App.User')->
-	// bind(Site::ROOT, 'App.User')->
-	// bind('App.ServiceSection.1', 'App.User')->
-	// bind('App.ServiceSection.2', 'App.User')->
-	// bind('App.ServiceSection.5', 'App.User')->
-	// bind('App.ServiceSection.4', 'App.User')->
-	// bind('App.ServiceSection', 'App.User')->
 	bind('App.Subject', 'App.Topic')->
 	bind('App.Topic', ['App.Subtopic', 'App.Test', 'App.Question'])->
 	bind('App.Subtopic', 'App.Test')->

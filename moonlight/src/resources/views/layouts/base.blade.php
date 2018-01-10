@@ -16,14 +16,10 @@
 <script src="/packages/moonlight/js/jquery.calendar.js"></script>
 <script src="/packages/moonlight/js/jquery.form.min.js"></script>
 <script src="/packages/moonlight/js/jquery.autocomplete.min.js"></script>
+<script src="/packages/moonlight/js/sortable.min.js"></script>
 <script src="/packages/moonlight/js/common.js"></script>
 @section('js')
 @show
-<script>
-$(function() {
-    
-});
-</script>
 </head>
 <body>
     <div class="block-ui">

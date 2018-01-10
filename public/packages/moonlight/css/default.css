@@ -496,6 +496,11 @@ ul.header li.checked > span {
   color: white;
 }
 
+.sort-toggler {
+  border-bottom: 1px dashed #999;
+  cursor: pointer;
+}
+
 div.plugin {
   display: table;
   margin: 0.5rem 0;
@@ -628,32 +633,13 @@ table.elements {
   font-size: 1rem;
 }
 
-table.elements tr {
-  vertical-align: top;
-  border-bottom: 1px solid #ddd;
-}
-
-table.elements > tbody > tr:nth-child(odd) {
-  background-color: #f7f8f9;
-}
-
-table.elements > tbody > tr.checked {
-  background-color: #cee;
-}
-
-table.elements tr:last-child {
-  border: none;
-}
-
-table.elements > tbody > tr:not(.checked):hover,
-table.elements > tbody > tr:nth-child(odd):not(.checked):hover,
-table.elements > tbody > tr:nth-child(even):not(.checked):hover {
-  background-color: #e7e8ff;
-}
-
-table.elements th {
+table.elements > thead > tr {
   vertical-align: bottom;
+  background-color: white;
   border-bottom: 2px solid #acb;
+}
+
+table.elements > thead > tr > th {
   padding: 0.5rem 1rem;
   color: #798;
   font-weight: normal;
@@ -671,7 +657,37 @@ table.elements th small {
   color: inherit;
 }
 
-table.elements td {
+table.elements > tbody > tr {
+  vertical-align: top;
+  border-bottom: 1px solid #ccc;
+}
+
+table.elements > tbody > tr:nth-child(odd) {
+  background-color: #f7f8f9;
+}
+
+table.elements > tbody > tr:last-child {
+  border: none;
+}
+
+table.elements > tbody > tr.chosen,
+table.elements > tbody > tr.checked.chosen {
+  background-color: #abf;
+}
+
+table.elements > tbody > tr.dragging {
+  background-color: white;
+}
+
+table.elements > tbody > tr.checked {
+  background-color: #cee;
+}
+
+table.elements > tbody > tr.hover:not(.checked) {
+  background-color: #e7e8ff;
+}
+
+table.elements > tbody > tr > td {
   max-width: 25rem;
   padding: 0.5rem 1rem;
   text-align: left;
@@ -681,7 +697,6 @@ table.elements td {
 table.elements th.browse,
 table.elements td.browse {
   width: 2rem;
-  min-width: 2rem;
   padding: 0.5rem 0;
   text-align: center;
 }
@@ -693,11 +708,14 @@ table.elements td.browse .fa {
   color: #3a7;
 }
 
-table.elements td.browse div.drag .fa {
-  top: 0;
-  font-size: 1rem;
-  color: steelblue;
-  cursor: grab;
+table.elements td.browse > .drag {
+  display: none;
+}
+
+table.elements td.browse > .drag > .fa {
+  top: 2px;
+  font-size: 0.9rem;
+  cursor: pointer;
 }
 
 table.elements td.name {
@@ -726,7 +744,6 @@ table.elements td.date {
 
 table.elements th.check {
   width: 3rem;
-  min-width: 3rem;
   padding: 0 0 0.5rem 0;
   text-align: center;
   vertical-align: bottom;
@@ -734,7 +751,6 @@ table.elements th.check {
 
 table.elements td.check {
   width: 3rem;
-  min-width: 3rem;
   padding: 0.5rem 0;
   text-align: center;
 }
@@ -1416,7 +1432,7 @@ form .loadfile .reset {
   margin: 0;
   border-bottom: 1px solid #bcc;
   padding: 1.5rem 2rem;
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 .confirm .bottom {
@@ -1458,6 +1474,7 @@ form .loadfile .reset {
 .alert .container {
   position: relative;
   display: table;
+  width: 25rem;
   margin: auto;
   padding: 1rem 4rem 1rem 2rem;
   background-color: white;

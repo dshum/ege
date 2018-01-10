@@ -20,6 +20,8 @@ use Moonlight\Properties\VirtualProperty;
 
 class BrowseController extends Controller
 {
+    const DEFAULT_PERPAGE = 10;
+
     /**
      * Order elements.
      *
@@ -30,23 +32,52 @@ class BrowseController extends Controller
         $scope = [];
         
         $loggedUser = LoggedUser::getUser();
+
+        $class = $request->input('item');
+
+        $site = \App::make('site');
         
-        $elements = $request->input('element');
+        $currentItem = $site->getItemByName($class);
+        
+        if (! $currentItem) {
+            $scope['error'] = 'Класс элементов не найден.';
+            
+            return response()->json($scope);
+        }
+
+        if (! $currentItem->getOrderProperty()) {
+            $scope['error'] = 'Поле для ручной сортировки не найдено.';
+            
+            return response()->json($scope);
+        }
+
+        $orderProperty = $currentItem->getOrderProperty();
+        
+        $elements = $request->input('elements');
+
+        $ordered = [];
 
         if (is_array($elements) && sizeof($elements) > 1) {
-            foreach ($elements as $order => $classId) {
-                $element = Element::getByClassId($classId);
-                
+            foreach ($elements as $order => $id) {
+                $element = $currentItem->getClass()->find($id);
+            
                 if ($element && $loggedUser->hasUpdateAccess($element)) {
-                    $item = $element->getItem();
-                    if ($item->getOrderProperty()) {
-                        $element->{$item->getOrderProperty()} = $order;
-                        $element->save();
-                    }
+                    $element->{$orderProperty} = $order;
+
+                    $element->save();
+
+                    $ordered[$order] = $id;
                 }
             }
 
-            $scope['ordered'] = $elements;
+            if ($ordered) {
+                UserAction::log(
+                    UserActionType::ACTION_TYPE_ORDER_ELEMENT_LIST_ID,
+                    $class.': '.implode(', ', $ordered)
+                );
+
+                $scope['ordered'] = 'ok';
+            }
         }
 
         return response()->json($scope);
@@ -836,10 +867,19 @@ class BrowseController extends Controller
 
 		foreach ($orderByList as $field => $direction) {
             $criteria->orderBy($field, $direction);
+
             $property = $currentItem->getPropertyByName($field);
+
             if ($property instanceof OrderProperty) {
                 $orders[$field] = 'порядку';
-                $hasOrderProperty = true;
+
+                if (
+                    ! $currentElement 
+                    || ! $property->getRelatedClass()
+                    || $property->getRelatedClass() == $currentClass
+                ) {
+                    $hasOrderProperty = true;
+                }
             } elseif ($property->getName() == 'created_at') {
                 $orders[$field] = 'дате создания';
             } elseif ($property->getName() == 'updated_at') {
@@ -852,14 +892,27 @@ class BrowseController extends Controller
         }
         
         $orders = implode(', ', $orders);
-
-		$elements = $criteria->paginate(10);
         
-        $total = $elements->total();
-		$currentPage = $elements->currentPage();
-        $hasMorePages = $elements->hasMorePages();
-        $nextPage = $elements->currentPage() + 1;
-        $lastPage = $elements->lastPage();
+        if ($hasOrderProperty) {
+            $elements = $criteria->get();
+
+            $total = sizeof($elements);
+
+            $currentPage = 1;
+            $hasMorePages = false;
+            $nextPage = null;
+            $lastPage = null;
+        } else {
+            $perpage = $currentItem->getPerPage() ?: self::DEFAULT_PERPAGE;
+            
+            $elements = $criteria->paginate($perpage);
+
+            $total = $elements->total();
+            $currentPage = $elements->currentPage();
+            $hasMorePages = $elements->hasMorePages();
+            $nextPage = $elements->currentPage() + 1;
+            $lastPage = $elements->lastPage();
+        }
         
         $properties = [];
         $views = [];
@@ -935,7 +988,7 @@ class BrowseController extends Controller
         $scope['elements'] = $elements;
         $scope['views'] = $views;
         $scope['orders'] = $orders;
-        $scope['hasOrderProperty'] = false;
+        $scope['hasOrderProperty'] = $hasOrderProperty;
         $scope['mode'] = 'browse';
         $scope['copyPropertyView'] = $copyPropertyView;
         $scope['movePropertyView'] = $movePropertyView;
