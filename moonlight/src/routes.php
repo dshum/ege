@@ -184,4 +184,8 @@ Route::group(['prefix' => 'moonlight'], function() {
                 where(['classId' => '[A-Za-z0-9\.]+']);
         });
     });
+
+    Route::get('/{url}', function() {
+        return redirect()->route('moonlight.home');
+    });
 });

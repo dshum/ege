@@ -39,3 +39,7 @@ Route::group(['before' => 'auth'], function() {
 });
 
 Route::get('/', ['as' => 'welcome', 'uses' => 'WelcomeController@index']);
+
+Route::get('/{url}', function() {
+	return view('404');
+});
