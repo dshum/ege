@@ -3,15 +3,15 @@
 namespace Moonlight\Middleware;
 
 use Closure;
-use Moonlight\Main\LoggedUser;
+use Illuminate\Support\Facades\Auth;
 
 class HistoryMiddleware
 {
     public function handle($request, Closure $next)
     {   
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
-        $history = config('app.url').$request->getRequestUri();
+        $history = $request->getRequestUri();
         
         $loggedUser->setParameter('history', $history);
 

@@ -1,7 +1,7 @@
 <?php namespace Moonlight\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Moonlight\Main\LoggedUser;
+use Illuminate\Support\Facades\Auth;
 use Moonlight\Main\UserActionType;
 
 class UserAction extends Model {
@@ -25,7 +25,7 @@ class UserAction extends Model {
 
 	public static function log($actionTypeId, $comments)
 	{
-		$loggedUser = LoggedUser::getUser();
+		$loggedUser = Auth::guard('moonlight')->user();
 
         $method = isset($_SERVER['REQUEST_METHOD'])
             ? $_SERVER['REQUEST_METHOD'] : '';

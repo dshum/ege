@@ -13,9 +13,7 @@
 <div class="main">
     <div class="container">
         @if ($homePluginView)
-        <div class="plugin">
             {!! $homePluginView !!}
-        </div>
         @endif
         <div class="leaf">
             {!! $rubrics !!}

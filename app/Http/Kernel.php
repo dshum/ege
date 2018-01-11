@@ -42,6 +42,7 @@ class Kernel extends HttpKernel
         ],
 
         'plugins' => [
+            \Moonlight\Middleware\SessionNameMiddleware::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
             \Moonlight\Middleware\AuthMiddleware::class,

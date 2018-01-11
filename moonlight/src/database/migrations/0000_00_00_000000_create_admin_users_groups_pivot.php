@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -28,7 +29,7 @@ class CreateAdminUsersGroupsPivot extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('admin_users_groups_pivot');
+		Schema::dropIfExists('admin_users_groups_pivot');
 	}
 
 }

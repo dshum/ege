@@ -27,10 +27,7 @@
         @foreach ($items as $item)
         <div classId="" item="{{ $item['id'] }}"></div>
         @endforeach
-        <div class="empty {{ sizeof($items) > 0 ? 'dnone' : '' }}">
-            <div>Элементов не найдено.</div>
-            <div><b>¯\_(ツ)_/¯</b></div>
-        </div>
+        <div class="empty {{ sizeof($items) > 0 ? 'dnone' : '' }}">Элементов не найдено.</div>
     </div>
 </div>
 @endsection

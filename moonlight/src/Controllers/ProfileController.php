@@ -5,7 +5,7 @@ namespace Moonlight\Controllers;
 use Log;
 use Validator;
 use Illuminate\Http\Request;
-use Moonlight\Main\LoggedUser;
+use Illuminate\Support\Facades\Auth;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\User;
 use Moonlight\Models\UserAction;
@@ -25,7 +25,7 @@ class ProfileController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         $inputs = $request->all();
 
@@ -156,7 +156,7 @@ class ProfileController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $groups = $loggedUser->getGroups();
         

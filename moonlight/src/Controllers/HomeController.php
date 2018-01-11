@@ -3,7 +3,7 @@
 namespace Moonlight\Controllers;
 
 use Illuminate\Http\Request;
-use Moonlight\Main\LoggedUser;
+use Illuminate\Support\Facades\Auth;
 use Moonlight\Main\Element;
 use Moonlight\Models\FavoriteRubric;
 use Moonlight\Models\Favorite;
@@ -19,7 +19,7 @@ class HomeController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $classId = $request->input('classId');
         
@@ -46,7 +46,7 @@ class HomeController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $classId = $request->input('classId');
         $rubricId = $request->input('rubricId');
@@ -166,7 +166,7 @@ class HomeController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         $site = \App::make('site');
 

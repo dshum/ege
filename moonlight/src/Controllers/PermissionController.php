@@ -4,7 +4,7 @@ namespace Moonlight\Controllers;
 
 use Log;
 use Illuminate\Http\Request;
-use Moonlight\Main\LoggedUser;
+use Illuminate\Support\Facades\Auth;
 use Moonlight\Main\UserActionType;
 use Moonlight\Main\Element;
 use Moonlight\Models\Group;
@@ -26,7 +26,7 @@ class PermissionController extends Controller
     {
         $scope = [];
 
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
 		$group = Group::find($id);
         
@@ -114,7 +114,7 @@ class PermissionController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         if (! $loggedUser->hasAccess('admin')) {
             $scope['state'] = 'error_admin_access_denied';
@@ -195,7 +195,7 @@ class PermissionController extends Controller
     {
         $scope = [];
 
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
 		$group = Group::find($id);
         
@@ -265,7 +265,7 @@ class PermissionController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         if (! $loggedUser->hasAccess('admin')) {
             return redirect()->route('moonlight.home');

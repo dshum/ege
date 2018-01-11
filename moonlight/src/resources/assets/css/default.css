@@ -434,6 +434,17 @@ div.path div.part a.edit .fa {
   font-size: 1.2rem;
 }
 
+div.path div.part a.external-link {
+  margin-left: 1rem;
+  text-decoration: none;
+  border-bottom: none;
+}
+
+div.path div.part a.external-link .fa {
+  color: slategrey;
+  font-size: 1.2rem;
+}
+
 div.path div.add-element a {
   margin-left: 0.25rem;
 }

@@ -8,10 +8,10 @@
         Вход
     </div>
     <div class="block">
-        @if (isset($message))
-        <div class="error">{{ $message }}</div>
+        @if (isset($error))
+        <div class="error">{{ $error }}</div>
         @endif
-        <form action="{{route('moonlight.login')}}" autocomplete="off" method="POST">
+        <form action="{{ route('moonlight.login') }}" autocomplete="off" method="POST">
             {{ csrf_field() }}
             <div class="row">
                 <label>Логин</label><br>
@@ -23,6 +23,12 @@
                 <a href="{{ route('moonlight.restore') }}">Забыли пароль?</a>
             </div>
             <div class="row">
+                <p>
+                    <input type="checkbox" name="remember" id="remember" value="1">
+                    <label for="remember">Запомнить меня</label>
+                </p>
+            </div>
+            <div class="row submit">
                 <input type="submit" value="Войти" class="btn">
             </div>
         </form>

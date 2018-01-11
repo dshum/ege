@@ -3,8 +3,8 @@
 namespace Moonlight\Controllers;
 
 use Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Moonlight\Main\LoggedUser;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\Group;
 use Moonlight\Models\User;
@@ -35,7 +35,7 @@ class GroupController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
 		$group = Group::find($id);
         
@@ -74,7 +74,7 @@ class GroupController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         if ( ! $loggedUser->hasAccess('admin')) {
             $scope['error'] = 'У вас нет прав на управление пользователями.';
@@ -142,7 +142,7 @@ class GroupController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
 		$group = Group::find($id);
         
@@ -214,7 +214,7 @@ class GroupController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         if ( ! $loggedUser->hasAccess('admin')) {
             return redirect()->route('home');
@@ -234,7 +234,7 @@ class GroupController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         if ( ! $loggedUser->hasAccess('admin')) {
             return redirect()->route('home');
@@ -260,7 +260,7 @@ class GroupController extends Controller
      {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         if (! $loggedUser->hasAccess('admin')) {
             return redirect()->route('home');

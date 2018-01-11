@@ -8,6 +8,27 @@ class PasswordProperty extends BaseProperty
 	{
 		return new self($name);
 	}
+
+	public function set()
+	{   
+		$name = $this->getName();
+		$value = $this->buildInput();
+
+		if ($this->getHidden() || $this->getReadonly()) {
+			if (! $this->element->$name) {
+				$chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+				$value = substr(str_shuffle($chars), 0, 8);
+
+				$this->element->$name = password_hash($value, PASSWORD_DEFAULT);
+			}
+		} else {
+			if ($value) {
+				$this->element->$name = password_hash($value, PASSWORD_DEFAULT);
+			}
+		}
+
+		return $this;
+	}
     
     public function searchQuery($query)
 	{

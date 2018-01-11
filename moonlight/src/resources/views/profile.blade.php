@@ -32,7 +32,9 @@
                 @endif
                 <div class="row">
                     <div>Дата создания:{{ $created_at->format('d.m.Y') }} <small>{{ $created_at->format('H:i:s') }}</small></div>
+                    @if ($last_login)
                     <div>Последний вход: {{ $last_login->format('d.m.Y') }} <small>{{ $last_login->format('H:i:s') }}</small></div>
+                    @endif
                 </div>
                 <div class="row">
                     <label>Имя:</label><span name="first_name" class="error"></span><br>

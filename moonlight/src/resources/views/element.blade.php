@@ -37,16 +37,7 @@
         <div classId="{{ $classId }}" item="{{ $item['id'] }}"></div>
         @endforeach
         @if (! $browsePluginView)
-        <div class="empty {{ sizeof($items) > 0 ? 'dnone' : '' }}">
-            <div>Элементов не найдено.</div>
-            <pre>
-                :
-                :
-                :
-            /\('')/\
-            \      /
-            </pre>
-        </div>
+        <div class="empty {{ sizeof($items) > 0 ? 'dnone' : '' }}">Элементов не найдено.</div>
         @endif
     </div>
 </div>

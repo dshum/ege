@@ -4,7 +4,7 @@ namespace Moonlight\Controllers;
 
 use Validator;
 use Illuminate\Http\Request;
-use Moonlight\Main\LoggedUser;
+use Illuminate\Support\Facades\Auth;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\Group;
 use Moonlight\Models\User;
@@ -17,7 +17,7 @@ class LogController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         if (! $loggedUser->hasAccess('admin')) {
             return response()->json(['error' => 'error_admin_access_denied']);
@@ -32,7 +32,7 @@ class LogController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         if (! $loggedUser->hasAccess('admin')) {
             return redirect()->route('home');
@@ -72,7 +72,7 @@ class LogController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $user = $request->input('user');
         $type = $request->input('type');

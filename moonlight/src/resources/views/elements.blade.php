@@ -47,7 +47,16 @@
                 <tr>
                     <th class="browse"><i class="fa fa-sort"></i></th>
                     @foreach ($properties as $property)
-                    <th><a href>{{ $property->getTitle() }}</a></th>
+                    <th>
+                        <a href>{{ $property->getTitle() }}</a>
+                        @if (isset($orderByList[$property->getName()]))
+                            @if ($orderByList[$property->getName()] == 'desc')
+                            <i class="fa fa-sort-desc"></i>
+                            @else
+                            <i class="fa fa-sort-asc"></i>
+                            @endif
+                        @endif
+                    </th>
                     @endforeach
                     <th class="check"><div class="check"></div></th>
                 </tr>

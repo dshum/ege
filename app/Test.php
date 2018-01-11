@@ -27,4 +27,9 @@ class Test extends Model
 	{
 		return $this->belongsToMany(static::$questionModel, static::$testsQuestionsPivot);
 	}
+
+	public function getHref()
+	{
+		return route('test', $this->id);
+	}
 }

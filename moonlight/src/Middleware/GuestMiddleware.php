@@ -5,20 +5,16 @@ namespace Moonlight\Middleware;
 use Log;
 use Closure;
 use Session;
+use Illuminate\Support\Facades\Auth;
 use Moonlight\Main\LoggedUser;
 use Moonlight\Models\User;
 
 class GuestMiddleware
 {
     public function handle($request, Closure $next)
-    {   
-        if (Session::get('logged')) {
-            $id = Session::get('logged');
-            $user = User::find($id);
-            
-            if ($user) {
-                return redirect()->route('moonlight.home');
-            }
+    {
+        if (Auth::guard('moonlight')->check()) {
+            return redirect()->route('moonlight.home');
         }
 
         return $next($request);

@@ -1,9 +1,9 @@
 <?php namespace Moonlight\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
-use Moonlight\Main\ElementInterface;
 
-class User extends Model {
+class User extends Authenticatable {
 
 	/**
 	 * The database table used by the model.

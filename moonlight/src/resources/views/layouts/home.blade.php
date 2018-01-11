@@ -9,6 +9,12 @@
         <li><a href="{{ route('moonlight.trash') }}">Корзина</a></li>
         <li><a href="{{ route('moonlight.groups') }}">Пользователи</a></li>
     </ul>
-    <div class="avatar"><a href="{{ route('moonlight.profile') }}"><img src="/packages/moonlight/img/avatar.jpg"></a></div>
+    <div class="avatar">
+        @if ($loggedUser->photoExists())
+        <a href="{{ route('moonlight.profile') }}"><img src="{{ $loggedUser->getPhotoSrc() }}"></a>
+        @else
+        <a href="{{ route('moonlight.profile') }}"><img src="/packages/moonlight/img/default-avatar.png"></a>
+        @endif
+    </div>
 </nav>
 @endsection

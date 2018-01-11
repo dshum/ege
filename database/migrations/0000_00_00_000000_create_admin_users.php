@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -20,10 +21,12 @@ class CreateAdminUsers extends Migration {
 			$table->string('email');
 			$table->string('first_name')->nullable();
 			$table->string('last_name')->nullable();
+			$table->string('photo')->nullable();
 			$table->mediumText('parameters')->nullable();
 			$table->boolean('superuser')->nullable();
 			$table->boolean('banned')->nullable();
 			$table->timestamp('last_login')->nullable();
+			$table->rememberToken();
 			$table->timestamps();
 			$table->engine = 'InnoDB';
 			$table->unique('login');
@@ -37,7 +40,7 @@ class CreateAdminUsers extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('admin_users');
+		Schema::dropIfExists('admin_users');
 	}
 
 }

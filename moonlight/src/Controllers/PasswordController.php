@@ -4,7 +4,7 @@ namespace Moonlight\Controllers;
 
 use Validator;
 use Illuminate\Http\Request;
-use Moonlight\Main\LoggedUser;
+use Illuminate\Support\Facades\Auth;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\User;
 use Moonlight\Models\UserAction;
@@ -20,7 +20,7 @@ class PasswordController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
 		$validator = Validator::make($request->all(), [
             'password_old' => 'required',
@@ -84,7 +84,7 @@ class PasswordController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         return view('moonlight::password', $scope);
     }

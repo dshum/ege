@@ -3,7 +3,7 @@
 namespace Moonlight\Controllers;
 
 use Illuminate\Http\Request;
-use Moonlight\Main\LoggedUser;
+use Illuminate\Support\Facades\Auth;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\User;
 use Moonlight\Models\UserAction;
@@ -21,38 +21,39 @@ class LoginController extends Controller
         $scope = [];
 
 		$login = $request->input('login');
-		$password = $request->input('password');
+        $password = $request->input('password');
+        $remember = $request->input('remember');
 
-		if ( ! $login) {
-			$scope['message'] = 'Введите логин.';
+		if (! $login) {
+			$scope['error'] = 'Введите логин.';
 			return view('moonlight::login', $scope);
 		}
         
         $scope['login'] = $login;
 
-		if ( ! $password) {
-			$scope['message'] = 'Введите пароль.';
+		if (! $password) {
+			$scope['error'] = 'Введите пароль.';
 			return view('moonlight::login', $scope);
 		}
 
 		$user = User::where('login', $login)->first();
 
-		if ( ! $user) {
-			$scope['message'] = 'Неправильный логин или пароль.';
+		if (! $user) {
+			$scope['error'] = 'Неправильный логин или пароль.';
 			return view('moonlight::login', $scope);
 		}
         
-		if ( ! password_verify($password, $user->password)) {
-			$scope['message'] = 'Неправильный логин или пароль.';
+		if (! password_verify($password, $user->password)) {
+			$scope['error'] = 'Неправильный логин или пароль.';
 			return view('moonlight::login', $scope);
 		}
 
 		if ($user->banned) {
-			$scope['message'] = 'Пользователь заблокирован.';
+			$scope['error'] = 'Пользователь заблокирован.';
 			return view('moonlight::login', $scope);
-		}
-
-        LoggedUser::login($user);
+        }
+        
+        Auth::guard('moonlight')->login($user, $remember);
         
         UserAction::log(
 			UserActionType::ACTION_TYPE_LOGIN_ID,
@@ -70,14 +71,14 @@ class LoginController extends Controller
     
     public function logout(Request $request)
     {
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         UserAction::log(
 			UserActionType::ACTION_TYPE_LOGOUT_ID,
 			'ID '.$loggedUser->id.' ('.$loggedUser->login.')'
 		);
-        
-        LoggedUser::logout();
+
+        Auth::guard('moonlight')->logout();
         
         return redirect()->route('moonlight.login');
     }

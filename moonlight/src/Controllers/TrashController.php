@@ -3,9 +3,9 @@
 namespace Moonlight\Controllers;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
-use Moonlight\Main\LoggedUser;
 use Moonlight\Main\Element;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\UserAction;
@@ -34,7 +34,7 @@ class TrashController extends Controller
      */
     public function count($item)
     {   
-        $loggedUser = LoggedUser::getUser(); 
+        $loggedUser = Auth::guard('moonlight')->user();
 
 		if (! $loggedUser->isSuperUser()) {
 			$permissionDenied = true;
@@ -112,7 +112,7 @@ class TrashController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $class = $request->input('item');
         
@@ -138,7 +138,7 @@ class TrashController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $element = Element::getByClassIdOnlyTrashed($classId);
         
@@ -186,7 +186,7 @@ class TrashController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $element = Element::getByClassIdOnlyTrashed($classId);
         
@@ -240,7 +240,7 @@ class TrashController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         $site = \App::make('site');
         
@@ -303,7 +303,7 @@ class TrashController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $site = \App::make('site');
         
@@ -385,7 +385,7 @@ class TrashController extends Controller
     {        
         $scope = [];
 
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $site = \App::make('site');
         
@@ -415,7 +415,7 @@ class TrashController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         $site = \App::make('site');
 

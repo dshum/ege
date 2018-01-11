@@ -4,7 +4,7 @@ namespace Moonlight\Controllers;
 
 use Validator;
 use Illuminate\Http\Request;
-use Moonlight\Main\LoggedUser;
+use Illuminate\Support\Facades\Auth;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\Group;
 use Moonlight\Models\User;
@@ -21,7 +21,7 @@ class UserController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
 		$user = User::find($id);
         
@@ -62,7 +62,7 @@ class UserController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         if ( ! $loggedUser->hasAccess('admin')) {
             $scope['error'] = 'У вас нет прав на управление пользователями.';
@@ -126,8 +126,8 @@ class UserController extends Controller
          */
         
         $chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-        $password = substr(str_shuffle($chars), 0, 6);
-        $user->password = password_hash($password, PASSWORD_DEFAULT); 
+        $password = substr(str_shuffle($chars), 0, 8);
+        $user->password = password_hash($password, PASSWORD_DEFAULT);
         
         $user->save();
         
@@ -166,7 +166,7 @@ class UserController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
 		$user = User::find($id);
         
@@ -276,7 +276,7 @@ class UserController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         if ( ! $loggedUser->hasAccess('admin')) {
             return redirect()->route('moonlight.home');
@@ -300,7 +300,7 @@ class UserController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         if ( ! $loggedUser->hasAccess('admin')) {
             return redirect()->route('moonlight.home');
@@ -332,27 +332,27 @@ class UserController extends Controller
      * 
      * @return View
      */
-     public function users(Request $request)
-     {
-         $scope = [];
-         
-         $loggedUser = LoggedUser::getUser();
-         
-         if ( ! $loggedUser->hasAccess('admin')) {
-             return redirect()->route('moonlight.home');
-         }
-         
-         $groups = Group::orderBy('name', 'asc')->get();
-         $users = User::orderBy('login', 'asc')->get();
-         
-         foreach ($users as $user) {
-             $userGroups[$user->id] = $user->getGroups();
-         }
-         
-         $scope['groups'] = $groups;
-         $scope['users'] = $users;
-         $scope['userGroups'] = $userGroups;
-         
-         return view('moonlight::users', $scope);
-     }
+    public function users(Request $request)
+    {
+        $scope = [];
+        
+        $loggedUser = Auth::guard('moonlight')->user();
+        
+        if ( ! $loggedUser->hasAccess('admin')) {
+            return redirect()->route('moonlight.home');
+        }
+        
+        $groups = Group::orderBy('name', 'asc')->get();
+        $users = User::orderBy('login', 'asc')->get();
+        
+        foreach ($users as $user) {
+            $userGroups[$user->id] = $user->getGroups();
+        }
+        
+        $scope['groups'] = $groups;
+        $scope['users'] = $users;
+        $scope['userGroups'] = $userGroups;
+        
+        return view('moonlight::users', $scope);
+    }
 }

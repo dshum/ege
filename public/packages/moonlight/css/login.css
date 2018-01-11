@@ -77,6 +77,14 @@ body {
   padding: 0.5rem 2rem;
 }
 
+.login .row p {
+  margin: 0;
+}
+
+.login .row.submit {
+  padding-top: 1rem;
+}
+
 form input[type="text"],
 form input[type="password"] {
   width: 16rem;

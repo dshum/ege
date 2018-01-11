@@ -1,14 +1,4 @@
 $(function() {
-    setInterval(function() {
-        $.getJSON('/moonlight/check', {}, function(data) {
-            if (! data.login) {
-                document.location.href = '/moonlight/login';
-            }
-        }).fail(function() {
-            document.location.href = '/moonlight';
-        });
-    }, 60000);
-
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

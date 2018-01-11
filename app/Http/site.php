@@ -120,6 +120,7 @@ $site->
 		Item::create('App\SiteSettings')->
 		setTitle('Настройки сайта')->
 		setRoot(true)->
+		setCreate(false)->
 		addProperty(
 			MainProperty::create('name')->
 			setTitle('Название')->
@@ -162,6 +163,10 @@ $site->
 			addRule('unique:users,email', 'Такой адрес уже существует')->
 			setRequired(true)
 		)->
+		addProperty(
+			PasswordProperty::create('password')->
+			setTitle('Пароль')
+		)->
         addProperty(
 			TextfieldProperty::create('first_name')->
 			setTitle('Имя')->
@@ -179,11 +184,6 @@ $site->
 			setTitle('Фотография')->
 			setResize(200, 200, 100)->
 			setShow(true)
-		)->
-        addProperty(
-			TextfieldProperty::create('password')->
-			setTitle('Пароль')->
-			setHidden(true)
 		)->
         addProperty(
 			CheckboxProperty::create('activated')->

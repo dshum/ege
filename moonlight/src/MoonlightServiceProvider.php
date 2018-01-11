@@ -3,6 +3,7 @@
 namespace Moonlight;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Moonlight\Main\Site;
@@ -32,7 +33,23 @@ class MoonlightServiceProvider extends ServiceProvider
             __DIR__.'/resources/assets' => public_path('packages/moonlight'),
         ]);
         
-        DB::enableQueryLog(); 
+        DB::enableQueryLog();
+
+        $authGuards = Config::get('auth.guards');
+        $authProviders = Config::get('auth.providers');
+
+        $authGuards['moonlight'] = [
+            'driver' => 'session',
+            'provider' => 'moonlight',
+        ];
+
+        $authProviders['moonlight'] = [
+            'driver' => 'eloquent',
+            'model' => \Moonlight\Models\User::class,
+        ];
+
+        Config::set('auth.guards', $authGuards);
+        Config::set('auth.providers', $authProviders);
         
         include __DIR__.'/routes.php';
     }

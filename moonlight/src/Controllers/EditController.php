@@ -5,13 +5,14 @@ namespace Moonlight\Controllers;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Moonlight\Main\LoggedUser;
 use Moonlight\Main\Element;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\UserAction;
 use Moonlight\Properties\MainProperty;
 use Moonlight\Properties\OrderProperty;
+use Moonlight\Properties\PasswordProperty;
 use Moonlight\Properties\FileProperty;
 use Moonlight\Properties\ImageProperty;
 use Moonlight\Properties\ManyToManyProperty;
@@ -29,7 +30,7 @@ class EditController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
 		$element = Element::getByClassId($classId);
         
@@ -117,7 +118,7 @@ class EditController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
 		$element = Element::getByClassId($classId);
         
@@ -177,7 +178,7 @@ class EditController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
 		$element = Element::getByClassId($classId);
         
@@ -260,7 +261,7 @@ class EditController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $site = \App::make('site');
         
@@ -322,7 +323,13 @@ class EditController extends Controller
                 $property->
                     setElement($element)->
                     set();
-                
+                continue;
+            }
+
+            if ($property instanceof PasswordProperty) {
+                $property->
+                    setElement($element)->
+                    set();
                 continue;
             }
             
@@ -369,7 +376,7 @@ class EditController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
 		$element = Element::getByClassId($classId);
         
@@ -477,7 +484,7 @@ class EditController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         if ($classId == 'root') {
             $parent = null;
@@ -559,7 +566,7 @@ class EditController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         $site = \App::make('site');
         

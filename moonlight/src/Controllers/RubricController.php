@@ -3,8 +3,8 @@
 namespace Moonlight\Controllers;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Moonlight\Main\LoggedUser;
 use Moonlight\Main\Site;
 use Moonlight\Main\Item;
 use Moonlight\Main\Element;
@@ -21,7 +21,7 @@ class RubricController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $name = $request->input('rubric');
         
@@ -80,7 +80,7 @@ class RubricController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $name = $request->input('rubric');
         
@@ -108,7 +108,7 @@ class RubricController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $name = $request->input('rubric');
         
@@ -133,7 +133,7 @@ class RubricController extends Controller
     {
         $scope = [];
 
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         $opens = $loggedUser->getParameter('rubrics');
         
@@ -192,7 +192,7 @@ class RubricController extends Controller
     {
         $scope = [];
 
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $site = \App::make('site');
 
@@ -237,7 +237,7 @@ class RubricController extends Controller
                 }
             }
 
-            if (sizeof($rubricElements[$name])) {
+            if (isset($rubricElements[$name]) && sizeof($rubricElements[$name])) {
                 $rubrics[] = $rubric;
             }
         }
@@ -250,7 +250,7 @@ class RubricController extends Controller
 
     protected function getElements($parentId, $className)
     {
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         $site = \App::make('site');
 
@@ -394,7 +394,7 @@ class RubricController extends Controller
 
     protected function getElement($classId)
     {
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         $element = Element::getByClassId($classId);
         

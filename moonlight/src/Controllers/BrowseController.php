@@ -4,8 +4,8 @@ namespace Moonlight\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Moonlight\Main\LoggedUser;
 use Moonlight\Main\Element;
 use Moonlight\Main\Site;
 use Moonlight\Main\UserActionType;
@@ -31,7 +31,7 @@ class BrowseController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         $class = $request->input('item');
 
@@ -92,7 +92,7 @@ class BrowseController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         $class = $request->input('item');
 
@@ -220,7 +220,7 @@ class BrowseController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         $class = $request->input('item');
 
@@ -317,7 +317,7 @@ class BrowseController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $class = $request->input('item');
 
@@ -441,7 +441,7 @@ class BrowseController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $class = $request->input('item');
 
@@ -515,7 +515,7 @@ class BrowseController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $class = $request->input('item');
 
@@ -589,7 +589,7 @@ class BrowseController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $class = $request->input('item');
         $classId = $request->input('classId');
@@ -619,7 +619,7 @@ class BrowseController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $class = $request->input('item');
         $classId = $request->input('classId');
@@ -649,7 +649,7 @@ class BrowseController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $open = $request->input('open');
         $class = $request->input('item');
@@ -682,7 +682,7 @@ class BrowseController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         $lists = $loggedUser->getParameter('lists');
 
@@ -987,6 +987,7 @@ class BrowseController extends Controller
         $scope['lastPage'] = $lastPage;
         $scope['elements'] = $elements;
         $scope['views'] = $views;
+        $scope['orderByList'] = $orderByList;
         $scope['orders'] = $orders;
         $scope['hasOrderProperty'] = $hasOrderProperty;
         $scope['mode'] = 'browse';
@@ -1005,7 +1006,7 @@ class BrowseController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $class = $request->input('item');
         $query = $request->input('query');
@@ -1121,7 +1122,7 @@ class BrowseController extends Controller
     {
         $scope = [];
         
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
         
         $element = Element::getByClassId($classId);
         
@@ -1271,7 +1272,7 @@ class BrowseController extends Controller
     {
         $scope = [];
 
-        $loggedUser = LoggedUser::getUser();
+        $loggedUser = Auth::guard('moonlight')->user();
 
         $site = \App::make('site');
         
