@@ -10,7 +10,7 @@ $(function() {
               var $el = $(this);
               var sortable = $el.data('sortable');
     
-              if (!sortable && options instanceof Object) {
+              if (! sortable && options instanceof Object) {
                   sortable = new Sortable(this, options);
                   $el.data('sortable', sortable);
               }
@@ -23,7 +23,7 @@ $(function() {
     }
 
     var init = function(item) {
-        $('.main div[item="' + item + '"]input.one').each(function() {
+        $('.main div[item="' + item + '"] input.one').each(function() {
             var parent = $(this).parents('div.row');
             var relatedItem = $(this).attr('item');
             var name = $(this).attr('property');

@@ -55,7 +55,7 @@ class OrderProperty extends BaseProperty
 
 	public function set()
 	{   
-		if ( ! $this->element instanceof Model) return $this;
+		if (! $this->element instanceof Model) return $this;
 
 		$name = $this->getName();
 

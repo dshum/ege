@@ -1015,13 +1015,13 @@ class BrowseController extends Controller
         
         $currentItem = $site->getItemByName($class);
         
-        if ( ! $currentItem) {
+        if (! $currentItem) {
             return response()->json($scope);
         }
         
         $mainProperty = $currentItem->getMainProperty();
 
-		if ( ! $loggedUser->isSuperUser()) {
+		if (! $loggedUser->isSuperUser()) {
 			$permissionDenied = true;
 			$deniedElementList = [];
 			$allowedElementList = [];
