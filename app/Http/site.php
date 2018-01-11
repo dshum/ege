@@ -160,7 +160,6 @@ $site->
 			MainProperty::create('email')->
 			setTitle('E-mail')->
 			addRule('email', 'Некорректный адрес электронной почты')->
-			addRule('unique:users,email', 'Такой адрес уже существует')->
 			setRequired(true)
 		)->
 		addProperty(
