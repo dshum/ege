@@ -20,7 +20,38 @@ class Site
 	protected $searchPlugins = [];
 	protected $editPlugins = [];
 
+	protected $styles = [];
+	protected $scripts = [];
+
 	protected $initMicroTime = null;
+
+	public function addStyle($path)
+	{
+		if (! in_array($path, $this->styles)) {
+			$this->styles[] = $path;
+		}
+
+		return $this;
+	}
+
+	public function getStyles()
+	{
+		return $this->styles;
+	}
+
+	public function addScript($path)
+	{
+		if (! in_array($path, $this->scripts)) {
+			$this->scripts[] = $path;
+		}
+
+		return $this;
+	}
+
+	public function getScripts()
+	{
+		return $this->scripts;
+	}
 
 	public function addRubric(Rubric $rubric)
 	{

@@ -24,7 +24,7 @@
             </div>
             <div class="row">
                 <p>
-                    <input type="checkbox" name="remember" id="remember" value="1">
+                    <input type="checkbox" name="remember" id="remember" value="1"{{ $remember ? ' checked' : '' }}>
                     <label for="remember">Запомнить меня</label>
                 </p>
             </div>

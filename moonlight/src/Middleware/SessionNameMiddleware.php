@@ -2,11 +2,8 @@
 
 namespace Moonlight\Middleware;
 
-use Log;
 use Closure;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Moonlight\Models\User;
 
 class SessionNameMiddleware
 {

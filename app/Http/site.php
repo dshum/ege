@@ -636,4 +636,8 @@ $site->
 		addList('App.SiteSettings')
 	)->
 
+	addStyle('/css/photo.css')->
+	addScript('/js/photo.js')->
+	addScript('/js/loader.js')->
+
 	end();

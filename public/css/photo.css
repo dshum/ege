@@ -1,0 +1,22 @@
+.photo-container {
+    margin: 1rem 0;
+    clear: both;
+}
+
+.photo-container .block {
+    float: left;
+    margin-right: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.18), 0 2px 11px 0 rgba(0, 0, 0, 0.15);
+    padding: 0.5rem;
+    background-color: #cde;
+}
+
+.photo-container .block img {
+    max-height: 10rem;
+    width: auto;
+    margin-bottom: 0.25rem;
+}

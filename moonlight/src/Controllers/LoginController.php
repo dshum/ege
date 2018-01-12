@@ -24,12 +24,13 @@ class LoginController extends Controller
         $password = $request->input('password');
         $remember = $request->input('remember');
 
+        $scope['login'] = $login;
+        $scope['remember'] = $remember;
+
 		if (! $login) {
 			$scope['error'] = 'Введите логин.';
 			return view('moonlight::login', $scope);
 		}
-        
-        $scope['login'] = $login;
 
 		if (! $password) {
 			$scope['error'] = 'Введите пароль.';
@@ -60,7 +61,9 @@ class LoginController extends Controller
 			'ID '.$user->id.' ('.$user->login.')'
 		);
 
-        return redirect()->route('moonlight.home')->withCookie(cookie()->forever('login', $user->login));
+        return redirect()->route('moonlight.home')
+            ->withCookie(cookie()->forever('login', $user->login))
+            ->withCookie(cookie()->forever('remember', $remember));
     }
     
     /**
@@ -92,6 +95,7 @@ class LoginController extends Controller
     public function show(Request $request)
     {
         $scope['login'] = $request->cookie('login');
+        $scope['remember'] = $request->cookie('remember');
         
         return view('moonlight::login', $scope);
     }

@@ -21,11 +21,8 @@
   display: block;
   margin: 0;
   padding: 0;
-}
-
-.main .h2 span {
-  font-size: 1.3rem;
   color: steelblue;
+  font-size: 1.3rem;
 }
 
 .main .elements ul {

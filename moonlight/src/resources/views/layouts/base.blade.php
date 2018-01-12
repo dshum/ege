@@ -12,6 +12,11 @@
 <link media="all" type="text/css" rel="stylesheet" href="/packages/moonlight/css/jquery.calendar.css">
 @section('css')
 @show
+@if (isset($styles))
+@foreach ($styles as $style)
+<link media="all" type="text/css" rel="stylesheet" href="{{ $style }}">
+@endforeach
+@endif
 <script src="/packages/moonlight/js/jquery-3.2.1.min.js"></script>
 <script src="/packages/moonlight/js/jquery.calendar.js"></script>
 <script src="/packages/moonlight/js/jquery.form.min.js"></script>
@@ -20,6 +25,11 @@
 <script src="/packages/moonlight/js/common.js"></script>
 @section('js')
 @show
+@if (isset($scripts))
+@foreach ($scripts as $script)
+<script src="{{ $script }}"></script>
+@endforeach
+@endif
 </head>
 <body>
     <div class="block-ui">
