@@ -7,7 +7,6 @@ use Moonlight\Middleware\SessionNameMiddleware;
 use Moonlight\Middleware\GuestMiddleware;
 use Moonlight\Middleware\AuthMiddleware;
 use Moonlight\Middleware\HistoryMiddleware;
-use Moonlight\Middleware\PluginMiddleware;
 use Moonlight\Main\Element;
 use Moonlight\Models\User;
 
@@ -17,7 +16,6 @@ Route::group(['prefix' => 'moonlight'], function() {
         StartSession::class, 
         GuestMiddleware::class, 
         VerifyCsrfToken::class,
-        PluginMiddleware::class,
     ]], function () {
         Route::get('/login', ['as' => 'moonlight.login', 'uses' => 'Moonlight\Controllers\LoginController@show']);
         
@@ -29,7 +27,6 @@ Route::group(['prefix' => 'moonlight'], function() {
         StartSession::class, 
         AuthMiddleware::class,
         VerifyCsrfToken::class,
-        PluginMiddleware::class,
     ]], function () {
         Route::get('/', ['as' => 'moonlight.home', 'uses' => 'Moonlight\Controllers\HomeController@index']);
 

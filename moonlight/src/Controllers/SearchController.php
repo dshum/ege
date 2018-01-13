@@ -75,7 +75,7 @@ class SearchController extends Controller
         
         $currentItem = $site->getItemByName($class);
         
-        if ( ! $currentItem) {
+        if (! $currentItem) {
             return redirect()->route('search');
         }
 
@@ -144,6 +144,23 @@ class SearchController extends Controller
         }
         
         $sort = $request->input('sort');
+
+        $styles = [];
+        $scripts = [];
+
+        /*
+         * Item styles and scripts
+         */
+
+        $styles = array_merge($styles, $site->getItemStyles($class));
+        $scripts = array_merge($scripts, $site->getItemScripts($class));
+
+        /*
+         * Search styles and scripts
+         */
+
+        $styles = array_merge($styles, $site->getSearchStyles($class));
+        $scripts = array_merge($scripts, $site->getSearchScripts($class));
         
         $scope['items'] = $items;
         $scope['currentItem'] = $currentItem;
@@ -156,6 +173,11 @@ class SearchController extends Controller
         $scope['action'] = $action;
         $scope['sort'] = $sort;
         $scope['elements'] = $elements;
+
+        view()->share([
+            'styles' => $styles,
+            'scripts' => $scripts,
+        ]);
             
         return view('moonlight::searchItem', $scope);
     }

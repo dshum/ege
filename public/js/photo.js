@@ -11,9 +11,10 @@ $(function() {
                         + '<img src="/pictures/'+ filename + '"><br>'
                         + filename
                         + '</div>';
-                    var block = $(html);
+                    var block = $(html).hide();
 
                     container.append(block);
+                    block.fadeIn(200);
                 }
             }
         }).fail(function() {
@@ -73,9 +74,10 @@ $(function() {
                         + '<img src="/pictures/'+ filename + '"><br>'
                         + filename
                         + '</div>';
-                    var block = $(html);
+                    var block = $(html).hide();
 
                     container.prepend(block);
+                    block.fadeIn(200);
                 }
             },
             error: function() {

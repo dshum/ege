@@ -1,0 +1,18 @@
+.answers {
+    width: 15rem;
+}
+
+.answers .answer {
+    border-radius: 2px;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+.answers .answer:hover {
+    background-color: lightskyblue;
+}
+
+.answers .answer.correct {
+    background-color: #acb;
+    color: black;
+}

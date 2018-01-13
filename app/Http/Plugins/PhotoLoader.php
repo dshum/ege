@@ -104,7 +104,7 @@ class PhotoLoader extends Controller {
 
 	public function index()
 	{
-		$scope = [];
+        $scope = [];
 
 		return view('plugins.photoLoader', $scope);
 	}

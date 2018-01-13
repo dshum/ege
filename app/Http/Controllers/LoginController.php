@@ -32,19 +32,19 @@ class LoginController extends Controller {
 			return view('login', $scope);
 		}
 
-		if ( ! $password) {
+		if (! $password) {
 			$scope['error'] = 'Введите пароль.';
 			return view('login', $scope);
 		}
 
 		$user = User::where('email', $email)->first();
 
-		if ( ! $user) {
+		if (! $user) {
 			$scope['error'] = 'Неправильный e-mail или пароль.';
 			return view('login', $scope);
 		}
 
-		if ( ! password_verify($password, $user->password)) {
+		if (! password_verify($password, $user->password)) {
 			$scope['error'] = 'Неправильный логин или пароль.';
 			return view('login', $scope);
 		}
@@ -53,9 +53,6 @@ class LoginController extends Controller {
 			$scope['error'] = 'Пользователь заблокирован.';
 			return view('login', $scope);
 		}
-        
-        // $user->last_login = Carbon::now();
-        // $user->save();
 
 		Auth::login($user, $remember);
 

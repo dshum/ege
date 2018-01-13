@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\User;
 use Moonlight\Models\UserAction;
+use Carbon\Carbon;
 
 class LoginController extends Controller
 {
@@ -54,12 +55,15 @@ class LoginController extends Controller
 			return view('moonlight::login', $scope);
         }
         
-        Auth::guard('moonlight')->login($user, $remember);
+        Auth::guard('moonlight')->login($user, true);
+
+        $user->last_login = Carbon::now();
+        $user->save();
         
         UserAction::log(
 			UserActionType::ACTION_TYPE_LOGIN_ID,
 			'ID '.$user->id.' ('.$user->login.')'
-		);
+        );
 
         return redirect()->route('moonlight.home')
             ->withCookie(cookie()->forever('login', $user->login))

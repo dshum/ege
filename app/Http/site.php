@@ -580,15 +580,23 @@ $site->
 	)->
 
 	// addHomePlugin('App\Http\Plugins\Welcome')->
-	addItemPlugin('App.Question', 'App\Http\Plugins\Answers')->
 	// addBrowseFilter('App.Question', 'App\Http\Plugins\QuestionFilter')->
+	
+	addItemStyle('App.Question', '/css/answers.css')->
+	addItemScript('App.Question', '/js/answers.js')->
+	
+	addBrowseStyle(env('site.loader', 'App.ServiceSection.4'), '/css/loader.css')->
+	addBrowseScript(env('site.loader', 'App.ServiceSection.4'), '/js/loader.js')->
 	addBrowsePlugin(env('site.loader', 'App.ServiceSection.4'), 'App\Http\Plugins\TestLoader')->
-	addBrowsePlugin(env('site.photo', 'App.ServiceSection.17'), 'App\Http\Plugins\PhotoLoader')->
+
+	addBrowseStyle(env('site.photo', 'App.ServiceSection.5'), '/css/photo.css')->
+	addBrowseScript(env('site.photo', 'App.ServiceSection.5'), '/js/photo.js')->
+	addBrowsePlugin(env('site.photo', 'App.ServiceSection.5'), 'App\Http\Plugins\PhotoLoader')->
 
 	bind(Site::ROOT, ['App.Section', 'App.ServiceSection', 'App.SiteSettings'])->
 	bind(env('site.subjects', 'App.ServiceSection.2'), 'App.Subject')->
     bind(env('site.dicts', 'App.ServiceSection.3'), 'App.ServiceSection')->
-	bind(env('site.types', 'App.ServiceSection.5'), 'App.QuestionType')->
+	bind(env('site.types', 'App.ServiceSection.6'), 'App.QuestionType')->
 	bind(env('site.students', 'App.ServiceSection.1'), 'App.User')->
 	bind('App.Subject', 'App.Topic')->
 	bind('App.Topic', ['App.Subtopic', 'App.Test', 'App.Question'])->
@@ -635,9 +643,5 @@ $site->
 		Rubric::create('site_settings', 'Настройки сайта')->
 		addList('App.SiteSettings')
 	)->
-
-	addStyle('/css/photo.css')->
-	addScript('/js/photo.js')->
-	addScript('/js/loader.js')->
 
 	end();

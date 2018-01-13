@@ -51,14 +51,5 @@ class Answers extends Controller {
 
 		return view('plugins.answers.field', $scope);
     }
-    
-    public function index(Item $item)
-	{
-        $scope = [];
-        
-        $scope['item'] = $item;
-
-		return view('plugins.answers.index', $scope);
-	}
 
 } 

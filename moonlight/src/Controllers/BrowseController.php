@@ -659,7 +659,7 @@ class BrowseController extends Controller
         
         $currentItem = $site->getItemByName($class);
         
-        if ( ! $currentItem) {
+        if (! $currentItem) {
             return response()->json([]);
         }
 
@@ -1149,6 +1149,16 @@ class BrowseController extends Controller
         
         $site = \App::make('site');
 
+        $styles = [];
+        $scripts = [];
+
+        /*
+         * Browse styles and scripts
+         */
+
+        $styles = array_merge($styles, $site->getBrowseStyles($classId));
+        $scripts = array_merge($scripts, $site->getBrowseScripts($classId));
+
         /*
          * Browse plugin
          */
@@ -1223,6 +1233,13 @@ class BrowseController extends Controller
                             'name' => $item->getTitle(),
                         ];
                     }
+
+                    /*
+                     * Item styles and scripts
+                     */
+
+                    $styles = array_merge($styles, $site->getItemStyles($bind));
+                    $scripts = array_merge($scripts, $site->getItemScripts($bind));
                     
                     break;
                 } elseif (
@@ -1240,6 +1257,13 @@ class BrowseController extends Controller
                             'name' => $item->getTitle(),
                         ];
                     }
+
+                    /*
+                     * Item styles and scripts
+                     */
+
+                    $styles = array_merge($styles, $site->getItemStyles($bind));
+                    $scripts = array_merge($scripts, $site->getItemScripts($bind));
                     
                     break;
                 }
@@ -1259,6 +1283,11 @@ class BrowseController extends Controller
 		$scope['items'] = $items;
         $scope['creates'] = $creates;
         $scope['rubrics'] = $rubrics;
+
+        view()->share([
+            'styles' => $styles,
+            'scripts' => $scripts,
+        ]);
             
         return view('moonlight::element', $scope);
     }
@@ -1275,6 +1304,9 @@ class BrowseController extends Controller
         $loggedUser = Auth::guard('moonlight')->user();
 
         $site = \App::make('site');
+
+        $styles = [];
+        $scripts = [];
         
         $itemList = $site->getItemList();
         $binds = $site->getBinds();        
@@ -1300,6 +1332,13 @@ class BrowseController extends Controller
                         'name' => $item->getTitle(),
                     ];
                 }
+
+                /*
+                 * Item styles and scripts
+                 */
+
+                $styles = array_merge($styles, $site->getItemStyles($bind));
+                $scripts = array_merge($scripts, $site->getItemScripts($bind));
             }
         }
 
@@ -1311,6 +1350,11 @@ class BrowseController extends Controller
 		$scope['items'] = $items;
         $scope['creates'] = $creates;
         $scope['rubrics'] = $rubrics;
+
+        view()->share([
+            'styles' => $styles,
+            'scripts' => $scripts,
+        ]);
             
         return view('moonlight::root', $scope);
     }

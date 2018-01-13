@@ -547,6 +547,14 @@ class EditController extends Controller
         
         $rubrics = $rubricController->sidebar();
 
+        $styles = $site->getStyles();
+        $scripts = $site->getScripts();
+
+        view()->share([
+            'styles' => $styles,
+            'scripts' => $scripts,
+        ]);
+
         $scope['classId'] = $classId;
         $scope['element'] = $element;
         $scope['parents'] = $parents;
@@ -604,6 +612,16 @@ class EditController extends Controller
             ];
         }
 
+        $styles = [];
+        $scripts = [];
+
+        /*
+         * Item styles and scripts
+         */
+
+        $styles = array_merge($styles, $site->getItemStyles($classId));
+        $scripts = array_merge($scripts, $site->getItemScripts($classId));
+
         /*
          * Item plugin
          */
@@ -620,6 +638,13 @@ class EditController extends Controller
                     ? $view : $view->render();
             }
         }
+
+        /*
+         * Edit styles and scripts
+         */
+
+        $styles = array_merge($styles, $site->getEditStyles($classId));
+        $scripts = array_merge($scripts, $site->getEditScripts($classId));
 
         /*
          * Edit plugin
@@ -707,6 +732,11 @@ class EditController extends Controller
         $scope['movePropertyView'] = $movePropertyView;
         $scope['copyPropertyView'] = $copyPropertyView;
         $scope['rubrics'] = $rubrics;
+
+        view()->share([
+            'styles' => $styles,
+            'scripts' => $scripts,
+        ]);
         
         return view('moonlight::edit', $scope);
     }

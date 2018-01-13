@@ -156,7 +156,7 @@ class TestLoader extends Controller {
 
 	public function index()
 	{
-		$scope = [];
+        $scope = [];
 
 		$topics = Topic::orderBy('order')->get();
 
