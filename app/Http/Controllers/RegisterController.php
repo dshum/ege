@@ -103,10 +103,7 @@ class RegisterController extends Controller {
 
 		Mail::to($email)->send(new Register($user));
 
-		Mail::to([[
-			'address' => 'vegorova@mail.ru',
-			'name' => 'Verra',
-		]])->send(new AdminRegister($user));
+		Mail::to('vegorova@mail.ru', 'Verra')->send(new AdminRegister($user));
 
 		return redirect()->route('success');
 	}
