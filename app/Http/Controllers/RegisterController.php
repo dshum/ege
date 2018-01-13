@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\User;
 use App\Mail\Register;
+use App\Mail\AdminRegister;
 
 class RegisterController extends Controller {
 
@@ -101,6 +102,11 @@ class RegisterController extends Controller {
 		$user->save();
 
 		Mail::to($email)->send(new Register($user));
+
+		Mail::to([
+			'address' => 'vegorova@mail.ru',
+			'name' => 'Verra',
+		])->send(new AdminRegister($user));
 
 		return redirect()->route('success');
 	}

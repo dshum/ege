@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
 
-class Register extends Mailable
+class AdminRegister extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,13 +31,10 @@ class Register extends Mailable
      */
     public function build()
     {
-        $code = substr(md5($this->user->email), 8, 8);
-		$url = route('activate').'?email='.$this->user->email.'&code='.$code;
-
         return $this->
-            subject('Подтверждение регистрации на сайте «ЕГЭ по биологии»')->
-            view('mails.register')->with([
-			    'url' => $url
+            subject('Новый ученик на сайте ЕГЭ')->
+            view('mails.adminRegister')->with([
+			    'user' => $this->user
 		    ]);
     }
 }
