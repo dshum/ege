@@ -170,6 +170,8 @@ class HomeController extends Controller
 
         $site = \App::make('site');
 
+        1/0;
+
         /*
          * Home plugin
          */

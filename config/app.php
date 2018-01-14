@@ -167,16 +167,21 @@ return [
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
-
-        /*
-         * Moonlight Service Provider
-         */
-        Moonlight\MoonlightServiceProvider::class,
          
         /*
          * IDE Helper
          */
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+
+        /*
+         * Bugsnag Service Provider
+         */
+        Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
+
+        /*
+         * Moonlight Service Provider
+         */
+        Moonlight\MoonlightServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -235,6 +240,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        'Bugsnag' => Bugsnag\BugsnagLaravel\Facades\Bugsnag::class,
 
     ],
 
