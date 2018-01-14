@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -67,17 +68,23 @@ class RegisterController extends Controller {
 		$last_name = $request->input('last_name');
 
 		$validator = Validator::make($request->all(), [
-			'email' => 'required|email|unique:users,email',
+			'email' => [
+				'required',
+				'email',
+				Rule::unique('users', 'email')->where(function ($query) {
+					return $query->where('deleted_at', null);
+				}),
+			],
 			'password' => 'required',
             'first_name' => 'required',
             'last_name' => 'required',
         ], [
-			'email.required' => 'Введите e-mail',
-            'email.email' => 'Некорректный e-mail',
-			'email.unique' => 'Такой e-mail уже зарегистрирован',
-			'password.required' => 'Придумайте пароль',
-            'first_name.required' => 'Введите имя',
-            'last_name.required' => 'Введите фамилию',
+			'email.required' => 'Введите e-mail.',
+            'email.email' => 'Некорректный e-mail.',
+			'email.unique' => 'Такой e-mail уже зарегистрирован.',
+			'password.required' => 'Придумайте пароль.',
+            'first_name.required' => 'Введите имя.',
+            'last_name.required' => 'Введите фамилию.',
         ]);
         
         if ($validator->fails()) {

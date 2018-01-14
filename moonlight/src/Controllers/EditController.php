@@ -547,14 +547,6 @@ class EditController extends Controller
         
         $rubrics = $rubricController->sidebar();
 
-        $styles = $site->getStyles();
-        $scripts = $site->getScripts();
-
-        view()->share([
-            'styles' => $styles,
-            'scripts' => $scripts,
-        ]);
-
         $scope['classId'] = $classId;
         $scope['element'] = $element;
         $scope['parents'] = $parents;
