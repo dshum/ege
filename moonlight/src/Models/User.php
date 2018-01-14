@@ -3,8 +3,8 @@
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable {
-
+class User extends Authenticatable
+{
 	/**
 	 * The database table used by the model.
 	 *
@@ -33,11 +33,9 @@ class User extends Authenticatable {
 	 */
 	protected $assetsName = 'assets';
 
-	protected $guard = 'moonlight';
-
     public function getDates()
 	{
-		return array('created_at', 'updated_at', 'last_login');
+		return ['created_at', 'updated_at', 'last_login'];
 	}
 
 	public function isSuperUser()

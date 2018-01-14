@@ -55,7 +55,7 @@ class LoginController extends Controller
 			return view('moonlight::login', $scope);
         }
         
-        Auth::guard('moonlight')->login($user, true);
+        Auth::guard('moonlight')->login($user, $remember);
 
         $user->last_login = Carbon::now();
         $user->save();

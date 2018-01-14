@@ -27,7 +27,7 @@ class LoginController extends Controller {
 		$scope['password'] = $password;
 		$scope['remember'] = $remember;
 
-		if ( ! $email) {
+		if (! $email) {
 			$scope['error'] = 'Введите e-mail.';
 			return view('login', $scope);
 		}

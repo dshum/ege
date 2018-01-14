@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Log;
+use \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Moonlight\Middleware\SessionNameMiddleware;
@@ -12,6 +13,7 @@ use Moonlight\Models\User;
 
 Route::group(['prefix' => 'moonlight'], function() {
     Route::group(['middleware' => [
+        AddQueuedCookiesToResponse::class,
         SessionNameMiddleware::class,
         StartSession::class, 
         GuestMiddleware::class, 
@@ -23,6 +25,7 @@ Route::group(['prefix' => 'moonlight'], function() {
     });
     
     Route::group(['middleware' => [
+        AddQueuedCookiesToResponse::class,
         SessionNameMiddleware::class,
         StartSession::class, 
         AuthMiddleware::class,
