@@ -35,6 +35,7 @@ class Register extends Mailable
 		$url = route('activate').'?email='.$this->user->email.'&code='.$code;
 
         return $this->
+            to($this->user->email)->
             subject('Подтверждение регистрации на сайте «ЕГЭ по биологии»')->
             view('mails.register')->with([
 			    'url' => $url

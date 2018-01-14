@@ -32,6 +32,7 @@ class AdminRegister extends Mailable
     public function build()
     {
         return $this->
+            to('vegorova@mail.ru', 'Verra')->
             subject('Новый ученик на сайте ЕГЭ')->
             view('mails.adminRegister')->with([
 			    'user' => $this->user

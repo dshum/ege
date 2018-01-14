@@ -101,9 +101,9 @@ class RegisterController extends Controller {
 
 		$user->save();
 
-		Mail::to($email)->send(new Register($user));
+		Mail::send(new Register($user));
 
-		Mail::to('vegorova@mail.ru', 'Verra')->send(new AdminRegister($user));
+		Mail::send(new AdminRegister($user));
 
 		return redirect()->route('success');
 	}
