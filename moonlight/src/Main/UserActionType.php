@@ -30,6 +30,8 @@ class UserActionType
 	const ACTION_TYPE_SAVE_USER_ID = 411;
 	const ACTION_TYPE_DROP_USER_ID = 421;
 	const ACTION_TYPE_SAVE_PROFILE_ID = 501;
+	const ACTION_TYPE_CHANGE_PASSWORD_ID = 502;
+	const ACTION_TYPE_RESET_PASSWORD_ID = 503;
 	const ACTION_TYPE_LOGIN_ID = 601;
     const ACTION_TYPE_LOGOUT_ID = 602;
 
@@ -60,6 +62,8 @@ class UserActionType
 		self::ACTION_TYPE_SAVE_USER_ID => 'Сохранение пользователя',
 		self::ACTION_TYPE_DROP_USER_ID => 'Удаление пользователя',
 		self::ACTION_TYPE_SAVE_PROFILE_ID => 'Сохранение профиля',
+		self::ACTION_TYPE_CHANGE_PASSWORD_ID => 'Изменение пароля',
+		self::ACTION_TYPE_RESET_PASSWORD_ID => 'Сброс пароля',
 		self::ACTION_TYPE_LOGIN_ID => 'Авторизация',
         self::ACTION_TYPE_LOGOUT_ID => 'Выход',
 	];

@@ -153,8 +153,16 @@ class UserController extends Controller
 			UserActionType::ACTION_TYPE_ADD_USER_ID,
 			'ID '.$user->id.' ('.$user->login.')'
         );
+
+        $mailScope = [
+            'login' => $user->login,
+            'password' => $password,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'email' => $user->email,
+        ];
         
-        Mail::send(new Register($user, $password));
+        Mail::send(new Register($mailScope));
         
         $scope['added'] = $user->id;
         

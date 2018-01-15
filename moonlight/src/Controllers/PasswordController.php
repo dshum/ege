@@ -66,7 +66,7 @@ class PasswordController extends Controller
         $loggedUser->save();
         
         UserAction::log(
-			UserActionType::ACTION_TYPE_SAVE_PROFILE_ID,
+			UserActionType::ACTION_TYPE_CHANGE_PASSWORD_ID,
 			'ID '.$loggedUser->id.' ('.$loggedUser->login.')'
 		);
         
@@ -80,7 +80,7 @@ class PasswordController extends Controller
      * 
      * @return View
      */
-    public function show(Request $request)
+    public function index(Request $request)
     {
         $scope = [];
         

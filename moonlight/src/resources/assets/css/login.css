@@ -52,13 +52,29 @@ body {
 }
 
 .login .error {
-  display: block;
+  display: none;
   margin: 0;
   padding: 1rem 2rem;
   border: none;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
   background-color: crimson;
+  color: white;
+  font-size: 1rem;
+}
+
+.login .error.show {
+  display: block;
+}
+
+.login .ok {
+  display: none;
+  margin: 0;
+  padding: 1rem 2rem;
+  border: none;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  background-color: green;
   color: white;
   font-size: 1rem;
 }
@@ -83,6 +99,10 @@ body {
 
 .login .row.submit {
   padding-top: 1rem;
+}
+
+.login .back {
+  margin: 1rem 2rem 0 2rem;
 }
 
 form input[type="text"],

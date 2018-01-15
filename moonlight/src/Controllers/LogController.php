@@ -28,7 +28,7 @@ class LogController extends Controller
         return response()->json(['html' => $html]);
     }
     
-    public function show(Request $request)
+    public function index(Request $request)
     {
         $scope = [];
         

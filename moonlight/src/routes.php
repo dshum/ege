@@ -19,9 +19,17 @@ Route::group(['prefix' => 'moonlight'], function() {
         GuestMiddleware::class, 
         VerifyCsrfToken::class,
     ]], function () {
-        Route::get('/login', ['as' => 'moonlight.login', 'uses' => 'Moonlight\Controllers\LoginController@show']);
+        Route::get('/login', ['as' => 'moonlight.login', 'uses' => 'Moonlight\Controllers\LoginController@index']);
         
         Route::post('/login', ['as' => 'moonlight.login', 'uses' => 'Moonlight\Controllers\LoginController@login']);
+
+        Route::get('/reset', ['as' => 'moonlight.reset', 'uses' => 'Moonlight\Controllers\ResetController@index']);
+
+        Route::post('/reset/send', ['as' => 'moonlight.reset.send', 'uses' => 'Moonlight\Controllers\ResetController@send']);
+
+        Route::get('/reset/create', ['as' => 'moonlight.reset.create', 'uses' => 'Moonlight\Controllers\ResetController@create']);
+
+        Route::post('/reset/save', ['as' => 'moonlight.reset.save', 'uses' => 'Moonlight\Controllers\ResetController@save']);
     });
     
     Route::group(['middleware' => [
@@ -35,13 +43,11 @@ Route::group(['prefix' => 'moonlight'], function() {
 
         Route::get('/logout', ['as' => 'moonlight.logout', 'uses' => 'Moonlight\Controllers\LoginController@logout']);
        
-        Route::get('/profile', ['as' => 'moonlight.profile', 'uses' => 'Moonlight\Controllers\ProfileController@show']);
+        Route::get('/profile', ['as' => 'moonlight.profile', 'uses' => 'Moonlight\Controllers\ProfileController@index']);
        
         Route::post('/profile', ['as' => 'moonlight.profile', 'uses' => 'Moonlight\Controllers\ProfileController@save']);
         
-        Route::get('/password', ['as' => 'moonlight.password', 'uses' => 'Moonlight\Controllers\PasswordController@show']);
-
-        Route::get('/restore', ['as' => 'moonlight.restore', 'uses' => 'Moonlight\Controllers\PasswordController@restore']);
+        Route::get('/password', ['as' => 'moonlight.password', 'uses' => 'Moonlight\Controllers\PasswordController@index']);
         
         Route::post('/password', ['as' => 'moonlight.password', 'uses' => 'Moonlight\Controllers\PasswordController@save']);
 
@@ -87,7 +93,7 @@ Route::group(['prefix' => 'moonlight'], function() {
         Route::post('groups/permissions/elements/{id}/{class}', ['as' => 'moonlight.group.elements', 'uses' => 'Moonlight\Controllers\PermissionController@saveElementPermission'])->
             where('id', '[0-9]+'); 
         
-        Route::get('/log', ['as' => 'moonlight.log', 'uses' => 'Moonlight\Controllers\LogController@show']);
+        Route::get('/log', ['as' => 'moonlight.log', 'uses' => 'Moonlight\Controllers\LogController@index']);
         
         Route::get('/log/next', ['as' => 'moonlight.log.next', 'uses' => 'Moonlight\Controllers\LogController@next']);
         

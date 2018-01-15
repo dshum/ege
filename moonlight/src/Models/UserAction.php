@@ -23,9 +23,9 @@ class UserAction extends Model {
 		return UserActionType::getActionTypeName($this->action_type_id);
 	}
 
-	public static function log($actionTypeId, $comments)
+	public static function log($actionTypeId, $comments, $user = null)
 	{
-		$loggedUser = Auth::guard('moonlight')->user();
+		$loggedUser = $user ?: Auth::guard('moonlight')->user();
 
         $method = isset($_SERVER['REQUEST_METHOD'])
             ? $_SERVER['REQUEST_METHOD'] : '';

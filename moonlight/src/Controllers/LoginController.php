@@ -30,29 +30,29 @@ class LoginController extends Controller
 
 		if (! $login) {
 			$scope['error'] = 'Введите логин.';
-			return view('moonlight::login', $scope);
+			return response()->json($scope);
 		}
 
 		if (! $password) {
 			$scope['error'] = 'Введите пароль.';
-			return view('moonlight::login', $scope);
+			return response()->json($scope);
 		}
 
 		$user = User::where('login', $login)->first();
 
 		if (! $user) {
 			$scope['error'] = 'Неправильный логин или пароль.';
-			return view('moonlight::login', $scope);
+			return response()->json($scope);
 		}
         
 		if (! password_verify($password, $user->password)) {
 			$scope['error'] = 'Неправильный логин или пароль.';
-			return view('moonlight::login', $scope);
+			return response()->json($scope);
 		}
 
 		if ($user->banned) {
 			$scope['error'] = 'Пользователь заблокирован.';
-			return view('moonlight::login', $scope);
+			return response()->json($scope);
         }
         
         Auth::guard('moonlight')->login($user, $remember);
@@ -65,15 +65,18 @@ class LoginController extends Controller
 			'ID '.$user->id.' ('.$user->login.')'
         );
 
-        return redirect()->route('moonlight.home')
-            ->withCookie(cookie()->forever('login', $user->login))
-            ->withCookie(cookie()->forever('remember', $remember));
+        cookie()->forever('login', $user->login);
+        cookie()->forever('remember', $remember);
+
+        $scope['url'] = route('moonlight.home');
+
+        return response()->json($scope);
     }
     
     /**
      * Logout.
      * 
-     * @return Response
+     * @return Redirect
      */
     
     public function logout(Request $request)
@@ -96,7 +99,7 @@ class LoginController extends Controller
      * @return View
      */
     
-    public function show(Request $request)
+    public function index(Request $request)
     {
         $scope['login'] = $request->cookie('login');
         $scope['remember'] = $request->cookie('remember');

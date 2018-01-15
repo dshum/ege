@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class Register extends Mailable
+class Reset extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,13 +30,18 @@ class Register extends Mailable
      */
     public function build()
     {
+        $login = $this->scope['login'];
         $email = $this->scope['email'];
+        $token = $this->scope['token'];
+
+        $url = route('moonlight.reset.create').'?login='.$login.'&token='.$token;
 
         $this->scope['site'] = $_SERVER['HTTP_HOST'];
+        $this->scope['url'] = $url;
 
         return $this->
             to($email)->
-            subject('Регистрация')->
-            view('moonlight::mails.register')->with($this->scope);
+            subject('Сброс пароля')->
+            view('moonlight::mails.reset')->with($this->scope);
     }
 }

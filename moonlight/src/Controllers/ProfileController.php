@@ -152,7 +152,7 @@ class ProfileController extends Controller
      * 
      * @return View
      */
-    public function show(Request $request)
+    public function index(Request $request)
     {
         $scope = [];
         

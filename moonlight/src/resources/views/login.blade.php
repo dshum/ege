@@ -2,17 +2,22 @@
 
 @section('title', 'Moonlight')
 
+@section('css')
+<link media="all" type="text/css" rel="stylesheet" href="/packages/moonlight/css/login.css">
+@endsection
+
+@section('js')
+<script src="/packages/moonlight/js/login.js"></script>
+@endsection
+
 @section('content')
 <div class="login">
     <div class="path">
         Вход
     </div>
     <div class="block">
-        @if (isset($error))
-        <div class="error">{{ $error }}</div>
-        @endif
+        <div class="error"></div>
         <form action="{{ route('moonlight.login') }}" autocomplete="off" method="POST">
-            {{ csrf_field() }}
             <div class="row">
                 <label>Логин</label><br>
                 <input type="text" name="login" value="{{ $login or null }}" placeholder="Логин">
@@ -20,7 +25,7 @@
             <div class="row">
                 <label>Пароль</label><br>
                 <input type="password" name="password" placeholder="Пароль"><br>
-                <a href="{{ route('moonlight.restore') }}">Забыли пароль?</a>
+                <a href="{{ route('moonlight.reset') }}">Забыли пароль?</a>
             </div>
             <div class="row">
                 <p>
