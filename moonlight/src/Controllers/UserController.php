@@ -5,10 +5,12 @@ namespace Moonlight\Controllers;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\Group;
 use Moonlight\Models\User;
 use Moonlight\Models\UserAction;
+use Moonlight\Mail\Register;
 
 class UserController extends Controller
 {
@@ -150,7 +152,9 @@ class UserController extends Controller
         UserAction::log(
 			UserActionType::ACTION_TYPE_ADD_USER_ID,
 			'ID '.$user->id.' ('.$user->login.')'
-		);
+        );
+        
+        Mail::send(new Register($user, $password));
         
         $scope['added'] = $user->id;
         
