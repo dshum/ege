@@ -35,7 +35,7 @@ class Register extends Mailable
     {
         return $this->
             to($this->user->email)->
-            subject('Регистрация ')->
+            subject('Регистрация')->
             view('moonlight::mails.register')->with([
                 'user' => $this->user,
                 'password' => $this->password,

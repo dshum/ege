@@ -31,6 +31,10 @@
                 </div>
                 <div class="row">
                     <label>E-mail:</label><span name="email" class="error"></span><br>
+                    @if (! $user)
+                    <div><small class="red">На указанный адрес будет отправлено письмо<br>
+                    с параметрами доступа</small></div>
+                    @endif
                     <input type="text" name="email" value="{{ $user ? $user->email : '' }}" placeholder="E-mail">
                 </div>
                 <div class="row">
