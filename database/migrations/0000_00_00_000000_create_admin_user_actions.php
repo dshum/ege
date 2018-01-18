@@ -17,7 +17,7 @@ class CreateAdminUserActions extends Migration {
 			$table->increments('id');
 			$table->integer('user_id')->unsigned()->index();
 			$table->string('action_type_id')->index();
-			$table->string('comments');
+			$table->text('comments');
 			$table->string('url');
 			$table->timestamps();
             $table->engine = 'InnoDB';

@@ -212,7 +212,7 @@ class BrowseController extends Controller
     }
     
     /**
-     * Copy elements.
+     * Move elements.
      *
      * @return Response
      */
@@ -304,6 +304,190 @@ class BrowseController extends Controller
             $scope['moved'] = 'ok';
             $scope['url'] = $url;
         }
+
+        return response()->json($scope);
+    }
+
+    /**
+     * Bind element.
+     *
+     * @return Response
+     */
+    public function bind(Request $request)
+    {
+        $scope = [];
+        
+        $loggedUser = Auth::guard('moonlight')->user();
+
+        $class = $request->input('item');
+
+        $site = \App::make('site');
+        
+        $currentItem = $site->getItemByName($class);
+        
+        if (! $currentItem) {
+            $scope['error'] = 'Класс элементов не найден.';
+            
+            return response()->json($scope);
+        }
+
+        $checked = $request->input('checked');
+
+        if (! is_array($checked) || ! sizeof($checked)) {
+            $scope['error'] = 'Пустой список элементов.';
+            
+            return response()->json($scope);
+        }
+        
+        $elements = [];
+        
+        foreach ($checked as $id) {
+            $element = $currentItem->getClass()->find($id);
+            
+            if ($element && $loggedUser->hasUpdateAccess($element)) {
+                $elements[] = $element;
+            }
+        }
+        
+        if (! sizeof($elements)) {
+            $scope['error'] = 'Нет элементов для переноса.';
+            
+            return response()->json($scope);
+        }
+
+        $ones = $request->input('ones');
+
+        $attached = [];
+
+        $propertyList = $currentItem->getPropertyList();
+
+        foreach ($propertyList as $propertyName => $property) {
+            if ($property->getHidden()) continue;
+            if ($property->getReadonly()) continue;
+            if (! $property->isManyToMany()) continue;
+            if (! isset($ones[$propertyName])) continue;
+            if (! $ones[$propertyName]) continue;
+
+            $value = $ones[$propertyName];
+            
+            $relatedClass = $property->getRelatedClass();
+            $relatedItem = $site->getItemByName($relatedClass);
+
+            foreach ($elements as $element) {
+                $property->setElement($element);
+
+                $property->attach($value);
+
+                $element->save();
+
+                $attached[] = Element::getClassId($element);
+            }
+        }
+        
+        $lines = [];
+
+        foreach ($ones as $name => $value) {
+            $lines[] = $name.'+='.$value;
+        }
+
+        UserAction::log(
+            UserActionType::ACTION_TYPE_BIND_ELEMENT_LIST_ID,
+            implode(';', $lines).': '.implode(', ', $attached)
+        );
+
+        $scope['attached'] = 'ok';
+
+        return response()->json($scope);
+    }
+
+    /**
+     * Unbind element.
+     *
+     * @return Response
+     */
+    public function unbind(Request $request)
+    {
+        $scope = [];
+        
+        $loggedUser = Auth::guard('moonlight')->user();
+
+        $class = $request->input('item');
+
+        $site = \App::make('site');
+        
+        $currentItem = $site->getItemByName($class);
+        
+        if (! $currentItem) {
+            $scope['error'] = 'Класс элементов не найден.';
+            
+            return response()->json($scope);
+        }
+
+        $checked = $request->input('checked');
+
+        if (! is_array($checked) || ! sizeof($checked)) {
+            $scope['error'] = 'Пустой список элементов.';
+            
+            return response()->json($scope);
+        }
+        
+        $elements = [];
+        
+        foreach ($checked as $id) {
+            $element = $currentItem->getClass()->find($id);
+            
+            if ($element && $loggedUser->hasUpdateAccess($element)) {
+                $elements[] = $element;
+            }
+        }
+        
+        if (! sizeof($elements)) {
+            $scope['error'] = 'Нет элементов для переноса.';
+            
+            return response()->json($scope);
+        }
+
+        $ones = $request->input('ones');
+
+        $detached = [];
+
+        $propertyList = $currentItem->getPropertyList();
+
+        foreach ($propertyList as $propertyName => $property) {
+            if ($property->getHidden()) continue;
+            if ($property->getReadonly()) continue;
+            if (! $property->isManyToMany()) continue;
+            if (! isset($ones[$propertyName])) continue;
+            if (! $ones[$propertyName]) continue;
+
+            $value = $ones[$propertyName];
+            
+            $relatedClass = $property->getRelatedClass();
+            $relatedItem = $site->getItemByName($relatedClass);
+
+            foreach ($elements as $element) {
+                $property->setElement($element);
+
+                $property->detach($value);
+
+                $element->save();
+
+                $detached[] = Element::getClassId($element);
+            }
+        }
+        
+        $lines = [];
+
+        foreach ($ones as $name => $value) {
+            $lines[] = $name.'+='.$value;
+        }
+
+        UserAction::log(
+            UserActionType::ACTION_TYPE_UNBIND_ELEMENT_LIST_ID,
+            implode(';', $lines).': '.implode(', ', $detached)
+        );
+
+        $scope['detached'] = 'ok';
 
         return response()->json($scope);
     }
@@ -937,6 +1121,8 @@ class BrowseController extends Controller
 
         $copyPropertyView = null;
         $movePropertyView = null;
+        $bindPropertyViews = [];
+        $unbindPropertyViews = [];
 
         $currentElementItem = $currentElement ? Element::getItem($currentElement) : null;
 
@@ -970,6 +1156,23 @@ class BrowseController extends Controller
             }
         }
 
+        foreach ($propertyList as $property) {
+            if ($property->getHidden()) continue;
+            if (! $property->isManyToMany()) continue;
+
+            $propertyScope = $property->getEditView();
+
+            $propertyScope['mode'] = 'browse';
+
+            $bindPropertyViews[$property->getName()] = view(
+                'moonlight::properties.'.$property->getClassName().'.bind', $propertyScope
+            )->render();
+
+            $unbindPropertyViews[$property->getName()] = view(
+                'moonlight::properties.'.$property->getClassName().'.bind', $propertyScope
+            )->render();
+        }
+
         if (! $copyPropertyView && $currentItem->getRoot()) {
             $copyPropertyView = 'Корень сайта';
         }
@@ -993,6 +1196,8 @@ class BrowseController extends Controller
         $scope['mode'] = 'browse';
         $scope['copyPropertyView'] = $copyPropertyView;
         $scope['movePropertyView'] = $movePropertyView;
+        $scope['bindPropertyViews'] = $bindPropertyViews;
+        $scope['unbindPropertyViews'] = $unbindPropertyViews;
         
         return view('moonlight::elements', $scope)->render();
     }

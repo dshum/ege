@@ -17,6 +17,8 @@ class UserActionType
 	const ACTION_TYPE_RESTORE_ELEMENT_LIST_ID = 52;
 	const ACTION_TYPE_MOVE_ELEMENT_ID = 61;
 	const ACTION_TYPE_MOVE_ELEMENT_LIST_ID = 62;
+	const ACTION_TYPE_BIND_ELEMENT_LIST_ID = 63;
+	const ACTION_TYPE_UNBIND_ELEMENT_LIST_ID = 64;
 	const ACTION_TYPE_ORDER_ELEMENT_LIST_ID = 71;
 	const ACTION_TYPE_PLUGIN_ID = 101;
 	const ACTION_TYPE_ACTION_ID = 102;
@@ -47,8 +49,10 @@ class UserActionType
 		self::ACTION_TYPE_DROP_ELEMENT_LIST_ID => 'Удаление списка элементов',
 		self::ACTION_TYPE_RESTORE_ELEMENT_ID => 'Восстановление элемента из корзины',
 		self::ACTION_TYPE_RESTORE_ELEMENT_LIST_ID => 'Восстановление списка элементов из корзины',
-		self::ACTION_TYPE_MOVE_ELEMENT_ID => 'Перемещение элемента',
-		self::ACTION_TYPE_MOVE_ELEMENT_LIST_ID => 'Перемещение списка элементов',
+		self::ACTION_TYPE_MOVE_ELEMENT_ID => 'Перенос элемента',
+		self::ACTION_TYPE_MOVE_ELEMENT_LIST_ID => 'Перенос списка элементов',
+		self::ACTION_TYPE_BIND_ELEMENT_LIST_ID => 'Привязывание списка элементов',
+		self::ACTION_TYPE_UNBIND_ELEMENT_LIST_ID => 'Отвязывание списка элементов',
 		self::ACTION_TYPE_ORDER_ELEMENT_LIST_ID => 'Сортировка списка элементов',
 		self::ACTION_TYPE_PLUGIN_ID => 'Плагин',
 		self::ACTION_TYPE_ACTION_ID => 'Действие',

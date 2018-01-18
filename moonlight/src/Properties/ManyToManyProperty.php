@@ -13,7 +13,8 @@ class ManyToManyProperty extends BaseProperty
     protected $relatedMethod = null;
 	protected $showOrder = false;
     
-    protected $list = [];
+	protected $list = [];
+	protected $parent = null;
 
 	public function __construct($name) {
 		parent::__construct($name);
@@ -75,6 +76,19 @@ class ManyToManyProperty extends BaseProperty
 	{
 		return $this->list;
 	}
+
+	public function getIds()
+	{
+		$list = $this->getList();
+
+		$ids = [];
+
+		foreach ($list as $element) {
+            $ids[] = $element->id;
+		}
+		
+		return $ids;
+	}
     
     public function setElement(Model $element)
 	{
@@ -102,6 +116,45 @@ class ManyToManyProperty extends BaseProperty
 		try {
 			if (method_exists($this->element, $name)) {
 				$this->element->{$name}()->sync($ids);
+			}
+		} catch (\Exception $e) {}
+
+		return $this;
+	}
+
+	public function sync($ids)
+	{
+        $name = $this->getName();
+
+		try {
+			if (method_exists($this->element, $name)) {
+				$this->element->{$name}()->sync($ids);
+			}
+		} catch (\Exception $e) {}
+
+		return $this;
+	}
+
+	public function attach($id)
+	{
+        $name = $this->getName();
+
+		try {
+			if (method_exists($this->element, $name)) {
+				$this->element->{$name}()->attach($id);
+			}
+		} catch (\Exception $e) {}
+
+		return $this;
+	}
+
+	public function detach($id)
+	{
+        $name = $this->getName();
+
+		try {
+			if (method_exists($this->element, $name)) {
+				$this->element->{$name}()->detach($id);
 			}
 		} catch (\Exception $e) {}
 
@@ -143,7 +196,7 @@ class ManyToManyProperty extends BaseProperty
 		$relatedClass = $this->getRelatedClass();
 		$relatedItem = $site->getItemByName($relatedClass);
 		$mainProperty = $relatedItem->getMainProperty();
-        $list = $this->getList();
+		$list = $this->getList();
 
 		$elements = [];
 
@@ -162,6 +215,7 @@ class ManyToManyProperty extends BaseProperty
 			'readonly' => $this->getReadonly(),
 			'required' => $this->getRequired(),
 			'relatedClass' => $relatedItem->getNameId(),
+			'relatedItem' => $relatedItem,
 		];
 
 		return $scope;

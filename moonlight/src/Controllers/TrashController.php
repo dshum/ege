@@ -600,6 +600,8 @@ class TrashController extends Controller
         $scope['mode'] = 'trash';
         $scope['copyPropertyView'] = null;
         $scope['movePropertyView'] = null;
+        $scope['bindPropertyViews'] = null;
+        $scope['unbindPropertyViews'] = null;
         
         return view('moonlight::elements', $scope)->render();
     }

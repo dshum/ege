@@ -29,15 +29,13 @@
             <div class="button delete"><i class="fa fa-trash-o"></i>Удалить</div>
             @else
             <div class="button save"><i class="fa fa-floppy-o"></i>Сохранить</div>
-            @if ($copyPropertyView)
-            <div class="button copy"><i class="fa fa-clone"></i>Копировать</div>
-            @else
-            <div class="button copy disabled"><i class="fa fa-arrow-right"></i>Копировать</div>
+            <div class="button copy{{ $copyPropertyView ? '' : ' disabled' }}"><i class="fa fa-clone"></i>Копировать</div>
+            <div class="button move{{ $movePropertyView ? '' : ' disabled' }}"><i class="fa fa-arrow-right"></i>Перенести</div>
+            @if ($bindPropertyViews)
+            <div class="button bind"><i class="fa fa-tag"></i>Привязать</div>
             @endif
-            @if ($movePropertyView)
-            <div class="button move"><i class="fa fa-arrow-right"></i>Перенести</div>
-            @else
-            <div class="button move disabled"><i class="fa fa-arrow-right"></i>Перенести</div>
+            @if ($unbindPropertyViews)
+            <div class="button unbind"><i class="fa fa-tag"></i>Отвязать</div>
             @endif
             <div class="button delete"><i class="fa fa-trash-o"></i>Удалить</div>
             @endif
@@ -153,6 +151,50 @@
     </div>
 </div>
 @endif
+@if ($bindPropertyViews)
+<div class="confirm" id="{{ $currentItem->getNameId() }}_bind">
+    <div class="wrapper">
+        <div class="container">
+            <div class="content">
+                <div>Выберите элемент,<br>который вы хотите привязать:</div>
+                <div class="edit">
+                @foreach ($bindPropertyViews as $bindPropertyView)
+                <div class="row">
+                    {!! $bindPropertyView !!}
+                </div>
+                @endforeach
+                </div>
+            </div>
+            <div class="bottom">
+                <input type="button" value="Привязать" class="btn bind">
+                <input type="button" value="Отмена" class="btn cancel">
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+@if ($unbindPropertyViews)
+<div class="confirm" id="{{ $currentItem->getNameId() }}_unbind">
+    <div class="wrapper">
+        <div class="container">
+            <div class="content">
+            <div>Выберите элемент,<br>который вы хотите отвязать:</div>
+                <div class="edit">
+                    @foreach ($unbindPropertyViews as $unbindPropertyView)
+                    <div class="row">
+                        {!! $unbindPropertyView !!}
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            <div class="bottom">
+                <input type="button" value="Отвязать" class="btn unbind">
+                <input type="button" value="Отмена" class="btn cancel">
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 <div class="confirm" id="{{ $currentItem->getNameId() }}_delete">
     <div class="wrapper">
         <div class="container">
@@ -160,7 +202,7 @@
                 Удалить выбранные элементы?
             </div>
             <div class="bottom">
-                <input type="button" value="Удалить" class="btn danger remove">
+                <input type="button" value="Удалить" class="btn remove">
                 <input type="button" value="Отмена" class="btn cancel">
             </div>
         </div>

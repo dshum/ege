@@ -147,6 +147,10 @@ Route::group(['prefix' => 'moonlight'], function() {
         
         Route::post('/elements/move', ['as' => 'moonlight.elements.move', 'uses' => 'Moonlight\Controllers\BrowseController@move']);
 
+        Route::post('/elements/bind', ['as' => 'moonlight.elements.move', 'uses' => 'Moonlight\Controllers\BrowseController@bind']);
+
+        Route::post('/elements/unbind', ['as' => 'moonlight.elements.move', 'uses' => 'Moonlight\Controllers\BrowseController@unbind']);
+
         Route::post('/elements/delete', ['as' => 'moonlight.elements.delete', 'uses' => 'Moonlight\Controllers\BrowseController@delete']);
 
         Route::post('/elements/restore', ['as' => 'moonlight.elements.restore', 'uses' => 'Moonlight\Controllers\BrowseController@restore']);

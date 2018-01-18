@@ -165,10 +165,14 @@ $(function() {
         if (checked[item].length) {
             itemContainer.find('.button.copy:not(.disabled)').addClass('enabled');
             itemContainer.find('.button.move:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.bind:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.unbind:not(.disabled)').addClass('enabled');
             itemContainer.find('.button.delete:not(.disabled)').addClass('enabled');
         } else {
             itemContainer.find('.button.copy:not(.disabled)').removeClass('enabled');
             itemContainer.find('.button.move:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.bind:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.unbind:not(.disabled)').removeClass('enabled');
             itemContainer.find('.button.delete:not(.disabled)').removeClass('enabled');
         }
     });
@@ -202,10 +206,14 @@ $(function() {
         if (checked[item].length) {
             itemContainer.find('.button.copy:not(.disabled)').addClass('enabled');
             itemContainer.find('.button.move:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.bind:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.unbind:not(.disabled)').addClass('enabled');
             itemContainer.find('.button.delete:not(.disabled)').addClass('enabled');
         } else {
             itemContainer.find('.button.copy:not(.disabled)').removeClass('enabled');
             itemContainer.find('.button.move:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.bind:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.unbind:not(.disabled)').removeClass('enabled');
             itemContainer.find('.button.delete:not(.disabled)').removeClass('enabled');
         }
     });
@@ -222,6 +230,20 @@ $(function() {
         var item = itemContainer.attr('item');
 
         $.confirm(null, '.confirm[id="' + item + '_move"]');
+    });
+
+    $('body').on('click', '.button.bind.enabled', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        $.confirm(null, '.confirm[id="' + item + '_bind"]');
+    });
+
+    $('body').on('click', '.button.unbind.enabled', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        $.confirm(null, '.confirm[id="' + item + '_unbind"]');
     });
 
     $('body').on('click', '.button.delete.enabled', function() {
@@ -308,6 +330,90 @@ $(function() {
         );
     });
 
+    $('body').on('click', '.confirm .btn.bind', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var parent = $(this).parents('.confirm');
+        var item = itemContainer.attr('item');
+
+        var ones = {};
+        var count = 0;
+        
+        parent.find('input[type="radio"]:checked:not(:disabled), input[type="hidden"]').each(function() {
+            var name = $(this).attr('property');
+            var value = $(this).val();
+            
+            if (value) {
+                ones[name] = value;
+                count++;
+            }
+        });
+
+        if (! count) return false;
+
+        $.confirmClose();
+        $.blockUI();
+
+        $.post(
+            '/moonlight/elements/bind',
+            {
+                item: item,
+                checked: checked[item],
+                ones: ones
+            },
+            function(data) {
+                if (data.error) {
+                    $.unblockUI(function() {
+                        $.alert(data.error);
+                    });
+                } else if (data.attached) {
+                    getElements(item);
+                }
+            }
+        );
+    });
+
+    $('body').on('click', '.confirm .btn.unbind', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var parent = $(this).parents('.confirm');
+        var item = itemContainer.attr('item');
+
+        var ones = {};
+        var count = 0;
+        
+        parent.find('input[type="radio"]:checked:not(:disabled), input[type="hidden"]').each(function() {
+            var name = $(this).attr('property');
+            var value = $(this).val();
+            
+            if (value) {
+                ones[name] = value;
+                count++;
+            }
+        });
+
+        if (! count) return false;
+
+        $.confirmClose();
+        $.blockUI();
+
+        $.post(
+            '/moonlight/elements/unbind',
+            {
+                item: item,
+                checked: checked[item],
+                ones: ones
+            },
+            function(data) {
+                if (data.error) {
+                    $.unblockUI(function() {
+                        $.alert(data.error);
+                    });
+                } else if (data.detached) {
+                    getElements(item);
+                }
+            }
+        );
+    });
+
     $('body').on('click', '.confirm .btn.remove', function() {
         var itemContainer = $(this).parents('div[item]');
         var item = itemContainer.attr('item');
@@ -325,7 +431,9 @@ $(function() {
                 $.unblockUI();
 
                 if (data.error) {
-                    $.alert(data.error);
+                    $.unblockUI(function() {
+                        $.alert(data.error);
+                    });
                 } else if (data.deleted) {
                     getElements(item);
                 }

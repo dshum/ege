@@ -493,6 +493,8 @@ class SearchController extends Controller
 
         $copyPropertyView = null;
         $movePropertyView = null;
+        $bindPropertyViews = [];
+        $unbindPropertyViews = [];
 
         foreach ($propertyList as $property) {
             if ($property->getHidden()) continue;
@@ -509,6 +511,23 @@ class SearchController extends Controller
 
             $movePropertyView = view(
                 'moonlight::properties.'.$property->getClassName().'.move', $propertyScope
+            )->render();
+        }
+
+        foreach ($propertyList as $property) {
+            if ($property->getHidden()) continue;
+            if (! $property->isManyToMany()) continue;
+
+            $propertyScope = $property->getEditView();
+
+            $propertyScope['mode'] = 'search';
+
+            $bindPropertyViews[$property->getName()] = view(
+                'moonlight::properties.'.$property->getClassName().'.bind', $propertyScope
+            )->render();
+
+            $unbindPropertyViews[$property->getName()] = view(
+                'moonlight::properties.'.$property->getClassName().'.bind', $propertyScope
             )->render();
         }
 
@@ -531,6 +550,8 @@ class SearchController extends Controller
         $scope['mode'] = 'search';
         $scope['copyPropertyView'] = $copyPropertyView;
         $scope['movePropertyView'] = $movePropertyView;
+        $scope['bindPropertyViews'] = $bindPropertyViews;
+        $scope['unbindPropertyViews'] = $unbindPropertyViews;
         
         return view('moonlight::elements', $scope)->render();
     }

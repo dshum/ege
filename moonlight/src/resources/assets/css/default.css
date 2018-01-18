@@ -611,12 +611,12 @@ div.empty > div:last-child {
 }
 
 .buttons .button.enabled.copy > .fa {
-  color: teal;
+  color: olivedrab;
   transition: 0.3s;
 }
 
 .buttons .button.enabled.move > .fa {
-  color: seagreen;
+  color: peru;
   transition: 0.3s;
 }
 
@@ -625,8 +625,13 @@ div.empty > div:last-child {
   transition: 0.3s;
 }
 
-.buttons .button.enabled.tag > .fa {
-  color: fuchsia;
+.buttons .button.enabled.bind > .fa {
+  color: darkorchid;
+  transition: 0.3s;
+}
+
+.buttons .button.enabled.unbind > .fa {
+  color: darkslateblue;
   transition: 0.3s;
 }
 
@@ -746,6 +751,14 @@ table.elements td.name a .fa {
 
 table.elements td.name a span {
   white-space: normal;
+}
+
+table.elements td.many div {
+  margin-bottom: 0.5rem;
+}
+
+table.elements td.many div:last-child {
+  margin-bottom: 0;
 }
 
 table.elements th.date,
@@ -1458,6 +1471,30 @@ form .loadfile .reset {
   font-size: 0.8rem;
 }
 
+.confirm .btn.copy {
+  background-color: olivedrab;
+}
+
+.confirm .btn.move {
+  background-color: peru;
+}
+
+.confirm .btn.bind {
+  background-color: darkorchid;
+}
+
+.confirm .btn.unbind {
+  background-color: darkslateblue;
+}
+
+.confirm .btn.restore {
+  background-color: seagreen;
+}
+
+.confirm .btn.remove {
+  background-color: crimson;
+}
+
 .alert {
   display: none;
   position: fixed;
@@ -1622,6 +1659,10 @@ form .loadfile .reset {
 }
 
 .confirm .edit .row input.one {
+  width: 15rem;
+}
+
+.confirm .edit .row input.many {
   width: 15rem;
 }
 
