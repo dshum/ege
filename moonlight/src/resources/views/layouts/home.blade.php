@@ -13,7 +13,7 @@
         @if ($loggedUser->photoExists())
         <a href="{{ route('moonlight.profile') }}"><img src="{{ $loggedUser->getPhotoSrc() }}"></a>
         @else
-        <a href="{{ route('moonlight.profile') }}"><img src="/packages/moonlight/img/default-avatar.png"></a>
+        <a href="{{ route('moonlight.profile') }}"><img src="/packages/moonlight/img/avatar.png"></a>
         @endif
     </div>
 </nav>
