@@ -32,10 +32,10 @@
             <div class="button copy{{ $copyPropertyView ? '' : ' disabled' }}"><i class="fa fa-clone"></i>Копировать</div>
             <div class="button move{{ $movePropertyView ? '' : ' disabled' }}"><i class="fa fa-arrow-right"></i>Перенести</div>
             @if ($bindPropertyViews)
-            <div class="button bind"><i class="fa fa-tag"></i>Привязать</div>
+            <div class="button bind"><i class="fa fa-link"></i>Привязать</div>
             @endif
             @if ($unbindPropertyViews)
-            <div class="button unbind"><i class="fa fa-tag"></i>Отвязать</div>
+            <div class="button unbind"><i class="fa fa-chain-broken"></i>Отвязать</div>
             @endif
             <div class="button delete"><i class="fa fa-trash-o"></i>Удалить</div>
             @endif

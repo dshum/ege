@@ -577,6 +577,8 @@ class EditController extends Controller
         }
         
         $currentItem = Element::getItem($element);
+
+        $class = $currentItem->getNameId();
         
         $parentElement = null;
         $parent = Element::getParent($element);
@@ -611,8 +613,8 @@ class EditController extends Controller
          * Item styles and scripts
          */
 
-        $styles = array_merge($styles, $site->getItemStyles($classId));
-        $scripts = array_merge($scripts, $site->getItemScripts($classId));
+        $styles = array_merge($styles, $site->getItemStyles($class));
+        $scripts = array_merge($scripts, $site->getItemScripts($class));
 
         /*
          * Item plugin
@@ -620,7 +622,7 @@ class EditController extends Controller
         
         $itemPluginView = null;
          
-        $itemPlugin = $site->getItemPlugin($currentItem->getNameId());
+        $itemPlugin = $site->getItemPlugin($class);
 
         if ($itemPlugin) {
             $view = \App::make($itemPlugin)->index($currentItem);

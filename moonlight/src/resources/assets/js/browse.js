@@ -113,7 +113,13 @@ $(function() {
 
                 init(item);
             } else {
-                $('.main div[item="' + item + '"]').fadeOut(200);
+                $('.main div[item="' + item + '"]').fadeOut(200, function() {
+                    itemCount--;
+
+                    if (! itemCount) {
+                        $('div.empty').show();
+                    }
+                });
             }
         }).fail(function() {
             $.unblockUI();
@@ -328,7 +334,7 @@ $(function() {
             value = $(this).val();
         });
 
-        if (! value) return false;
+        if (! name) return false;
 
         $.confirmClose();
         $.blockUI();
@@ -375,7 +381,7 @@ $(function() {
             };
         });
 
-        if (! one || ! one.value) return false;
+        if (! one) return false;
 
         $.confirmClose();
         $.blockUI();

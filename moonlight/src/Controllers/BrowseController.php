@@ -479,7 +479,7 @@ class BrowseController extends Controller
         $lines = [];
 
         foreach ($ones as $name => $value) {
-            $lines[] = $name.'+='.$value;
+            $lines[] = $name.'-='.$value;
         }
 
         UserAction::log(

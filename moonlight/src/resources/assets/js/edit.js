@@ -105,9 +105,10 @@ $(function() {
 
     tinymce.init({
         selector: 'textarea[tinymce="true"]',
+        themes: 'modern',
         language: 'ru',
         plugins: ['lists', 'link', 'image', 'paste', 'table', 'code', 'preview'],
-        width: '40rem',
+        width: '50rem',
         height: '20rem',
         convert_urls: false,
         setup: function(editor) {
