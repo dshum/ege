@@ -18,7 +18,6 @@
         </div>
         <form action="{{ route('moonlight.log') }}" autocomplete="off">
             <input type="hidden" name="action" value="search">
-            <input type="hidden" name="next" value="{{ route('moonlight.log.next') }}">
             <div class="search-form">
                 <div class="search-form-params log">
                     <div class="row">

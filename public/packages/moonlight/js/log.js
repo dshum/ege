@@ -21,7 +21,6 @@ $(function() {
     $('body').on('click', '.next', function() {
         var next = $(this);
         var page = next.attr('page');
-        var url = $('[name="next"]').val();
         var comments = $('[name="comments"]').val();
         var user = $('[name="user"]').val();
         var type = $('[name="type"]').val();
@@ -32,7 +31,7 @@ $(function() {
 
         $.blockUI();
 
-        $.getJSON(url, {
+        $.getJSON('/moonlight/log/next', {
             comments: comments,
             user: user,
             type: type,
