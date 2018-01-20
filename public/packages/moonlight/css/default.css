@@ -248,12 +248,77 @@ nav .avatar {
   position: absolute;
   top: 0.5rem;
   right: 1rem;
+  cursor: pointer;
 }
 
 nav .avatar img {
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
+}
+
+nav .dropdown {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  top: 5rem;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.18), 0 2px 11px 0 rgba(0, 0, 0, 0.15);
+  border: none;
+  border-collapse: separate;
+  border-spacing: 1px;
+  background-color: white;
+  font-size: 1rem;
+}
+
+nav .dropdown ul {
+  margin: 0;
+  padding: 0;
+}
+
+nav .dropdown ul > li {
+  float: none;
+  height: 3rem;
+  line-height: 3rem;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  color: black;
+}
+
+nav .dropdown ul > li:hover {
+  background-color: #eee;
+  transition: 0.2s;
+}
+
+nav .dropdown ul > li.title {
+  height: auto;
+  line-height: 1.5rem;
+  padding: 1rem 3rem 0.5rem 2rem;
+  background-color: white;
+  color: #357;
+}
+
+nav .dropdown ul > li.divider {
+  height: 1px;
+  background-color: #ccc;
+  padding: 0;
+}
+
+nav .dropdown ul > li a {
+  display: block;
+  padding: 0 3rem 0 2rem;
+  text-decoration: none;
+  color: black;
+}
+
+nav .dropdown ul > li span {
+  padding: 0 3rem 0 2rem;
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
 }
 
 /* Sidebar */

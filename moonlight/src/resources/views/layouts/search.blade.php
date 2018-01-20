@@ -11,10 +11,19 @@
     </ul>
     <div class="avatar">
         @if ($loggedUser->photoExists())
-        <a href="{{ route('moonlight.profile') }}"><img src="{{ $loggedUser->getPhotoSrc() }}"></a>
+        <img src="{{ $loggedUser->getPhotoSrc() }}">
         @else
-        <a href="{{ route('moonlight.profile') }}"><img src="/packages/moonlight/img/avatar.png"></a>
+        <img src="/packages/moonlight/img/avatar.png">
         @endif
+    </div>
+    <div class="dropdown">
+        <ul>
+            <li class="title">{{ $loggedUser->first_name }} {{ $loggedUser->last_name }}<br /><small>{{ $loggedUser->email }}</small></li>
+            <li><a href="{{ route('moonlight.profile') }}">Редактировать профиль</a></li>
+            <li><a href="{{ route('moonlight.password') }}">Сменить пароль</a></li>
+            <li class="divider"></li>
+            <li><a href="{{ route('moonlight.logout') }}">Выход</a></li>
+        </ul>
     </div>
 </nav>
 @endsection

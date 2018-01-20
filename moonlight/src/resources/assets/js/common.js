@@ -69,6 +69,16 @@ $(function() {
 		return $.onCtrlS(event);
 	}).keydown(function(event) {
 		return $.onCtrlS(event);
+    }).click(function() {
+        $('nav .dropdown').fadeOut(200);
+    });
+
+    $('nav').click(function(event) {
+        event.stopPropagation();
+    });
+
+    $('nav .avatar').click(function() {
+        $('nav .dropdown').fadeToggle(200);
     });
     
     $('body').on('click', '.alert .container', function(event) {
