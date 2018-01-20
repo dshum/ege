@@ -5,14 +5,14 @@
 @stop
 
 @section('content')
-<h1>{{ $test->name }}</h1>
+<h2>{{ $test->name }}</h2>
 
 @if ($userTest && $userTest->complete)
 
 @foreach ($questions as $k => $question)
     @if (isset($questionAnswered[$question->id]))
     <div class="row complete {{ $questionAnswered[$question->id]->correct ? 'correct' : 'incorrect' }}">
-        <b>Вопрос {{$k + 1}}</b><br>
+        <h3>Вопрос {{$k + 1}}</h3>
         {!! $question->question !!}
         @foreach ($answers as $answer)
             @if ($answer->question_id == $question->id)
@@ -36,7 +36,7 @@
 {{ csrf_field() }}
 @foreach ($questions as $k => $question)
     <div class="row">
-        <b>Вопрос {{$k + 1}}</b><br>
+        <h3>Вопрос {{$k + 1}}</h3>
         {!! $question->question !!}
         @foreach ($answers as $answer)
             @if ($answer->question_id == $question->id)

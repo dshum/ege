@@ -4,8 +4,8 @@ body {
   left: 0;
   bottom: 0;
   right: 0;
-  background-image: url(http://yandex.ru/images/today?size=1920x1080);
-  background-position: top;
+  background-image: url(/packages/moonlight/img/background.jpg);
+  background-position: center;
   background-size: cover;
   -webkit-background-size: cover;
   -moz-background-size: cover;

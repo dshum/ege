@@ -40,10 +40,8 @@ Route::group(['before' => 'auth'], function() {
 
 Route::get('/', ['as' => 'welcome', 'uses' => 'WelcomeController@index']);
 
+Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('/{url}', function() {
 	return view('404');
 });
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

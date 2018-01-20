@@ -101,6 +101,27 @@ class LoginController extends Controller
     
     public function index(Request $request)
     {
+        $scope = [];
+
+        try {
+            $url = 'http://yandex.ru/images/today?size=1920x1080';
+            $path = public_path().'/packages/moonlight/img/background.jpg';
+
+            $date = file_exists($path) ? date('Y-m-d', filemtime($path)) : null;
+
+            if ($date < date('Y-m-d')) {
+                $file = file($url);
+
+                $f = fopen($path, 'w');
+
+                foreach ($file as $line) {
+                    fwrite($f, $line);
+                }
+
+                fclose($f);
+            }
+        } catch (\Exception $e) {}
+
         $scope['login'] = $request->cookie('login');
         $scope['remember'] = $request->cookie('remember');
         
