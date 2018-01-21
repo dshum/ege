@@ -1,10 +1,14 @@
+html {
+  font-family: sans-serif;
+  font-weight: normal;
+  font-size: 15px;
+}
+
 body {
   margin: 0;
   padding: 0;
+  font-size: 1rem;
   line-height: 1.5;
-  font-family: sans-serif;
-  font-size: 14px;
-  font-weight: normal;
   color: black;
   overflow-y: scroll;
 }
@@ -26,12 +30,12 @@ h1, h2, h3 {
 
 h1 {
   margin: 0.5rem 0 0.7rem 0;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
 }
 
 h2 {
   margin: 0.5rem 0 0 0;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
 }
 
 h3 {
@@ -345,7 +349,7 @@ nav .dropdown ul > li span {
 }
 
 .sidebar .h2 span {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   color: steelblue;
   border-bottom: 1px dashed #37a;
   cursor: pointer;
@@ -459,7 +463,7 @@ nav .dropdown ul > li span {
 
 div.path {
   margin: 1rem 0 2rem 0;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
 }
 
 div.path div.part {
@@ -495,7 +499,7 @@ div.path div.part a.edit {
 
 div.path div.part a.edit .fa {
   color: tan;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
 }
 
 div.path div.part a.external-link {
@@ -506,7 +510,7 @@ div.path div.part a.external-link {
 
 div.path div.part a.external-link .fa {
   color: slategrey;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
 }
 
 div.path div.add-element a {
@@ -542,7 +546,7 @@ ul.header li.h2 {
 }
 
 ul.header li.h2 span {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   color: #ccc;
 }
 
@@ -574,23 +578,6 @@ ul.header li.checked > span {
 .sort-toggler {
   border-bottom: 1px dashed #999;
   cursor: pointer;
-}
-
-div.plugin {
-  display: table;
-  margin: 0.5rem 0;
-  padding: 1rem;
-  background-color: #dee;
-  border-radius: 4px;
-}
-
-div.plugin form {
-  margin: 0;
-  padding: 0;
-}
-
-div.plugin input[type="text"] {
-  width: 10rem;
 }
 
 div.empty {
@@ -643,14 +630,14 @@ div.empty > div:last-child {
 
 .buttons .button > .fa {
   margin-bottom: 0.25rem;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   color: silver;
 }
 
 .buttons .button > div > .fa {
   margin-left: 0.25rem;
   margin-top: 0.2rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: silver;
 }
 
@@ -784,7 +771,7 @@ table.elements td.browse {
 table.elements td.browse .fa {
   position: relative;
   top: -2px;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   color: #3a7;
 }
 
@@ -794,7 +781,7 @@ table.elements td.browse > .drag {
 
 table.elements td.browse > .drag > .fa {
   top: 2px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
 }
 
@@ -810,7 +797,7 @@ table.elements td.name a {
 table.elements td.name a .fa {
   margin-right: 0.5rem;
   color: goldenrod;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 table.elements td.name a span {
@@ -874,7 +861,7 @@ table.elements img {
 
 table.elements div.time {
   color: #666;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 /* Pager */
@@ -948,7 +935,7 @@ ul.pager > li.page input {
 .tree .item {
   margin: 0.25rem 0;
   padding-left: 1.5rem;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: #234e9e;
   font-weight: bold;
 }
@@ -1085,14 +1072,21 @@ ul.pager > li.page input {
   top: -1px;
   margin-right: 0.25rem;
   width: 1rem;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .search-form-params input[type="text"],
 .search-form-params select {
-  width: 10rem;
   margin-bottom: 0.25rem;
   background-color: white;
+}
+
+.search-form-params input[type="text"] {
+  width: 12rem;
+}
+
+.search-form-params select {
+  width: 12rem;
 }
 
 .search-form .row-submit {
@@ -1109,21 +1103,20 @@ ul.pager > li.page input {
 }
 
 .search-form-params input[type="text"].one {
-  width: 15rem;
+  width: 16rem;
 }
 
-.close {
+.search-form-params .close {
   float: right;
-  margin: 0 0 1rem 1rem;
-  font-size: 2rem;
-  color: #357;
+  margin: 0 0 0 1rem;
   cursor: pointer;
 }
 
-.close .fa {
+.search-form-params .close .fa {
   position: relative;
-  top: 2px;
-  font-size: 1rem;
+  top: 4px;
+  font-size: 1.1rem;
+  color: #357;
 }
 
 .date .fa {
@@ -1195,13 +1188,16 @@ ul.pager > li.page input {
   margin-top: 0.2rem;
 }
 
-.edit input[type="text"],
+.edit input[type="text"] {
+  width: 25rem;
+}
+
 .edit input[type="password"] {
-  width: 20rem;
+  width: 15rem;
 }
 
 .edit textarea {
-  width: 30rem;
+  width: 40rem;
 }
 
 .edit input.date {
@@ -1226,12 +1222,12 @@ ul.pager > li.page input {
 }
 
 .edit textarea[tinymce="true"] {
-  width: 40rem;
+  width: 50rem;
   height: 25rem;
 }
 
 .edit .richtext {
-  width: 30rem;
+  width: 50rem;
   border: 1px solid #999;
   border-radius: 2px;
   padding: 0.5rem;
@@ -1532,7 +1528,7 @@ form .loadfile .reset {
   margin-right: 1rem;
   height: 2rem;
   line-height: 2rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .confirm .btn.copy {
@@ -1661,7 +1657,7 @@ form .loadfile .reset {
   border-radius: 2px;
   background: #fff;
   overflow: auto;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .autocomplete-suggestion {
@@ -1672,7 +1668,7 @@ form .loadfile .reset {
 }
 
 .autocomplete-suggestion small {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .autocomplete-selected {
