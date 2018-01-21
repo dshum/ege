@@ -9,8 +9,14 @@
 <link media="all" type="text/css" rel="stylesheet" href="/packages/moonlight/css/font-awesome.min.css">
 <link media="all" type="text/css" rel="stylesheet" href="/packages/moonlight/css/default.css">
 <link media="all" type="text/css" rel="stylesheet" href="/packages/moonlight/css/loader.css">
+<link media="all" type="text/css" rel="stylesheet" href="/packages/moonlight/css/login.css">
 @section('css')
 @show
+<style>
+    body {
+        background-image: url(/packages/moonlight/img/background.jpg?{{ date('Y-m-d') }});
+    }
+</style>
 <script src="/packages/moonlight/js/jquery-3.2.1.min.js"></script>
 <script src="/packages/moonlight/js/jquery.form.min.js"></script>
 <script src="/packages/moonlight/js/common.js"></script>

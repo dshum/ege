@@ -1,10 +1,6 @@
-@extends('moonlight::layouts.small')
+@extends('moonlight::layouts.login')
 
 @section('title', 'Moonlight')
-
-@section('css')
-<link media="all" type="text/css" rel="stylesheet" href="/packages/moonlight/css/login.css">
-@endsection
 
 @section('js')
 <script src="/packages/moonlight/js/login.js"></script>
