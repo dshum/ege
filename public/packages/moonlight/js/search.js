@@ -54,6 +54,12 @@ $(function() {
         });
     };
 
+    $('.main div[item]').each(function () {
+        var item = $(this).attr('item');
+
+        init(item);
+    });
+
     $('#filter').keyup(function () {
         var str = $(this).val();
 
@@ -99,11 +105,12 @@ $(function() {
         });
     });
 
-    $('input[name].date').calendar({
+    $('.search-form-params input[name].date').calendar({
         dateFormat: '%Y-%m-%d'
     });
 
-    $('input.one').each(function() {
+    $('.search-form-params input.one').each(function() {
+        var parent = $(this).parents('div.row');
         var item = $(this).attr('item');
         var name = $(this).attr('property');
 
@@ -116,17 +123,18 @@ $(function() {
                 return suggestion.value + ' <small>(' + suggestion.id + ')</small>';
             },
             onSelect: function (suggestion) {
-                $('input:hidden[name="' + name + '"]').val(suggestion.id);
+                parent.find('input:hidden[name="' + name + '"]').val(suggestion.id);
             },
             minChars: 0
         });
     });
 
-    $('.addition.unset[property]').click(function() {
+    $('.search-form-params .addition.unset[property]').click(function() {
+        var parent = $(this).parents('div.row');
         var name = $(this).attr('property');
 
-        $('input:hidden[name="' + name + '"]').val('');
-        $('input:text[name="' + name + '_autocomplete"]').val('');
+        parent.find('input:hidden[name="' + name + '"]').val('');
+        parent.find('input:text[name="' + name + '_autocomplete"]').val('');
     });
 
     $('body').on('click', 'th.check', function() {

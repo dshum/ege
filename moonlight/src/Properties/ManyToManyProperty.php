@@ -160,6 +160,50 @@ class ManyToManyProperty extends BaseProperty
 
 		return $this;
 	}
+
+	public function searchQuery($query)
+	{
+		$site = \App::make('site');
+		
+		$relatedClass = $this->getRelatedClass();
+		$relatedItem = $site->getItemByName($relatedClass);
+		$relatedMethod = $this->getRelatedMethod();
+        $request = $this->getRequest();
+		$name = $this->getName();
+
+		$value = (int)$request->input($name);
+
+		if ($value) {
+			$bind = $relatedItem->getClass()->find($value);
+
+			if ($bind && method_exists($bind, $relatedMethod)) {
+				$elements = $bind->{$relatedMethod}()->get();
+
+				$ids = [];
+
+				foreach ($elements as $element) {
+					$ids[] = $element->id;
+				}
+
+				if ($ids) {
+					$query->whereIn('id', $ids);
+				}
+			}
+		}
+
+		return $query;
+	}
+
+	public function searching()
+	{
+		$request = $this->getRequest();
+        $name = $this->getName();
+
+		$value = $request->input($name);
+
+		return $value
+			? true : false;
+	}
     
     public function getListView()
 	{
@@ -223,7 +267,34 @@ class ManyToManyProperty extends BaseProperty
     
     public function getSearchView()
 	{
-		return null;
+        $site = \App::make('site');
+        
+		$request = $this->getRequest();
+        $name = $this->getName();
+        $id = (int)$request->input($name);
+        $relatedClass = $this->getRelatedClass();
+		$relatedItem = $site->getItemByName($relatedClass);
+        $mainProperty = $relatedItem->getMainProperty();
+
+		$element = $id 
+            ? $relatedClass::find($id)
+            : null;
+        
+        $value = $element
+            ? [
+                'id' => $element->id, 
+                'name' => $element->{$mainProperty}
+            ] : null;
+
+		$scope = array(
+			'name' => $this->getName(),
+			'title' => $this->getTitle(),
+			'value' => $value,
+			'open' => $element !== null,
+            'relatedClass' => $relatedItem->getNameId(),
+		);
+
+		return $scope;
 	}
     
     public function isManyToMany()
