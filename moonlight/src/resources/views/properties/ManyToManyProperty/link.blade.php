@@ -1,1 +1,1 @@
-<div class="label many"><i class="fa fa-share-alt"></i><span>{{ $title }}</span></div>
+<div class="label many"><i class="fa fa-list"></i><span>{{ $title }}</span></div>

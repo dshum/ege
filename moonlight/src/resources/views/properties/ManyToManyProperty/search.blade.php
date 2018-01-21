@@ -1,3 +1,3 @@
-<div class="label many"><i class="fa fa-share-alt"></i><span>{{ $title }}</span><span class="addition unset" property="{{ $name }}">Очистить</span></div>
+<div class="label many"><i class="fa fa-list"></i><span>{{ $title }}</span><span class="addition unset" property="{{ $name }}">Очистить</span></div>
 <input type="hidden" name="{{ $name }}" value="{{ $value ? $value['id'] : null }}">
 <input type="text" class="one" item="{{ $relatedClass }}" property="{{ $name }}" name="{{ $name }}_autocomplete" value="{{ $value ? $value['name'] : null }}" placeholder="ID или название">
