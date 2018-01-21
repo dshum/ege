@@ -106,6 +106,7 @@ $(function() {
     tinymce.init({
         selector: 'textarea[tinymce="true"]',
         themes: 'modern',
+        skin: 'custom',
         language: 'ru',
         plugins: ['lists', 'link', 'image', 'paste', 'table', 'code', 'preview'],
         width: '50rem',
@@ -126,7 +127,7 @@ $(function() {
         $('textarea[tinymce="true"]').each(function() {
             var name = $(this).attr('name');
 
-			$(this).val(tinyMCE.get(name).getContent());
+			$(this).val(tinymce.get(name).getContent());
 		});
 
         $.blockUI();
@@ -140,6 +141,7 @@ $(function() {
                 if (data.error) {
                     $.alert(data.error);
                 } else if (data.errors) {
+                    console.log(data.errors);
                     for (var field in data.errors) {
                         form.find('span.error[name="' + field + '"]')
                             .html(data.errors[field])
