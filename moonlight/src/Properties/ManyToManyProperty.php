@@ -177,7 +177,7 @@ class ManyToManyProperty extends BaseProperty
 			$bind = $relatedItem->getClass()->find($value);
 
 			if ($bind && method_exists($bind, $relatedMethod)) {
-				$elements = $bind->{$relatedMethod}()->get();
+				$elements = $bind->{$relatedMethod}()->withTrashed()->get();
 
 				$ids = [];
 
