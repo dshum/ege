@@ -579,8 +579,7 @@ $site->
 		addSoftDeletes()
 	)->
 
-	// addHomePlugin('App\Http\Plugins\Welcome')->
-	// addBrowseFilter('App.Question', 'App\Http\Plugins\QuestionFilter')->
+	addHomePlugin('App\Http\Plugins\Welcome')->
 	
 	addItemStyle('App.Question', '/css/answers.css')->
 	addItemScript('App.Question', '/js/answers.js')->

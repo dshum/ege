@@ -1,39 +1,54 @@
 <style>
 .wrapper {
     width: 60rem;
-    margin: 2rem -2rem 2rem -2rem;
-    background-image: url(/pictures/welcome.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
-    border-radius: 0.5rem;
+    margin: 1rem 0 1rem 0;
     padding: 0;
 }
 
-.wrapper > .container {
-    padding: 2rem;
-    background-color: rgba(0, 30, 60, 0.6);
-    border-radius: 0.5rem;
-    color: white;
-    font-size: 1.2rem;
+.wrapper small {
+    color: #357;
+    font-size: 0.8rem;
 }
 
-.wrapper > .container > h2 {
-    color: orange;
-    font-size: 1.5rem;
+.wrapper .h2 a {
+    color: royalblue;
 }
 
-.wrapper > .container > a {
-    color: #fff;
+.wrapper .correct {
+    font-weight: bold;
+    color: green;
+}
+
+.wrapper .incorrect {
+    font-weight: bold;
+    color: red;
 }
 </style>
 <div class="wrapper">
-    <div class="container">
-        <h2>На нашем сайте</h2>
-        Уже 2 ученика<br>
-        6 тестов и 120 вопросов<br>
-        <br>
-        <h2>Недавно зарегистрировались</h2>
-        <a href="">vegorova@mail.ru</a><br>
-        <a href="">denis-shumeev@yandex.ru</a><br>
+    <div class="row">
+        @foreach ($users as $index => $user)
+        <div class="elements">
+            <div class="h2"><a href="{{ route('moonlight.browse.element', $user['classId']) }}"><span>{{ $user['name'] }}</span></a></div>
+            <div><small>{{ $user['email'] }}</small></div>
+            <ul>
+                @if (! $user['tests'])
+                <li>Тесты еще не выполнялись.</li>
+                @else
+                @foreach ($user['tests'] as $userTest)
+                <li>
+                    <div><a href="{{ route('moonlight.browse.element', $userTest['classId']) }}">{{ $userTest['name'] }}</a></div>
+                    <div>
+                        <small>{{ $userTest['created_at'] }}</small>,
+                        <span class="correct">{{ $userTest['correct'] }}</span> /
+                        <span class="incorrect">{{ $userTest['incorrect'] }}</span> /
+                        {{ $userTest['total'] }},
+                        {{ $userTest['percent'] }}%
+                    </div>
+                </li>
+                @endforeach
+                @endif
+            </ul>
+        </div>
+        @endforeach
     </div>
 </div>
