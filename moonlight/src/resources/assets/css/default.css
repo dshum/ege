@@ -338,6 +338,20 @@ nav .dropdown ul > li span {
   padding: 2rem;
 }
 
+.sidebar ul {
+  display: table;
+}
+
+.sidebar ul li.active {
+  font-weight: normal;
+  color: royalblue;
+}
+
+.sidebar ul li a {
+  text-decoration: underline;
+  color: inherit;
+}
+
 .sidebar .elements {
   margin-bottom: 1.5rem;
 }
@@ -363,10 +377,6 @@ nav .dropdown ul > li span {
 .sidebar .elements ul li {
   margin: 0.5rem 0;
   padding: 0;
-}
-
-.sidebar a {
-  color: inherit;
 }
 
 .sidebar input[type="text"] {
@@ -402,11 +412,6 @@ nav .dropdown ul > li span {
   padding: 0;
 }
 
-.sidebar ul.items > li.active a {
-  color: darkorchid;
-  font-weight: normal;
-}
-
 .sidebar ul.items > li .total {
   position: relative;
   display: inline-block;
@@ -428,16 +433,6 @@ nav .dropdown ul > li span {
 .sidebar ul.menu > li {
   margin: 0 0 0.5rem 0;
   padding: 0.5rem 0;
-}
-
-.sidebar ul.menu > li a {
-  text-decoration: underline;
-  color: inherit;
-}
-
-.sidebar ul.menu > li.active a {
-  color: darkorchid;
-  font-weight: normal;
 }
 
 .sidebar ul.menu > li i.fa {

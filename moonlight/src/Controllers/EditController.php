@@ -545,7 +545,7 @@ class EditController extends Controller
 
         $rubricController = new RubricController;
         
-        $rubrics = $rubricController->sidebar();
+        $rubrics = $rubricController->sidebar($classId);
 
         $scope['classId'] = $classId;
         $scope['element'] = $element;
@@ -712,7 +712,7 @@ class EditController extends Controller
 
         $rubricController = new RubricController;
         
-        $rubrics = $rubricController->sidebar();
+        $rubrics = $rubricController->sidebar($classId);
 
         $scope['element'] = $element;
         $scope['classId'] = $classId;

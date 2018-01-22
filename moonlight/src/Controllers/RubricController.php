@@ -129,7 +129,7 @@ class RubricController extends Controller
         return response()->json([]);
     }
 
-    public function sidebar()
+    public function sidebar($currentClassId = null)
     {
         $scope = [];
 
@@ -181,6 +181,7 @@ class RubricController extends Controller
             }
         }
 
+        $scope['classId'] = $currentClassId;
         $scope['rubrics'] = $rubrics;
         $scope['rubricElements'] = $rubricElements;
         $scope['opens'] = $opens;

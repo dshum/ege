@@ -4,7 +4,7 @@
     @if (isset($rubricElements[$rubric->getName()]))
     <ul>
         @foreach ($rubricElements[$rubric->getName()] as $element)
-        <li><a href="{{ route('moonlight.browse.element', $element['classId']) }}">{{ $element['name'] }}</a></li>
+        <li class="{{ $classId == $element['classId'] ? 'active' : '' }}"><a href="{{ route('moonlight.browse.element', $element['classId']) }}">{{ $element['name'] }}</a></li>
         @endforeach
     </ul>
     @endif
