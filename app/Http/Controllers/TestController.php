@@ -23,15 +23,21 @@ class TestController extends Controller {
 
 		$user = Auth::user();
 
-        $test = Test::where('id', $id)->first();
+        $test = cache()->tags('tests')->remember("test_{$id}", 1440, function() use ($id) {
+			return Test::where('id', $id)->first();
+		});
 
         if (! $test) {
             return redirect()->route('welcome');
         }
 
-		$userTest = UserTest::where('test_id', $test->id)->
-			where('user_id', $user->id)->
-			first();
+		$userTest = cache()->tags('user_tests')->remember("user_test_where_user_{$user->id}_and_test_{$test->id}", 1440, function() use ($user, $test) {
+			return 
+				UserTest::where([
+					['user_id', $user->id],
+					['test_id', $test->id],
+				])->first();
+		});
 
 		if (! $userTest) {
 			$userTest = new UserTest;
@@ -46,7 +52,7 @@ class TestController extends Controller {
 		$answers = $request->input('answers');
 
 		if (empty($answers)) {
-			return redirect()->route('welcome');
+			return redirect()->back();
 		}
 
 		foreach ($answers as $questionId => $answerId) {
@@ -110,8 +116,10 @@ class TestController extends Controller {
 		$scope = [];
 
 		$user = Auth::user();
-
-        $test = Test::where('id', $id)->first();
+		
+		$test = cache()->tags('tests')->remember("test_{$id}", 1440, function() use ($id) {
+			return Test::where('id', $id)->first();
+		});
 
         if (! $test) {
             return redirect()->route('welcome');
@@ -120,40 +128,41 @@ class TestController extends Controller {
 		$questionAnswered = [];
 		$answerChecked = [];
 
-		$userTest = UserTest::where('test_id', $test->id)->
-			where('user_id', $user->id)->
-			first();
+		$userTest = cache()->tags('user_tests')->remember("user_test_where_user_{$user->id}_and_test_{$test->id}", 1440, function() use ($user, $test) {
+			return 
+				UserTest::where([
+					['user_id', $user->id],
+					['test_id', $test->id],
+				])->first();
+		});
 
 		if ($userTest) {
-			$userQuestions = UserQuestion::where('user_test_id', $userTest->id)->get();
-
-			$userQuestinIds = [];
+			$userQuestions = cache()->tags('user_questions')->remember("user_test_{$userTest->id}_questions", 1440, function() use ($userTest) {
+				return $userTest->questions()->get();
+			});
 
 			foreach ($userQuestions as $userQuestion) {
-				$userQuestinIds[] = $userQuestion->id;
+				$userAnswers = cache()->tags('user_answers')->remember("user_question_{$userQuestion->id}_answers", 1440, function() use ($userQuestion) {
+					return $userQuestion->answers()->get();
+				});
+
+				foreach ($userAnswers as $userAnswer) {
+					$answerChecked[$userAnswer->answer_id] = true;
+				}
+
 				$questionAnswered[$userQuestion->question_id] = $userQuestion;
 			}
-
-			$userAnswers = UserAnswer::whereIn('user_question_id', $userQuestinIds)->get();
-
-			foreach ($userAnswers as $userAnswer) {
-				$answerChecked[$userAnswer->answer_id] = true;
-			}
 		}
 
-		$questions = $test->questions()->
-			orderBy('order')->
-			get();
-
-		$questinIds = [];
+		$questions = cache()->tags('questions')->remember("test_{$test->id}_questions", 1440, function() use ($test) {
+			return $test->questions()->orderBy('order')->get();
+		});
 
 		foreach ($questions as $question) {
-			$questinIds[] = $question->id;
+			$answers[$question->id] = cache()->tags('answers')->remember("question_{$question->id}_answers", 1440, function() use ($question) {
+				return $question->answers()->orderBy('order')->get();
+			});
 		}
-
-		$answers = Answer::whereIn('question_id', $questinIds)->
-			orderBy('order')->
-			get();
 
 		$scope['userTest'] = $userTest;
 		$scope['questionAnswered'] = $questionAnswered;

@@ -165,8 +165,8 @@ class TrashController extends Controller
             $classId
         );
 
-        if (Cache::has('trashItemTotal['.$currentItem->getNameId().']')) {
-            Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
+        if (cache()->has("trash_item_{$currentItem->getNameId()}")) {
+            cache()->forget("trash_item_{$currentItem->getNameId()}");
         }
 
         $url = route('moonlight.trash.item', $currentItem->getNameId());
@@ -219,8 +219,8 @@ class TrashController extends Controller
             $classId
         );
 
-        if (Cache::has('trashItemTotal['.$currentItem->getNameId().']')) {
-            Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
+        if (cache()->has("trash_item_{$currentItem->getNameId()}")) {
+            cache()->forget("trash_item_{$currentItem->getNameId()}");
         }
 
         $url = route('moonlight.trash.item', $currentItem->getNameId());
@@ -278,7 +278,7 @@ class TrashController extends Controller
         $totals = [];
 
         foreach ($itemList as $item) {
-            $total = Cache::remember('trashItemTotal['.$item->getNameId().']', 1440, function () use ($item) {
+            $total = cache()->remember("trash_item_{$item->getNameId()}", 1440, function () use ($item) {
                 return $this->total($item);
             });
 
@@ -319,7 +319,7 @@ class TrashController extends Controller
         $totals = [];
 
         foreach ($itemList as $item) {
-            $total = Cache::remember('trashItemTotal['.$item->getNameId().']', 1440, function () use ($item) {
+            $total = cache()->remember("trash_item_{$item->getNameId()}", 1440, function () use ($item) {
                 return $this->total($item);
             });
 
@@ -395,7 +395,7 @@ class TrashController extends Controller
         $totals = [];
 
         foreach ($itemList as $item) {
-            $total = Cache::remember('trashItemTotal['.$item->getNameId().']', 1440, function () use ($item) {
+            $total = cache()->remember("trash_item_{$item->getNameId()}", 1440, function () use ($item) {
                 return $this->total($item);
             });
 
@@ -524,7 +524,7 @@ class TrashController extends Controller
 			}
 		}
         
-        $sort = 'deleted_at'; //$request->input('sort');
+        $sort = 'deleted_at';
         $property = $currentItem->getPropertyByName($sort);
         
         if ($property instanceof DateProperty) {
@@ -595,6 +595,7 @@ class TrashController extends Controller
         $scope['lastPage'] = $lastPage;
         $scope['elements'] = $elements;
         $scope['views'] = $views;
+        $scope['orderByList'] = $orderByList;
         $scope['orders'] = $orders;
         $scope['hasOrderProperty'] = false;
         $scope['mode'] = 'trash';

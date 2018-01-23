@@ -33,6 +33,25 @@ class User extends Authenticatable
 	 */
 	protected $assetsName = 'assets';
 
+	public static function boot()
+	{
+		parent::boot();
+
+		if (method_exists(cache()->getStore(), 'tags')) {
+			static::created(function($element) {
+				cache()->tags('admin_users')->flush();
+			});
+	
+			static::saved(function($element) {
+				cache()->tags('admin_users')->flush();
+			});
+	
+			static::deleted(function($element) {
+				cache()->tags('admin_users')->flush();
+			});
+		}
+    }
+
     public function getDates()
 	{
 		return ['created_at', 'updated_at', 'last_login'];
@@ -50,7 +69,7 @@ class User extends Authenticatable
 
 	public function addGroup(Group $group)
 	{
-		if ( ! $this->inGroup($group)) {
+		if (! $this->inGroup($group)) {
 			$this->groups()->attach($group);
 		}
 	}
@@ -77,6 +96,14 @@ class User extends Authenticatable
 
 	public function getGroups()
 	{
+		if (method_exists(cache()->getStore(), 'tags')) {
+			$user = $this;
+
+			return cache()->tags('admin_groups')->remember("admin_user_{$user->id}_groups", 1440, function() use ($user) {
+				return $user->groups()->get();		
+			});
+		}
+
         return $this->groups()->get();
 	}
 
@@ -102,17 +129,13 @@ class User extends Authenticatable
 	public function setParameter($name, $value)
 	{
 		try {
-
 			$unserializedParameters = $this->getUnserializedParameters();
 
 			$unserializedParameters[$name] = $value;
 
-			$parameters = serialize($unserializedParameters);
-
-			$this->parameters = $parameters;
+			$this->parameters = serialize($unserializedParameters);
 
 			$this->save();
-
 		} catch (\Exception $e) {}
 
 		return $this;

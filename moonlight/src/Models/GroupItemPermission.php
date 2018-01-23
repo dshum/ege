@@ -15,4 +15,22 @@ class GroupItemPermission extends Model {
 
 	public $timestamps = false;
 
+	public static function boot()
+	{
+		parent::boot();
+
+		if (method_exists(cache()->getStore(), 'tags')) {
+			static::created(function($element) {
+				cache()->tags('admin_item_permissions')->flush();
+			});
+	
+			static::saved(function($element) {
+				cache()->tags('admin_item_permissions')->flush();
+			});
+	
+			static::deleted(function($element) {
+				cache()->tags('admin_item_permissions')->flush();
+			});
+		}
+    }
 }

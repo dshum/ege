@@ -14,15 +14,13 @@
     <div class="row complete {{ $questionAnswered[$question->id]->correct ? 'correct' : 'incorrect' }}">
         <h3>Вопрос {{$k + 1}}</h3>
         {!! $question->question !!}
-        @foreach ($answers as $answer)
-            @if ($answer->question_id == $question->id)
-                @if ($answer->correct)
-                    <div class="correct-answer"><i class="fa fa-check"></i>{!! $answer->answer !!}</div>
-                @elseif (isset($answerChecked[$answer->id]))
-                    <div class="incorrect-answer"><i class="fa fa-ban"></i>{!! $answer->answer !!}</div>
-                @else
-                    <div><span class="empty"></span>{!! $answer->answer !!}</div>
-                @endif
+        @foreach ($answers[$question->id] as $answer)
+            @if ($answer->correct)
+                <div class="correct-answer"><i class="fa fa-check"></i>{!! $answer->answer !!}</div>
+            @elseif (isset($answerChecked[$answer->id]))
+                <div class="incorrect-answer"><i class="fa fa-ban"></i>{!! $answer->answer !!}</div>
+            @else
+                <div><span class="empty"></span>{!! $answer->answer !!}</div>
             @endif
         @endforeach
         <br>
@@ -38,11 +36,9 @@
     <div class="row">
         <h3>Вопрос {{$k + 1}}</h3>
         {!! $question->question !!}
-        @foreach ($answers as $answer)
-            @if ($answer->question_id == $question->id)
-                <input type="radio" name="answers[{{ $question->id }}]" id="answer_{{ $answer->id }}" value="{{ $answer->id }}"{{ isset($answerChecked[$answer->id]) ? ' checked' : '' }}>
-                <label for="answer_{{ $answer->id }}">{!! $answer->answer !!}</label><br>
-            @endif
+        @foreach ($answers[$question->id] as $answer)
+            <input type="radio" name="answers[{{ $question->id }}]" id="answer_{{ $answer->id }}" value="{{ $answer->id }}"{{ isset($answerChecked[$answer->id]) ? ' checked' : '' }}>
+            <label for="answer_{{ $answer->id }}">{!! $answer->answer !!}</label><br>
         @endforeach
         <br>
     </div>

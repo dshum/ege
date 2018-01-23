@@ -269,7 +269,7 @@ class RubricController extends Controller
 
         $mainProperty = $item->getMainProperty();
 
-		if ( ! $loggedUser->isSuperUser()) {
+		if (! $loggedUser->isSuperUser()) {
 			$permissionDenied = true;
 			$deniedElementList = [];
 			$allowedElementList = [];
@@ -277,8 +277,9 @@ class RubricController extends Controller
 			$groupList = $loggedUser->getGroups();
 
 			foreach ($groupList as $group) {
-				$itemPermission = $group->getItemPermission($item->getNameId())
-					? $group->getItemPermission($item->getNameId())->permission
+                $groupItemPermission = $group->getItemPermission($item->getNameId());
+				$itemPermission = $groupItemPermission
+					? $groupItemPermission->permission
 					: $group->default_permission;
 
 				if ($itemPermission != 'deny') {
@@ -286,7 +287,7 @@ class RubricController extends Controller
 					$deniedElementList = [];
 				}
 
-				$elementPermissionList = $group->elementPermissions;
+				$elementPermissionList = $group->getElementPermissions();
 
 				$elementPermissionMap = [];
 

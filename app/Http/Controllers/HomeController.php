@@ -85,12 +85,19 @@ class HomeController extends Controller
 
         $user = Auth::user();
         
-		$userTests = UserTest::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        $userTests = cache()->tags('user_tests')->remember("user_{$user->id}_tests", 1440, function() use ($user) {
+            return UserTest::where('user_id', $user->id)->
+                orderBy('created_at', 'desc')->
+                get();
+        });
         
         $tests = [];
 
 		foreach ($userTests as $userTest) {
-			$test = Test::where('id', $userTest->test_id)->first();
+			$test = cache()->tags('tests')->remember("user_test_{$userTest->id}_test", 1440, function() use ($userTest) {
+                return $userTest->test()->first();
+            });
+            
 			$tests[] = $test;
         }
         

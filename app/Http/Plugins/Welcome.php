@@ -3,7 +3,6 @@
 namespace App\Http\Plugins;
 
 use Illuminate\Http\Request;
-use Cache;
 use Validator;
 use Carbon\Carbon;
 use Moonlight\Main\Element;
@@ -22,7 +21,7 @@ class Welcome extends Controller {
 	{
 		$scope = [];
 
-        $users = Cache::tags('User')->remember('lastUsers', 1440, function() {
+        $users = cache()->tags('users')->remember('last_10_users', 1440, function() {
             return User::orderBy('created_at', 'desc')->limit(10)->get();
         });
 
@@ -37,26 +36,26 @@ class Welcome extends Controller {
                 'tests' => [],
             ];
 
-            $userTests = Cache::tags('UserTest')->remember("userTests[{$user->id}]", 1440, function() use ($user) {
+            $userTests = cache()->tags('user_tests')->remember("user_{$user->id}_tests", 1440, function() use ($user) {
                 return UserTest::where('user_id', $user->id)->
                     orderBy('created_at', 'desc')->
                     get();
             });
 
             foreach ($userTests as $userTest) {
-                $test = Cache::tags('Test')->remember("userTest[{$userTest->id}][test]", 1440, function() use ($userTest) {
+                $test = cache()->tags('tests')->remember("user_test_{$userTest->id}_test", 1440, function() use ($userTest) {
                     return $userTest->test()->first();
                 });
 
-                $questionCount = Cache::tags('Question')->remember("test[{$test->id}][questions][count]", 1440, function() use ($test) {
+                $total = cache()->tags('questions')->remember("test_{$test->id}_questions_count", 1440, function() use ($test) {
                     return $test->questions()->count();
                 });
 
-                $userQuestionCount = Cache::tags('UserQuestion')->remember("userTest[{$userTest->id}][questions][count]", 1440, function() use ($userTest) {
+                $answered = cache()->tags('user_questions')->remember("user_test_{$userTest->id}_questions_count", 1440, function() use ($userTest) {
                     return $userTest->questions()->count();
                 });
 
-                $userCorrectQuestionCount = Cache::tags('UserQuestion')->remember("userTest[{$userTest->id}][questions][correct][count]", 1440, function() use ($userTest) {
+                $correct = cache()->tags('user_questions')->remember("user_test_{$userTest->id}_correct_questions_count", 1440, function() use ($userTest) {
                     return $userTest->questions()->where('correct', 1)->count();
                 });
 
@@ -66,11 +65,11 @@ class Welcome extends Controller {
                     'name' => $userTest->name,
                     'created_at' => $userTest->created_at->format('d.m.Y, H:i'),
                     'complete' => $userTest->complete,
-                    'total' => $questionCount,
-                    'answered' => $userQuestionCount,
-                    'incorrect' => $userQuestionCount - $userCorrectQuestionCount,
-                    'correct' => $userCorrectQuestionCount,
-                    'percent' => round(100 * $userQuestionCount / $questionCount),
+                    'total' => $total,
+                    'answered' => $answered,
+                    'correct' => $correct,
+                    'incorrect' => $answered - $correct,
+                    'percent' => round(100 * $answered / $total),
                 ];
             }
 

@@ -18,11 +18,11 @@ class QueryLogMiddleware
             $queries = \DB::getQueryLog();
             
             foreach ($queries as $index => $query) {
-                Log::info($index.') '.($query['time'] / 1000).' sec. '.$query['query']);
+                Log::info($index.')'."\t".($query['time'] / 1000).' sec.'."\t".$query['query']);
             }
 
-            Log::info('Total time: '.$site->getMicroTime().' sec');
-            Log::info('Memory usage: '.$site->getMemoryUsage().' Mb');
+            Log::info('Total time:'."\t".$site->getMicroTime().' sec');
+            Log::info('Memory usage:'."\t".$site->getMemoryUsage().' Mb');
         }
 
         return $response;

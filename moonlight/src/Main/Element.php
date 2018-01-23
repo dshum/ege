@@ -40,7 +40,7 @@ final class Element
 
 	public static function getByClassId($classId)
 	{
-		if ( ! strpos($classId, static::ID_SEPARATOR)) return null;
+		if (! strpos($classId, static::ID_SEPARATOR)) return null;
 
 		try {
 			$array = explode(static::ID_SEPARATOR, $classId);
@@ -51,7 +51,9 @@ final class Element
             
             $item = $site->getItemByName($class);
 
-			return $item ? $class::find($id) : null;
+			if ($item) {
+				return $item->getClass()->find($id);
+			};
 		} catch (\Exception $e) {}
 
 		return null;
@@ -59,14 +61,20 @@ final class Element
 
 	public static function getByClassIdWithTrashed($classId)
 	{
-		if ( ! strpos($classId, static::ID_SEPARATOR)) return null;
+		if (! strpos($classId, static::ID_SEPARATOR)) return null;
 
 		try {
 			$array = explode(static::ID_SEPARATOR, $classId);
 			$id = array_pop($array);
 			$class = implode('\\', $array);
 
-			return $class::withTrashed()->find($id);
+			$site = \App::make('site');
+            
+            $item = $site->getItemByName($class);
+
+			if ($item) {
+				return $item->getClass()->withTrashed()->find($id);
+			};
 		} catch (\Exception $e) {}
 
 		return null;
@@ -74,7 +82,7 @@ final class Element
 
 	public static function getByClassIdOnlyTrashed($classId)
 	{
-		if ( ! strpos($classId, static::ID_SEPARATOR)) return null;
+		if (! strpos($classId, static::ID_SEPARATOR)) return null;
 
 		try {
 
@@ -82,7 +90,13 @@ final class Element
 			$id = array_pop($array);
 			$class = implode('\\', $array);
 
-			return $class::onlyTrashed()->find($id);
+			$site = \App::make('site');
+            
+            $item = $site->getItemByName($class);
+
+			if ($item) {
+				return $item->getClass()->onlyTrashed()->find($id);
+			};
 
 		} catch (\Exception $e) {}
 

@@ -545,6 +545,7 @@ class SearchController extends Controller
         $scope['lastPage'] = $lastPage;
         $scope['elements'] = $elements;
         $scope['views'] = $views;
+        $scope['orderByList'] = $orderByList;
         $scope['orders'] = $orders;
         $scope['hasOrderProperty'] = false;
         $scope['mode'] = 'search';
