@@ -36,5 +36,22 @@ class User extends Authenticatable
 			'updated_at',
 			'deleted_at',
 		);
-	}
+    }
+    
+    public static function boot()
+	{
+		parent::boot();
+
+        static::created(function($element) {
+            cache()->tags('users')->flush();
+        });
+
+        static::saved(function($element) {
+            cache()->tags('users')->flush();
+        });
+
+        static::deleted(function($element) {
+            cache()->tags('users')->flush();
+        });
+    }
 }
