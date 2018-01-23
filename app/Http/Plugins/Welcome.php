@@ -33,6 +33,7 @@ class Welcome extends Controller {
                 'classId' => Element::getClassId($user),
                 'email' => $user->email,
                 'name' => $user->first_name.' '.$user->last_name,
+                'activated' => $user->activated,
                 'tests' => [],
             ];
 

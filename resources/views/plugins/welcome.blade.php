@@ -23,6 +23,11 @@
     font-weight: bold;
     color: red;
 }
+
+.wrapper .red {
+    font-weight: bold;
+    color: crimson;
+}
 </style>
 <div class="wrapper">
     <div class="row">
@@ -30,6 +35,9 @@
         <div class="elements">
             <div class="h2"><a href="{{ route('moonlight.browse.element', $user['classId']) }}"><span>{{ $user['name'] }}</span></a></div>
             <div><small>{{ $user['email'] }}</small></div>
+            @if (! $user['activated'])
+            <div><small class="red">Не активирован</small></div>
+            @endif
             <ul>
                 @if (! $user['tests'])
                 <li>Тесты еще не выполнялись.</li>
@@ -49,6 +57,10 @@
                 @endif
             </ul>
         </div>
+        @if ($index % 3 == 2)
+    </div>
+    <div class="row">
+        @endif
         @endforeach
     </div>
 </div>
