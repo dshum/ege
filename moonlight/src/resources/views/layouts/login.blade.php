@@ -14,7 +14,7 @@
 @show
 <style>
     body {
-        background-image: url(/packages/moonlight/img/background.jpg?{{ date('Y-m-d') }});
+        background-image: url(/assets/background.jpg?{{ date('Y-m-d') }});
     }
 </style>
 <script src="/packages/moonlight/js/jquery-3.2.1.min.js"></script>

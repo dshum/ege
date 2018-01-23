@@ -244,7 +244,7 @@ class ImageProperty extends BaseProperty
 				$original = $file->getClientOriginalName();
 				$extension = $file->getClientOriginalExtension();
 
-				if ( ! $extension) $extension = 'txt';
+				if (! $extension) $extension = 'txt';
 
 				$folderPath =
 					public_path()
@@ -254,7 +254,7 @@ class ImageProperty extends BaseProperty
 					.$this->getFolderName()
 					.DIRECTORY_SEPARATOR;
 
-				if ( ! file_exists($folderPath)) {
+				if (! file_exists($folderPath)) {
 					mkdir($folderPath, 0755);
 				}
 
@@ -269,7 +269,7 @@ class ImageProperty extends BaseProperty
 					? $folderPath.DIRECTORY_SEPARATOR.$folderHash
 					: $folderPath;
 
-				if ( ! file_exists($destination)) {
+				if (! file_exists($destination)) {
 					mkdir($destination, 0755);
 				}
 

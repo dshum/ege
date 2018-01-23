@@ -105,7 +105,7 @@ class LoginController extends Controller
 
         try {
             $url = 'http://yandex.ru/images/today?size=1920x1080';
-            $path = public_path().'/packages/moonlight/img/background.jpg';
+            $path = public_path().'/assets/background.jpg';
 
             $date = file_exists($path) ? date('Y-m-d', filemtime($path)) : null;
 
