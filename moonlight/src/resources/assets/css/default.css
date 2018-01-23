@@ -493,7 +493,7 @@ div.path div.part a.edit {
 }
 
 div.path div.part a.edit .fa {
-  color: tan;
+  color: firebrick;
   font-size: 1.3rem;
 }
 
@@ -504,7 +504,7 @@ div.path div.part a.external-link {
 }
 
 div.path div.part a.external-link .fa {
-  color: slategrey;
+  color: firebrick;
   font-size: 1.3rem;
 }
 
@@ -667,7 +667,7 @@ div.empty > div:last-child {
 }
 
 .buttons .button.enabled.restore > .fa {
-  color: seagreen;
+  color: forestgreen;
   transition: 0.3s;
 }
 
@@ -1547,7 +1547,7 @@ form .loadfile .reset {
 }
 
 .confirm .btn.restore {
-  background-color: seagreen;
+  background-color: forestgreen;
 }
 
 .confirm .btn.remove {

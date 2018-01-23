@@ -4,10 +4,20 @@ namespace Moonlight\Main;
 
 trait ScriptTrait 
 {
-    protected $browseScripts = [];
+	protected $homeScripts = [];
+	protected $browseScripts = [];
 	protected $editScripts = [];
 	protected $searchScripts = [];
-    protected $itemScripts = [];
+	protected $itemScripts = [];
+	
+	public function addHomeScript($path)
+	{
+		if (! in_array($path, $this->homeScripts)) {
+			$this->homeScripts[] = $path;
+		}
+
+		return $this;
+	}
     
     public function addBrowseScript($classId, $path)
 	{
@@ -59,6 +69,11 @@ trait ScriptTrait
 		}
 
 		return $this;
+	}
+
+	public function getHomeScripts()
+	{
+		return $this->homeScripts;
 	}
 
 	public function getBrowseScripts($classId)

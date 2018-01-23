@@ -24,6 +24,13 @@ class HomeController extends Controller
         $site = \App::make('site');
 
         /*
+         * Home styles and scripts
+         */
+
+        $styles = $site->getHomeStyles();
+        $scripts = $site->getHomeScripts();
+
+        /*
          * Home plugin
          */
         
@@ -46,6 +53,11 @@ class HomeController extends Controller
 
         $scope['homePluginView'] = $homePluginView;
         $scope['rubrics'] = $rubrics;
+
+        view()->share([
+            'styles' => $styles,
+            'scripts' => $scripts,
+        ]);
             
         return view('moonlight::home', $scope);
     }

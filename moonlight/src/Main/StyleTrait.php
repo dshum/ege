@@ -4,10 +4,20 @@ namespace Moonlight\Main;
 
 trait StyleTrait 
 {
+	protected $homeStyles = [];
     protected $browseStyles = [];
 	protected $editStyles = [];
 	protected $searchStyles = [];
-    protected $itemStyles = [];
+	protected $itemStyles = [];
+	
+	public function addHomeStyle($path)
+	{
+		if (! in_array($path, $this->homeStyles)) {
+			$this->homeStyles[] = $path;
+		}
+
+		return $this;
+	}
     
     public function addBrowseStyle($classId, $path)
 	{
@@ -59,6 +69,11 @@ trait StyleTrait
 		}
 
 		return $this;
+	}
+
+	public function getHomeStyles()
+	{
+		return $this->homeStyles;
 	}
 
 	public function getBrowseStyles($classId)

@@ -579,6 +579,7 @@ $site->
 		addSoftDeletes()
 	)->
 
+	addHomeStyle('/css/welcome.css')->
 	addHomePlugin('App\Http\Plugins\Welcome')->
 	
 	addItemStyle('App.Question', '/css/answers.css')->

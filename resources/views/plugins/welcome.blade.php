@@ -1,34 +1,3 @@
-<style>
-.wrapper {
-    width: 60rem;
-    margin: 1rem 0 1rem 0;
-    padding: 0;
-}
-
-.wrapper small {
-    color: #357;
-    font-size: 0.8rem;
-}
-
-.wrapper .h2 a {
-    color: royalblue;
-}
-
-.wrapper .correct {
-    font-weight: bold;
-    color: green;
-}
-
-.wrapper .incorrect {
-    font-weight: bold;
-    color: red;
-}
-
-.wrapper .red {
-    font-weight: bold;
-    color: crimson;
-}
-</style>
 <div class="wrapper">
     <div class="row">
         @foreach ($users as $index => $user)
