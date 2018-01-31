@@ -66,6 +66,7 @@ class RegisterController extends Controller {
 		$password = $request->input('password');
 		$first_name = $request->input('first_name');
 		$last_name = $request->input('last_name');
+		$human = $request->input('human');
 
 		$validator = Validator::make($request->all(), [
 			'email' => [
@@ -77,14 +78,16 @@ class RegisterController extends Controller {
 			],
 			'password' => 'required',
             'first_name' => 'required',
-            'last_name' => 'required',
+			'last_name' => 'required',
+			'human' => 'required',
         ], [
 			'email.required' => 'Введите e-mail.',
             'email.email' => 'Некорректный e-mail.',
 			'email.unique' => 'Такой e-mail уже зарегистрирован.',
 			'password.required' => 'Придумайте пароль.',
             'first_name.required' => 'Введите имя.',
-            'last_name.required' => 'Введите фамилию.',
+			'last_name.required' => 'Введите фамилию.',
+			'human.required' => 'Подтвердите, что вы не робот.',
         ]);
         
         if ($validator->fails()) {
@@ -93,6 +96,7 @@ class RegisterController extends Controller {
 			$scope['password'] = $password;
 			$scope['first_name'] = $first_name;
 			$scope['last_name'] = $last_name;
+			$scope['human'] = $human;
             
             return view('register.index', $scope);
         }
@@ -122,7 +126,8 @@ class RegisterController extends Controller {
 		$scope['email'] = null;
 		$scope['password'] = null;
 		$scope['first_name'] = null;
-        $scope['last_name'] = null;
+		$scope['last_name'] = null;
+		$scope['human'] = false;
 
 		return view('register.index', $scope);
 	}

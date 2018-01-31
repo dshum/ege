@@ -30,6 +30,12 @@
         <label>Фамилия:</label><br>
         <input type="text" name="last_name" value="{{ $last_name }}">
     </div>
+    <div class="row">
+        <p>
+            <input type="checkbox" name="human" id="human" value="1"{{ $human ? ' checked' : '' }}>
+            <label for="human">Я не робот</label>
+        </p>
+    </div>
     <div class="row submit">
         <input type="submit" value="Зарегистрироваться" class="btn">
     </div>
