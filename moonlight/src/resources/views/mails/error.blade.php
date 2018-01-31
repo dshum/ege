@@ -22,10 +22,10 @@ Referer: {{ $referer }}<br>
 Request method: {{ $method }}
 </p>
 
-<p>GET vars:<br><pre>{{ $get }}</pre></p>
+<p>GET: {!! nl2br($get) !!}</p>
 
-<p>POST vars:<br><pre>{{ $post }}</pre></p>
+<p>POST: {!! nl2br($post) !!}</p>
 
-<p>COOKIE vars:<br><pre>{{ $cookie }}</pre></p>
+<p>COOKIE: {!! nl2br($cookie) !!}</p>
 
 <p>Message sent: {{ $date->format('Y-m-d H:i:s') }}</p>

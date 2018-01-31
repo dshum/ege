@@ -2,7 +2,7 @@
 
 namespace Moonlight\Utils;
 
-class RussianTextUtils {
+class RussianText {
 
 	const MALE		= 0;
 	const FEMALE	= 1;
@@ -178,7 +178,7 @@ class RussianTextUtils {
 					$size, array('байт', 'байта', 'байт')
 				);
 		else
-			return TextUtils::friendlyFileSize(
+			return Text::friendlyFileSize(
 				$size, $precision, self::$bytePrefixes, true
 			).'Б';
 	}
@@ -196,7 +196,7 @@ class RussianTextUtils {
 			return
 				(int) $date->getDay()
 				. ' '
-				. RussianTextUtils::getMonthInGenitiveCase(
+				. RussianText::getMonthInGenitiveCase(
 					$date->getMonth()
 				);
 	}
