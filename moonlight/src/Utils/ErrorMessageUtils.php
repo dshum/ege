@@ -12,7 +12,7 @@ class ErrorMessageUtils {
 
 	const TIME_DELAY = 60;
 
-	public static function sendMessage(\Exception $e)
+	public static function sendMessage(Exception $e)
 	{
 		if (
 			! Config::get('mail.from.address')
@@ -129,15 +129,15 @@ class ErrorMessageUtils {
 	{
 		$count = 0;
 
-		if (is_readable($filepath)) {
-			$f = fopen($filepath, 'r');
-			$count = floor(fread($f, 4096));
+		if ($f = fopen($filepath, 'r')) {
+			$count = (int)fread($f, 4096);
 			fclose($f);
 		}
 
-		$f = fopen($filepath, 'w');
-		fwrite($f, 1);
-		fclose($f);
+		if ($f = fopen($filepath, 'w')) {
+			fwrite($f, 1);
+			fclose($f);
+		}
 
 		return $count;
 	}
@@ -146,15 +146,17 @@ class ErrorMessageUtils {
 	{
 		$count = 0;
 
-		if (is_readable($filepath)) {
-			$f = fopen($filepath, 'r');
-			$count = floor(fread($f, 4096));
+		if ($f = fopen($filepath, 'r')) {
+			$count = (int)fread($f, 4096);
 			fclose($f);
 		}
 
-		$f = fopen($filepath, 'w');
-		fwrite($f, ++$count);
-		fclose($f);
+		$count++;
+
+		if ($f = fopen($filepath, 'w')) {
+			fwrite($f, $count);
+			fclose($f);
+		}
 
 		return $count;
 	}

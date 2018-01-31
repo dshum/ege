@@ -12,7 +12,7 @@
 <body>
 	<div class="container">
 		<nav>
-			<logo><a href="{{ route('welcome') }}"><i class="fa fa-graduation-cap"></i>Тесты ЕГЭ по биологии</a></logo>
+			<logo><a href="{{ route('welcome') }}"><i class="fa fa-graduation-cap"></i>ЕГЭ по биологии</a></logo>
 		</nav>
 		<main>
             <h1>Ой! Ошибка :[</h1>
