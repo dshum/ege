@@ -34,11 +34,11 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        parent::report($exception);
+
         if ($this->shouldReport($exception)) {
             ErrorMessageUtils::sendMessage($exception);
         }
-
-        parent::report($exception);
     }
 
     /**

@@ -129,7 +129,10 @@ class ErrorMessageUtils {
 	{
 		$count = 0;
 
-		if ($f = fopen($filepath, 'r')) {
+		if (
+			file_exists($filepath) 
+			&& $f = fopen($filepath, 'r')
+		) {
 			$count = (int)fread($f, 4096);
 			fclose($f);
 		}
@@ -146,7 +149,10 @@ class ErrorMessageUtils {
 	{
 		$count = 0;
 
-		if ($f = fopen($filepath, 'r')) {
+		if (
+			file_exists($filepath) 
+			&& $f = fopen($filepath, 'r')
+		) {
 			$count = (int)fread($f, 4096);
 			fclose($f);
 		}
