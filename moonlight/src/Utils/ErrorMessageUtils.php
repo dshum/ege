@@ -18,7 +18,6 @@ class ErrorMessageUtils {
 			! Config::get('mail.from.address')
 			|| ! Config::get('mail.buglover.address')
 		) {
-			Log::info('config');
 			return false;
 		}
 

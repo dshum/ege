@@ -34,9 +34,9 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-        ErrorMessageUtils::sendMessage($exception);
-
-        Log::info('sent');
+        if ($this->shouldReport($exception)) {
+            ErrorMessageUtils::sendMessage($exception);
+        }
 
         parent::report($exception);
     }
