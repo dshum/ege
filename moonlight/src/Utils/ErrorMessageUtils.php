@@ -96,6 +96,8 @@ class ErrorMessageUtils {
 			$send = true;
 		}
 
+		if (! $send) return;
+
 		$date = Carbon::now();
 
 		$subject = $uri.' - '.$exception.' - '.$e->getMessage();
