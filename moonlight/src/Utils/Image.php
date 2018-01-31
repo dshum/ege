@@ -2,7 +2,7 @@
 
 namespace Moonlight\Utils;
 
-class ImageUtils
+class Image
 {
 	public static function resizeAndCopy($source, $destination, $new_width, $new_height, $quality = 80)
 	{

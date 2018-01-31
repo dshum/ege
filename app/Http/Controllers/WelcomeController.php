@@ -18,8 +18,6 @@ class WelcomeController extends Controller {
 	{
 		$scope = [];
 
-		echo $unknown;
-
 		$subjects = \Cache::tags('Subject')->remember('subjects', 60, function() {
 			return Subject::where('hidden', false)->orderBy('order')->get();
 		});

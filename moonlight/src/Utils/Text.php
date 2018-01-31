@@ -2,7 +2,7 @@
 
 namespace Moonlight\Utils;
 
-class TextUtils
+class Text
 {
 	public static function friendlyFileSize(
 		$size, $precision = 2,

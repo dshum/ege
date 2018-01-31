@@ -4,15 +4,15 @@ namespace Moonlight\Utils;
 
 use Config;
 use Exception;
-use Illuminate\Support\Facades\Mail;
+use Mail;
 use Moonlight\Mail\Error;
 use Carbon\Carbon;
 
-class ErrorMessageUtils {
+class ErrorMessage {
 
 	const TIME_DELAY = 60;
 
-	public static function sendMessage(Exception $e)
+	public static function send(Exception $e)
 	{
 		if (
 			! Config::get('mail.from.address')

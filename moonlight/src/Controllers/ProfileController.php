@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\User;
 use Moonlight\Models\UserAction;
-use Moonlight\Utils\ImageUtils;
+use Moonlight\Utils\Image;
 
 class ProfileController extends Controller
 {
@@ -111,7 +111,7 @@ class ProfileController extends Controller
                     mkdir($folderPath, 0755);
                 }
                 
-                ImageUtils::resizeAndCopy(
+                Image::resizeAndCopy(
                     $path,
                     $folderPath.$filename,
                     self::PHOTO_RESIZE_WIDTH,

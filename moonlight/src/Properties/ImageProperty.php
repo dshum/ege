@@ -2,7 +2,7 @@
 
 namespace Moonlight\Properties;
 
-use Moonlight\Utils\ImageUtils;
+use Moonlight\Utils\Image;
 
 class ImageProperty extends BaseProperty
 {
@@ -286,7 +286,7 @@ class ImageProperty extends BaseProperty
 						$extension
 					);
 
-					ImageUtils::resizeAndCopy(
+					Image::resizeAndCopy(
 						$path,
 						$destination.DIRECTORY_SEPARATOR.$resizeFilename,
 						$width,
@@ -306,7 +306,7 @@ class ImageProperty extends BaseProperty
 
 					list($width, $height, $quality) = $this->resize;
 
-					ImageUtils::resizeAndCopy(
+					Image::resizeAndCopy(
 						$path,
 						$destination.DIRECTORY_SEPARATOR.$filename,
 						$width,
