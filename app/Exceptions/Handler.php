@@ -6,7 +6,7 @@ use Exception;
 use Log;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Moonlight\Utils\ErrorMessageUtils;
+use Moonlight\Utils\ErrorMessage;
 
 class Handler extends ExceptionHandler
 {
