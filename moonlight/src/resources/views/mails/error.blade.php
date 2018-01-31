@@ -3,9 +3,10 @@ Class: {{ $exception }}<br>
 Message: {{ $e->getMessage() }}<br>
 File: {{ $e->getFile() }}<br>
 Line: {{ $e->getLine() }}<br>
-Code: {{ $e->getCode() }}<br>
-Trace: {{ nl2br($e->getTraceAsString()) }}<br>
+Code: {{ $e->getCode() }}
 </p>
+
+<p><small>{!! nl2br($e->getTraceAsString()) !!}</small></p>
 
 @if ($count)
 <p>{{ $count }} error(s) per {{ $diff }} sec</p>
@@ -18,7 +19,7 @@ IP: {{ $ip }}<br>
 IP2: {{ $ip2 }}<br>
 UserAgent: {{ $useragent }}<br>
 Referer: {{ $referer }}<br>
-Request method: {{ $method }}<br>
+Request method: {{ $method }}
 </p>
 
 <p>GET vars:<br><pre>{{ $get }}</pre></p>
