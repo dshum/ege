@@ -2,6 +2,10 @@
 
 namespace Moonlight\Utils;
 
+use Config;
+use Exception;
+use Illuminate\Support\Facades\Mail;
+use Moonlight\Mail\Error;
 use Carbon\Carbon;
 
 class ErrorMessageUtils {
@@ -11,11 +15,14 @@ class ErrorMessageUtils {
 	public static function sendMessage(\Exception $e)
 	{
 		if (
-			! \Config::get('mail.from.address')
-			|| ! \Config::get('mail.buglover.address')
+			! Config::get('mail.from.address')
+			|| ! Config::get('mail.buglover.address')
 		) {
+			Log::info('config');
 			return false;
 		}
+
+		$to = Config::get('mail.buglover.address') ?: Config::get('mail.from.address');
 
 		$server =
 			isset($_SERVER['HTTP_HOST'])
@@ -66,10 +73,17 @@ class ErrorMessageUtils {
 		$count = 0;
 		$diff = 0;
 
-		$filepath = storage_path().'/logs/'.$filename;
+		$folder = storage_path().'/framework/errors';
+
+		if (! file_exists($folder)) {
+			mkdir($folder, 0755);
+		}
+
+		$filepath = $folder.'/'.$filename;
 
 		if (file_exists($filepath)) {
 			$time = filemtime($filepath);
+
 			if (time() - $time > static::TIME_DELAY) {
 				$count = static::reset($filepath);
 				$diff = time() - $time;
@@ -79,6 +93,7 @@ class ErrorMessageUtils {
 			}
 		} else {
 			static::reset($filepath);
+
 			$send = true;
 		}
 
@@ -86,7 +101,7 @@ class ErrorMessageUtils {
 
 		$subject = $uri.' - '.$exception.' - '.$e->getMessage();
 
-		$data = array(
+		$scope = [
 			'e' => $e,
 			'server' => $server,
 			'uri' => $uri,
@@ -102,78 +117,11 @@ class ErrorMessageUtils {
 			'count' => $count,
 			'diff' => $diff,
 			'date' => $date,
-		);
+			'subject' => $subject,
+			'to' => $to,
+		];
 
-		\Mail::send('admin::mail.error', $data, function($message) use ($subject) {
-			$message->
-				from(\Config::get('mail.from.address'), \Config::get('mail.from.name'))->
-				to(\Config::get('mail.buglover.address'), \Config::get('mail.buglover.name'))->
-				subject($subject);
-		});
-	}
-
-	public static function printMessage(\Exception $e)
-	{
-		$server =
-			isset($_SERVER['HTTP_HOST'])
-			? $_SERVER['HTTP_HOST']
-			: (defined('HTTP_HOST') ? HTTP_HOST : '');
-
-		$uri =
-			isset($_SERVER['REQUEST_URI'])
-			? $server.$_SERVER['REQUEST_URI']
-			: '';
-
-		$ip =
-			isset($_SERVER['HTTP_X_REAL_IP'])
-			? $_SERVER['HTTP_X_REAL_IP']
-			: isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-
-		$useragent =
-			isset($_SERVER['HTTP_USER_AGENT'])
-			? $_SERVER['HTTP_USER_AGENT']
-			: '';
-
-		$referer =
-			isset($_SERVER['HTTP_REFERER'])
-			? $_SERVER['HTTP_REFERER']
-			: '';
-
-		$method =
-			isset($_SERVER['REQUEST_METHOD'])
-			? $_SERVER['REQUEST_METHOD']
-			: '';
-
-		$exception = get_class($e);
-
-		$trace =
-			strpos($e->getMessage(), 'mysql_connect') === false
-			? nl2br($e->getTraceAsString())
-			: null;
-
-		$get = var_export($_GET, true);
-		$post = var_export($_POST, true);
-		$cookie = var_export($_COOKIE, true);
-
-		$str = <<<HTML
-Class: $exception<br />
-Message: {$e->getMessage()}<br />
-File: {$e->getFile()}<br />
-Line: {$e->getLine()}<br />
-Code: {$e->getCode()}<br />
-Trace: {$trace}<br /><br />
-Server: $server<br />
-URI: $uri<br />
-IP: $ip<br />
-UserAgent: $useragent<br />
-Referer: $referer<br />
-Request method: $method<br />
-GET: <pre>$get</pre><br />
-POST: <pre>$post</pre><br />
-COOKIE: <pre>$cookie</pre><br />
-HTML;
-
-		return $str;
+		Mail::send(new Error($scope));
 	}
 
 	protected static function reset($filepath)
@@ -209,5 +157,4 @@ HTML;
 
 		return $count;
 	}
-
 }

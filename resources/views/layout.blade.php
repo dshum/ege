@@ -18,7 +18,7 @@
 <body>
 	<div class="container">
 		<nav>
-			<logo><a href="{{ route('welcome') }}"><i class="fa fa-graduation-cap"></i>Тесты ЕГЭ по биологии</a></logo>
+			<logo><a href="{{ route('welcome') }}"><i class="fa fa-graduation-cap"></i>ЕГЭ по биологии</a></logo>
 			<user>
 				@if (Auth::check())
 				<a href="{{ route('home') }}">{{ Auth::user()->email }}</a>
