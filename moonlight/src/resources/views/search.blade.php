@@ -17,12 +17,7 @@
             <div class="part"><span>Поиск</span></div>
         </div>
         <div class="leaf">
-            <input type="text" id="filter" placeholder="Название">
-            <ul class="items">
-                @foreach ($items as $item)
-                <li><a href="{{ route('moonlight.search.item', $item->getNameId()) }}">{{ $item->getTitle() }}</a><br><small>{{ $item->getNameId() }}</small></li>
-                @endforeach
-            </ul>
+            <div class="items-container">{!! $items !!}</div>
         </div>
     </div>
 </div>

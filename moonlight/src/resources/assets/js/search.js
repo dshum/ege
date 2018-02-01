@@ -60,7 +60,7 @@ $(function() {
         init(item);
     });
 
-    $('#filter').keyup(function () {
+    $('body').on('keyup change', '#filter', function () {
         var str = $(this).val();
 
         if (str.length > 0) {
@@ -69,15 +69,24 @@ $(function() {
         } else {
             $('ul.items > li').show();
         }
-    }).change(function () {
-        var str = $(this).val();
+    });
 
-        if (str.length > 0) {
-            $('ul.items > li:not(:contains("' + str + '"))').hide();
-            $('ul.items > li:contains("' + str + '")').show();
-        } else {
-            $('ul.items > li').show();
-        }
+    $('body').on('click', '.sort span[sort]', function() {
+        var item = $(this).parents('.sort').attr('item');
+        var sort = $(this).attr('sort');
+
+        $.blockUI();
+
+        $.post('/moonlight/search/sort', {
+            item: item,
+            sort: sort
+        }, function(data) {
+            $.unblockUI();
+
+            if (data.html) {
+                $('.items-container').html(data.html);
+            }
+        });
     });
 
     $('.search-form-links div.link').click(function() {

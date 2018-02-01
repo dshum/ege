@@ -24,8 +24,13 @@ class SearchController extends Controller
         $scope = [];
         
         $loggedUser = Auth::guard('moonlight')->user();
+
+        $site = \App::make('site');
         
+        $class = $request->input('item');
         $sort = $request->input('sort');
+
+        $currentItem = $site->getItemByName($class);
         
         $search = $loggedUser->getParameter('search') ?: [];
 
@@ -34,7 +39,7 @@ class SearchController extends Controller
 			$loggedUser->setParameter('search', $search);
 		}
         
-        $html = $this->itemListView();
+        $html = $this->itemListView($currentItem);
         
         return response()->json(['html' => $html]);
     }
@@ -78,8 +83,6 @@ class SearchController extends Controller
         if (! $currentItem) {
             return redirect()->route('search');
         }
-
-        $items = $site->getItemList();
         
         $propertyList = $currentItem->getPropertyList();
         
@@ -138,12 +141,24 @@ class SearchController extends Controller
         $action = $request->input('action');
         
         if ($action == 'search') {
+            $search = $loggedUser->getParameter('search') ?: [];
+
+            $search['sortDate'][$class] = Carbon::now()->toDateTimeString();
+
+            if (isset($search['sortRate'][$class])) {
+                $search['sortRate'][$class]++;
+            } else {
+                $search['sortRate'][$class] = 1;
+            }
+            
+            $loggedUser->setParameter('search', $search);
+
             $elements = $this->elementListView($request, $currentItem);
         } else {
             $elements = null;
         }
         
-        $sort = $request->input('sort');
+        $items = $this->itemListView($currentItem);
 
         $styles = [];
         $scripts = [];
@@ -171,7 +186,6 @@ class SearchController extends Controller
         $scope['orderProperties'] = $orderProperties;
         $scope['hasOrderProperty'] = $hasOrderProperty;
         $scope['action'] = $action;
-        $scope['sort'] = $sort;
         $scope['elements'] = $elements;
 
         view()->share([
@@ -228,16 +242,14 @@ class SearchController extends Controller
 
         $loggedUser = Auth::guard('moonlight')->user();
         
-        $site = \App::make('site');
-        
-        $items = $site->getItemList();
+        $items = $this->itemListView();
 
 		$scope['items'] = $items;
     
         return view('moonlight::search', $scope);
     }
     
-    protected function itemListView() {
+    protected function itemListView($currentItem = null) {
         $scope = [];
         
         $loggedUser = Auth::guard('moonlight')->user();
@@ -306,10 +318,11 @@ class SearchController extends Controller
             'default' => 'умолчанию',
         ];
         
-        if ( ! isset($sorts[$sort])) {
+        if (! isset($sorts[$sort])) {
             $sort = 'default';
         }
 
+        $scope['currentItem'] = $currentItem;
 		$scope['items'] = $items;
         $scope['sorts'] = $sorts;
         $scope['sort'] = $sort;

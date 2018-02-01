@@ -57,12 +57,7 @@
 @section('sidebar')
 <div class="sidebar">
     <div class="container">
-        <input type="text" id="filter" placeholder="Название">
-        <ul class="items">
-            @foreach ($items as $item)
-            <li class="{{ $item->getNameId() == $currentItem->getNameId() ? 'active' : '' }}"><a href="{{ route('moonlight.search.item', $item->getNameId()) }}">{{ $item->getTitle() }}</a><br><small>{{ $item->getNameId() }}</small></li>
-            @endforeach
-        </ul>
+        <div class="items-container">{!! $items !!}</div>
     </div>
 </div>
 @endsection

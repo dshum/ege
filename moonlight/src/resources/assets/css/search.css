@@ -13,3 +13,16 @@
   margin-bottom: 1rem;
   padding: 0;
 }
+
+.main .sort {
+  margin-top: 2rem;
+}
+
+.sidebar .sort {
+  margin-bottom: 2rem;
+}
+
+.sort span[sort] {
+  border-bottom: 1px dashed blue;
+  cursor: pointer;
+}

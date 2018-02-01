@@ -108,7 +108,7 @@ select::-ms-expand {
 }
 
 select {
-  margin-top: 2px;
+  margin-top: 0;
 }
 
 input[type="text"]:focus:not([readonly]),
