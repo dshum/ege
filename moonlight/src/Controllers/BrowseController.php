@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Pagination\Paginator;
 use Moonlight\Main\Element;
 use Moonlight\Main\Site;
 use Moonlight\Main\UserActionType;
@@ -20,7 +21,7 @@ use Moonlight\Properties\VirtualProperty;
 
 class BrowseController extends Controller
 {
-    const DEFAULT_PERPAGE = 10;
+    const PER_PAGE = 10;
 
     /**
      * Order elements.
@@ -838,6 +839,7 @@ class BrowseController extends Controller
         $open = $request->input('open');
         $class = $request->input('item');
         $classId = $request->input('classId');
+        $page = $request->input('page');
         
         $site = \App::make('site');
         
@@ -852,6 +854,13 @@ class BrowseController extends Controller
             $cid = $classId ?: Site::ROOT;
             $lists[$cid][$class] = true;
             $loggedUser->setParameter('lists', $lists);
+        }
+
+        if ($page) {
+            $pages = $loggedUser->getParameter('pages');
+            $cid = $classId ?: Site::ROOT;
+            $pages[$cid][$class] = $page;
+            $loggedUser->setParameter('pages', $pages);
         }
         
         $element = $classId 
@@ -1087,7 +1096,20 @@ class BrowseController extends Controller
             $nextPage = null;
             $lastPage = null;
         } else {
-            $perpage = $currentItem->getPerPage() ?: self::DEFAULT_PERPAGE;
+            $pages = $loggedUser->getParameter('pages') ?: [];
+
+            $cid = $currentClassId ?: Site::ROOT;
+
+            $page = isset($pages[$currentClassId][$currentItem->getNameId()])
+                ? $pages[$cid][$currentItem->getNameId()]
+                : 1;
+
+            Paginator::currentPageResolver(function() use ($page) {
+                return $page;
+            });
+
+
+            $perpage = $currentItem->getPerPage() ?: static::PER_PAGE;
             
             $elements = $criteria->paginate($perpage);
 
