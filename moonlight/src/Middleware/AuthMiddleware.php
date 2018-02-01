@@ -13,6 +13,8 @@ class AuthMiddleware
 {
     public function handle($request, Closure $next)
     {
+        header('Cache-Control: no-store, must-revalidate');
+        
         if (! Auth::guard('moonlight')->check()) {
             return redirect()->route('moonlight.login');
         }
