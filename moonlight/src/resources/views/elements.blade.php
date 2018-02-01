@@ -22,7 +22,7 @@
             {!! $browseFilterView !!}
         </div>
         @endif
-        @if ($total)
+        @if (sizeof($elements))
         <div class="buttons">
             @if ($mode == 'trash')
             <div class="button restore"><i class="fa fa-arrow-left"></i>Восстановить</div>

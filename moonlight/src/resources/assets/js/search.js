@@ -54,6 +54,12 @@ $(function() {
         });
     };
 
+    var submit = function(page) {
+        $('input:hidden[name="page"]').val(page);
+
+        $('form#search-form').submit();
+    };
+
     $('.main div[item]').each(function () {
         var item = $(this).attr('item');
 
@@ -72,7 +78,7 @@ $(function() {
     });
 
     $('body').on('click', '.sort span[sort]', function() {
-        var item = $(this).parents('.sort').attr('item');
+        var item = $(this).parents('.sort').attr('activeItem');
         var sort = $(this).attr('sort');
 
         $.blockUI();
@@ -465,14 +471,14 @@ $(function() {
 
         if (page < 1) page = 1;
 
-        getElements(item, page);
+        submit(page);
     });
 
     $('body').on('click', 'ul.pager > li[first].active', function () {
         var pager = $(this).parent();
         var item = pager.attr('item');
 
-        getElements(item, 1);
+        submit(1);
     });
 
     $('body').on('keydown', 'ul.pager > li.page > input', function (event) {
@@ -486,7 +492,7 @@ $(function() {
             if (page < 1) page = 1;
             if (page > last) page = last;
 
-            getElements(item, page);
+            submit(page);
         }
     });
 
@@ -495,7 +501,7 @@ $(function() {
         var item = pager.attr('item');
         var last = pager.attr('last');
 
-        getElements(item, last);
+        submit(last);
     });
 
     $('body').on('click', 'ul.pager > li[next].active', function () {
@@ -506,6 +512,6 @@ $(function() {
 
         if (page > last) page = last;
 
-        getElements(item, page);
+        submit(page);
     });
 });

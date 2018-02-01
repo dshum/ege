@@ -20,6 +20,7 @@
         </div>
         <form id="search-form">
             <input type="hidden" name="action" value="search">
+            <input type="hidden" name="page" value="1">
             <div class="search-form">
                 <div class="search-form-links">
                     <div class="row">

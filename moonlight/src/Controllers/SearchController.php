@@ -2,6 +2,7 @@
 
 namespace Moonlight\Controllers;
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -14,6 +15,8 @@ use Carbon\Carbon;
 
 class SearchController extends Controller
 {
+    const PER_PAGE = 10;
+
     /**
      * Sort items.
      *
@@ -56,12 +59,13 @@ class SearchController extends Controller
         $loggedUser = Auth::guard('moonlight')->user();
         
         $class = $request->input('item');
+        $page = $request->input('page');
         
         $site = \App::make('site');
         
         $currentItem = $site->getItemByName($class);
         
-        if ( ! $currentItem) {
+        if (! $currentItem) {
             return response()->json([]);
         }
         
@@ -427,7 +431,7 @@ class SearchController extends Controller
             }
 		);
 
-		if ( ! $loggedUser->isSuperUser()) {
+		if (! $loggedUser->isSuperUser()) {
 			if (
 				$permissionDenied
 				&& sizeof($allowedElementList)
@@ -476,13 +480,17 @@ class SearchController extends Controller
         
         $orders = implode(', ', $orders);
 
-		$elements = $criteria->paginate(10);
+		$elements = $criteria->paginate(static::PER_PAGE);
         
         $total = $elements->total();
 		$currentPage = $elements->currentPage();
         $hasMorePages = $elements->hasMorePages();
         $nextPage = $elements->currentPage() + 1;
         $lastPage = $elements->lastPage();
+
+        if ($currentPage > $lastPage) {
+            $total = 0;
+        }
         
         $properties = [];
         $views = [];

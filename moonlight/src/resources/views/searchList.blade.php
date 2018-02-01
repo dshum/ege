@@ -1,5 +1,5 @@
 <input type="text" id="filter" placeholder="Название">
-<div class="sort" item="{{ $currentItem ? $currentItem->getNameId() : '' }}">
+<div class="sort" activeItem="{{ $currentItem ? $currentItem->getNameId() : '' }}">
     @if ($sort == 'rate')
     Отсортировано по частоте.<br>
     Сортировать по <span sort="date">дате</span>, <span sort="name">названию</span>, <span sort="default">умолчанию</span>.

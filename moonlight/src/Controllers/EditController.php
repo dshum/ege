@@ -228,8 +228,8 @@ class EditController extends Controller
                 $classId
             );
 
-            if (Cache::has('trashItemTotal['.$currentItem->getNameId().']')) {
-                Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
+            if (cache()->has("trash_item_{$currentItem->getNameId()}")) {
+                cache()->forget("trash_item_{$currentItem->getNameId()}");
             }
 
             $historyUrl = $loggedUser->getParameter('history');

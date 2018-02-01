@@ -608,8 +608,8 @@ class BrowseController extends Controller
                 implode(', ', $deleted)
             );
 
-            if (Cache::has('trashItemTotal['.$currentItem->getNameId().']')) {
-                Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
+            if (cache()->has("trash_item_{$currentItem->getNameId()}")) {
+                cache()->forget("trash_item_{$currentItem->getNameId()}");
             }
         }
         
@@ -682,8 +682,8 @@ class BrowseController extends Controller
                 implode(', ', $deleted)
             );
 
-            if (Cache::has('trashItemTotal['.$currentItem->getNameId().']')) {
-                Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
+            if (cache()->has("trash_item_{$currentItem->getNameId()}")) {
+                cache()->forget("trash_item_{$currentItem->getNameId()}");
             }
         }
         
@@ -756,8 +756,8 @@ class BrowseController extends Controller
                 implode(', ', $restored)
             );
 
-            if (Cache::has('trashItemTotal['.$currentItem->getNameId().']')) {
-                Cache::forget('trashItemTotal['.$currentItem->getNameId().']');
+            if (cache()->has("trash_item_{$currentItem->getNameId()}")) {
+                cache()->forget("trash_item_{$currentItem->getNameId()}");
             }
         }
         

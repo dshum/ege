@@ -29,16 +29,13 @@ $(function() {
         });
     };
 
-    $('#filter').keyup(function () {
-        var str = $(this).val();
+    var submit = function(page) {
+        $('input:hidden[name="page"]').val(page);
 
-        if (str.length > 0) {
-            $('ul.items > li:not(:contains("' + str + '"))').hide();
-            $('ul.items > li:contains("' + str + '")').show();
-        } else {
-            $('ul.items > li').show();
-        }
-    }).change(function () {
+        $('form').submit();
+    };
+
+    $('body').on('keyup change', '#filter', function () {
         var str = $(this).val();
 
         if (str.length > 0) {
@@ -251,14 +248,14 @@ $(function() {
 
         if (page < 1) page = 1;
 
-        getElements(item, page);
+        submit(page);
     });
 
     $('body').on('click', 'ul.pager > li[first].active', function () {
         var pager = $(this).parent();
         var item = pager.attr('item');
 
-        getElements(item, 1);
+        submit(1);
     });
 
     $('body').on('keydown', 'ul.pager > li.page > input', function (event) {
@@ -272,7 +269,7 @@ $(function() {
             if (page < 1) page = 1;
             if (page > last) page = last;
 
-            getElements(item, page);
+            submit(page);
         }
     });
 
@@ -281,7 +278,7 @@ $(function() {
         var item = pager.attr('item');
         var last = pager.attr('last');
 
-        getElements(item, last);
+        submit(last);
     });
 
     $('body').on('click', 'ul.pager > li[next].active', function () {
@@ -292,6 +289,6 @@ $(function() {
 
         if (page > last) page = last;
 
-        getElements(item, page);
+        submit(page);
     });
 });

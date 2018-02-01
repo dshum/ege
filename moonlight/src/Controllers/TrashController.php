@@ -17,6 +17,8 @@ use Carbon\Carbon;
 
 class TrashController extends Controller
 {
+    const PER_PAGE = 10;
+    
     /**
      * Return the total count of element list.
      *
@@ -557,13 +559,17 @@ class TrashController extends Controller
         
         $orders = implode(', ', $orders);
 
-		$elements = $criteria->paginate(10);
+		$elements = $criteria->paginate(static::PER_PAGE);
         
         $total = $elements->total();
 		$currentPage = $elements->currentPage();
         $hasMorePages = $elements->hasMorePages();
         $nextPage = $elements->currentPage() + 1;
         $lastPage = $elements->lastPage();
+
+        if ($currentPage > $lastPage) {
+            $total = 0;
+        }
         
         $properties = [];
         $views = [];

@@ -309,7 +309,10 @@ $site->
 		Item::create('App\Test')->
 		setTitle('Тест')->
         setCreate(true)->
-		addOrder()->
+		addProperty(
+			OrderProperty::create('order')->
+			setRelatedClass('App\Subtopic')
+		)->
 		addProperty(
 			MainProperty::create('name')->
 			setTitle('Название')->
