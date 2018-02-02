@@ -42,9 +42,15 @@ class UserController extends Controller
         if ($scope['error']) {
             return response()->json($scope);
         }
+
+        if ($user->photoExists()) {
+            try {
+                unlink($user->getPhotoAbsPath());
+            } catch (\Exception $e) {}
+        }
         
         $user->delete();
-        
+
         UserAction::log(
 			UserActionType::ACTION_TYPE_DROP_USER_ID,
 			'ID '.$user->id.' ('.$user->login.')'
