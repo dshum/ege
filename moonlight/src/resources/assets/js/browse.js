@@ -3,6 +3,7 @@ $(function() {
     var itemCount = 0;
     var empty = true;
     var checked = {};
+    var editing = [];
 
     if (typeof jQuery !== 'undefined') {
         jQuery.fn.sortable = function (options) {
@@ -174,6 +175,38 @@ $(function() {
                     init(item);
                 }
             });
+        }
+    });
+
+    $('body').on('click', 'table.elements td.editable', function() {
+        var td = $(this);
+        var tr = td.parent();
+        var itemContainer = $(this).parents('div[item]');
+        var mode = td.attr('mode');
+        var elementId = tr.attr('elementId');
+        var index = editing.indexOf(elementId);
+
+        if (mode == 'edit') {
+            td.attr('mode', 'view');
+
+            if (index > -1) {
+                editing.splice(index, 1);
+            }
+        } else {
+            td.attr('mode', 'edit');
+
+            if (index === -1) {
+                editing.push(elementId);
+            }
+        }
+
+        td.find('.view-container').toggle();
+        td.find('.edit-container').toggle();
+
+        if (editing.length) {
+            itemContainer.find('.button.save:not(.disabled)').addClass('enabled');
+        } else {
+            itemContainer.find('.button.save:not(.disabled)').removeClass('enabled');
         }
     });
 

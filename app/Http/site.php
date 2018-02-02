@@ -254,7 +254,8 @@ $site->
 		addProperty(
 			CheckboxProperty::create('hidden')->
 			setTitle('Скрыто')->
-			setShow(true)
+			setShow(true)->
+			setEditable(true)
 		)->
 		addProperty(
 			OneToOneProperty::create('subject_id')->

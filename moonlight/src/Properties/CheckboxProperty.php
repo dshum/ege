@@ -62,7 +62,7 @@ class CheckboxProperty extends BaseProperty {
 		return $this;
 	}
 
-	public function getBrowseEditView()
+	public function getEditableView()
 	{
 		$scope = array(
 			'name' => $this->getName(),
@@ -72,12 +72,6 @@ class CheckboxProperty extends BaseProperty {
 			'readonly' => $this->getReadonly(),
 		);
 
-		try {
-			$view = $this->getClassName().'.browseEdit';
-			return \View::make('admin::properties.'.$view, $scope);
-		} catch (\Exception $e) {}
-
-		return null;
+		return $scope;
 	}
-
 }

@@ -812,6 +812,20 @@ table.elements td.date {
   width: 5rem;
 }
 
+table.elements td.editable {
+  
+}
+
+table.elements td.editable .view-container {
+  display: inline-block;
+  border-bottom: 1px dashed #666;
+  cursor: pointer;
+}
+
+table.elements td.editable .edit-container {
+  display: none;
+}
+
 table.elements th.check {
   width: 3rem;
   padding: 0 0 0.5rem 0;

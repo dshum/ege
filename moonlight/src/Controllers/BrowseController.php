@@ -1116,11 +1116,20 @@ class BrowseController extends Controller
         foreach ($elements as $element) {
             foreach ($properties as $property) {
                 $classId = Element::getClassId($element);
-                $propertyScope = $property->setElement($element)->getListView();
+
+                if ($property->getEditable()) {
+                    $propertyScope = $property->setElement($element)->getEditableView();
                 
-                $views[$classId][$property->getName()] = view(
-                    'moonlight::properties.'.$property->getClassName().'.list', $propertyScope
-                )->render();
+                    $views[$classId][$property->getName()] = view(
+                        'moonlight::properties.'.$property->getClassName().'.editable', $propertyScope
+                    )->render();
+                } else {
+                    $propertyScope = $property->setElement($element)->getListView();
+                
+                    $views[$classId][$property->getName()] = view(
+                        'moonlight::properties.'.$property->getClassName().'.list', $propertyScope
+                    )->render();
+                }
             }
         }
 

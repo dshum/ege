@@ -291,7 +291,7 @@ abstract class BaseProperty
 		return $scope;
 	}
 
-	public function getEditListView()
+	public function getEditableView()
 	{
 		return $this->getListView();
 	}
