@@ -783,14 +783,12 @@ class BrowseController extends Controller
         
         $currentItem = $site->getItemByName($class);
         
-        if ( ! $currentItem) {
+        if (! $currentItem) {
             return response()->json([]);
         }
         
-        $lists = $loggedUser->getParameter('lists');
         $cid = $classId ?: Site::ROOT;
-        $lists[$cid][$class] = true;
-        $loggedUser->setParameter('lists', $lists);
+        cache()->forever("open_{$loggedUser->id}_{$cid}_{$class}", true);
 
         return response()->json([]);
     }
@@ -813,14 +811,12 @@ class BrowseController extends Controller
         
         $currentItem = $site->getItemByName($class);
         
-        if ( ! $currentItem) {
+        if (! $currentItem) {
             return response()->json([]);
         }
         
-        $lists = $loggedUser->getParameter('lists');
         $cid = $classId ?: Site::ROOT;
-        $lists[$cid][$class] = false;
-        $loggedUser->setParameter('lists', $lists);
+        cache()->forever("open_{$loggedUser->id}_{$cid}_{$class}", false);
 
         return response()->json([]);
     }
@@ -850,17 +846,13 @@ class BrowseController extends Controller
         }
 
         if ($open) {
-            $lists = $loggedUser->getParameter('lists');
             $cid = $classId ?: Site::ROOT;
-            $lists[$cid][$class] = true;
-            $loggedUser->setParameter('lists', $lists);
+            cache()->forever("open_{$loggedUser->id}_{$cid}_{$class}", true);
         }
 
         if ($page) {
-            $pages = $loggedUser->getParameter('pages');
             $cid = $classId ?: Site::ROOT;
-            $pages[$cid][$class] = $page;
-            $loggedUser->setParameter('pages', $pages);
+            cache()->put("page_{$loggedUser->id}_{$cid}_{$class}", $page, 60);
         }
         
         $element = $classId 
@@ -876,8 +868,6 @@ class BrowseController extends Controller
         $scope = [];
         
         $loggedUser = Auth::guard('moonlight')->user();
-
-        $lists = $loggedUser->getParameter('lists');
 
         $site = \App::make('site');
         
@@ -1030,18 +1020,16 @@ class BrowseController extends Controller
                     && $property->getRelatedClass() == $currentClass
                 ) {
                     $defaultOpen = $property->getOpenItem();
-                    
-                    $open = isset($lists[$currentClassId][$currentItem->getNameId()])
-                        ? $lists[$currentClassId][$currentItem->getNameId()]
-                        : $defaultOpen;
+
+                    $cid = $currentClassId ?: Site::ROOT;
+                    $open = cache()->get("open_{$loggedUser->id}_{$cid}_{$currentItem->getNameId()}", $defaultOpen);
                     
                     break;
                 }
             }
         } else {
-            $open = isset($lists[Site::ROOT][$currentItem->getNameId()])
-                ? $lists[Site::ROOT][$currentItem->getNameId()]
-                : false;
+            $cid = Site::ROOT;
+            $open = cache()->get("open_{$loggedUser->id}_{$cid}_{$currentItem->getNameId()}", false);
         }
         
         if (! $open) {
@@ -1096,18 +1084,13 @@ class BrowseController extends Controller
             $nextPage = null;
             $lastPage = null;
         } else {
-            $pages = $loggedUser->getParameter('pages') ?: [];
-
             $cid = $currentClassId ?: Site::ROOT;
 
-            $page = isset($pages[$currentClassId][$currentItem->getNameId()])
-                ? $pages[$cid][$currentItem->getNameId()]
-                : 1;
+            $page = cache()->get("page_{$loggedUser->id}_{$cid}_{$currentItem->getNameId()}", 1);
 
             Paginator::currentPageResolver(function() use ($page) {
                 return $page;
             });
-
 
             $perpage = $currentItem->getPerPage() ?: static::PER_PAGE;
             

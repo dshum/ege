@@ -29,13 +29,11 @@ class RubricController extends Controller
         
         $rubric = $site->getRubricByName($name);
         
-        if ( ! $rubric) {
+        if (! $rubric) {
             return response()->json([]);
         }
-        
-        $opens = $loggedUser->getParameter('rubrics');
-        $opens[$name] = true;
-        $loggedUser->setParameter('rubrics', $opens);
+
+        cache()->forever("rubric_{$loggedUser->id}_{$name}", true);
 
         $rubricElements = [];
 
@@ -88,13 +86,11 @@ class RubricController extends Controller
         
         $rubric = $site->getRubricByName($name);
         
-        if ( ! $rubric) {
+        if (! $rubric) {
             return response()->json([]);
         }
         
-        $opens = $loggedUser->getParameter('rubrics');
-        $opens[$name] = true;
-        $loggedUser->setParameter('rubrics', $opens);
+        cache()->forever("rubric_{$loggedUser->id}_{$name}", true);
 
         return response()->json([]);
     }
@@ -116,15 +112,11 @@ class RubricController extends Controller
         
         $rubric = $site->getRubricByName($name);
         
-        if ( ! $rubric) {
+        if (! $rubric) {
             return response()->json([]);
         }
         
-        $opens = $loggedUser->getParameter('rubrics');
-        if (isset($opens[$name])) {
-            unset($opens[$name]);
-        }
-        $loggedUser->setParameter('rubrics', $opens);
+        cache()->forget("rubric_{$loggedUser->id}_{$name}");
 
         return response()->json([]);
     }
@@ -134,8 +126,6 @@ class RubricController extends Controller
         $scope = [];
 
         $loggedUser = Auth::guard('moonlight')->user();
-
-        $opens = $loggedUser->getParameter('rubrics');
         
         $site = \App::make('site');
 
@@ -145,7 +135,9 @@ class RubricController extends Controller
         foreach ($rubrics as $rubric) {
             $name = $rubric->getName();
 
-            if (! isset($opens[$name])) continue;
+            $open = cache()->get("rubric_{$loggedUser->id}_{$name}", false);
+
+            if (! $open) continue;
 
             $all = $rubric->getAll();
 
@@ -184,7 +176,6 @@ class RubricController extends Controller
         $scope['classId'] = $currentClassId;
         $scope['rubrics'] = $rubrics;
         $scope['rubricElements'] = $rubricElements;
-        $scope['opens'] = $opens;
 
         return view('moonlight::rubrics.sidebar', $scope);
     }

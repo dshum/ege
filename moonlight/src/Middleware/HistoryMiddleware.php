@@ -11,9 +11,9 @@ class HistoryMiddleware
     {   
         $loggedUser = Auth::guard('moonlight')->user();
         
-        $history = $request->getRequestUri();
-        
-        $loggedUser->setParameter('history', $history);
+        $historyUrl = $request->getRequestUri();
+
+        cache()->put("history_{$loggedUser->id}", $historyUrl, 1440);
 
         return $next($request);
     }

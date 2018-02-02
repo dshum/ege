@@ -1,5 +1,5 @@
 @foreach ($rubrics as $rubric)
-<div class="elements" rubric="{{ $rubric->getName() }}" display="{{ isset($opens[$rubric->getName()]) ? 'show' : 'none' }}">
+<div class="elements" rubric="{{ $rubric->getName() }}" display="{{ isset($rubricElements[$rubric->getName()]) ? 'show' : 'none' }}">
     <div class="h2"><span>{{ $rubric->getTitle() }}</span></div>
     @if (isset($rubricElements[$rubric->getName()]))
     <ul>

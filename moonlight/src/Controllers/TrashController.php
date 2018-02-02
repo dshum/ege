@@ -355,8 +355,8 @@ class TrashController extends Controller
 
             $properties[] = $property;
         }
-        
-        $activeSearchProperties = $loggedUser->getParameter('activeSearchProperties') ?: [];
+
+        $activeSearchProperties = cache()->get("search_properties_{$loggedUser->id}", []);
 
         $activeProperties = 
             isset($activeSearchProperties[$currentItem->getNameId()])
@@ -486,7 +486,7 @@ class TrashController extends Controller
         
         $criteria = $currentItem->getClass()->onlyTrashed()->where(
             function($query) use ($loggedUser, $currentItem, $propertyList, $request) {
-                $search = $loggedUser->getParameter('search');
+                $search = cache()->get("search_items_{$loggedUser->id}", []);
 
                 foreach ($propertyList as $property) {
                     $property->setRequest($request);
@@ -505,8 +505,8 @@ class TrashController extends Controller
                         }
                     }
                 }
-                
-                $loggedUser->setParameter('search', $search);
+
+                cache()->forever("search_items_{$loggedUser->id}", $search);
             }
 		);
 

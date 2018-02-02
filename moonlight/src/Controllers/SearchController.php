@@ -35,11 +35,11 @@ class SearchController extends Controller
 
         $currentItem = $site->getItemByName($class);
         
-        $search = $loggedUser->getParameter('search') ?: [];
+        $search = cache()->get("search_items_{$loggedUser->id}", []);
 
         if (in_array($sort, ['rate', 'date', 'name', 'default'])) {
 			$search['sort'] = $sort;
-			$loggedUser->setParameter('search', $search);
+            $search = cache()->forever("search_items_{$loggedUser->id}", $search);
 		}
         
         $html = $this->itemListView($currentItem);
@@ -129,7 +129,7 @@ class SearchController extends Controller
             $properties[] = $property;
         }
         
-        $activeSearchProperties = $loggedUser->getParameter('activeSearchProperties') ?: [];
+        $activeSearchProperties = cache()->get("search_properties_{$loggedUser->id}", []);
 
         $activeProperties = 
             isset($activeSearchProperties[$currentItem->getNameId()])
@@ -145,7 +145,7 @@ class SearchController extends Controller
         $action = $request->input('action');
         
         if ($action == 'search') {
-            $search = $loggedUser->getParameter('search') ?: [];
+            $search = cache()->get("search_items_{$loggedUser->id}", []);
 
             $search['sortDate'][$class] = Carbon::now()->toDateTimeString();
 
@@ -155,7 +155,7 @@ class SearchController extends Controller
                 $search['sortRate'][$class] = 1;
             }
             
-            $loggedUser->setParameter('search', $search);
+            $search = cache()->forever("search_items_{$loggedUser->id}", $search);
 
             $elements = $this->elementListView($request, $currentItem);
         } else {
@@ -224,7 +224,7 @@ class SearchController extends Controller
         
         $active = $request->input('active');
 
-        $activeProperties = $loggedUser->getParameter('activeSearchProperties') ?: [];
+        $activeProperties = cache()->get("search_properties_{$loggedUser->id}", []);
         
         if ( 
             $active != 'true'
@@ -235,7 +235,7 @@ class SearchController extends Controller
             $activeProperties[$item->getNameId()][$property->getName()] = 1;
         }
         
-        $loggedUser->setParameter('activeSearchProperties', $activeProperties);
+        $search = cache()->forever("search_properties_{$loggedUser->id}", $activeProperties);
 
 		return response()->json($scope);
 	}
@@ -262,7 +262,7 @@ class SearchController extends Controller
         
         $itemList = $site->getItemList();
         
-        $search = $loggedUser->getParameter('search') ?: [];
+        $search = cache()->get("search_items_{$loggedUser->id}", []);
         
         $sort = isset($search['sort'])
 			? $search['sort'] : 'default';
@@ -407,7 +407,7 @@ class SearchController extends Controller
         
         $criteria = $currentItem->getClass()->where(
             function($query) use ($loggedUser, $currentItem, $propertyList, $request) {
-                $search = $loggedUser->getParameter('search');
+                $search = cache()->get("search_items_{$loggedUser->id}", []);
 
                 foreach ($propertyList as $property) {
                     $property->setRequest($request);
@@ -427,7 +427,7 @@ class SearchController extends Controller
                     }
                 }
                 
-                $loggedUser->setParameter('search', $search);
+                $search = cache()->forever("search_items_{$loggedUser->id}", $search);
             }
 		);
 

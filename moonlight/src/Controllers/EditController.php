@@ -232,7 +232,7 @@ class EditController extends Controller
                 cache()->forget("trash_item_{$currentItem->getNameId()}");
             }
 
-            $historyUrl = $loggedUser->getParameter('history');
+            $historyUrl = cache()->get("history_{$loggedUser->id}");
             $elementUrl = route('moonlight.browse.element', $classId);
 
             if (! $historyUrl || $historyUrl == $elementUrl) {
@@ -351,18 +351,18 @@ class EditController extends Controller
 			Element::getClassId($element)
         );
         
-        $history = $loggedUser->getParameter('history');
+        $historyUrl = cache()->get("history_{$loggedUser->id}");
         
-        if (! $history) {
+        if (! $historyUrl) {
             $parent = Element::getParent($element);
 
-            $history = $parent
+            $historyUrl = $parent
                 ? route('moonlight.browse.element', Element::getClassId($parent))
                 : route('moonlight.browse');
         }
         
         $scope['added'] = Element::getClassId($element);
-        $scope['url'] = $history;
+        $scope['url'] = $historyUrl;
         
         return response()->json($scope);
     }
