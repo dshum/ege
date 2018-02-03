@@ -217,7 +217,6 @@ $(function() {
     $('body').on('submit', 'form[name="save"]', function() {
         var itemContainer = $(this).parents('div[item]');
         var item = itemContainer.attr('item');
-        var classId = itemContainer.attr('classId');
         var count = itemContainer.find('td.editable[mode="edit"]').length;
 
         if (! count) return false;
@@ -231,7 +230,7 @@ $(function() {
                 if (data.error) {
                     $.alert(data.error);
                 } else if (data.saved) {
-                    getElements(item, classId, null);
+                    getElements(item, null);
                 }
             },
             error: function() {
