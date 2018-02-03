@@ -141,7 +141,6 @@ $(function() {
                 if (data.error) {
                     $.alert(data.error);
                 } else if (data.errors) {
-                    console.log(data.errors);
                     for (var field in data.errors) {
                         form.find('span.error[name="' + field + '"]')
                             .html(data.errors[field])

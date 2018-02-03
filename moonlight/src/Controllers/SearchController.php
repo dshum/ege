@@ -504,11 +504,22 @@ class SearchController extends Controller
 
         foreach ($elements as $element) {
             foreach ($properties as $property) {
-                $propertyScope = $property->setElement($element)->getListView();
+                if (
+                    $property->getEditable()
+                    && ! $property->getReadonly()
+                ) {
+                    $propertyScope = $property->setElement($element)->getEditableView();
                 
-                $views[Element::getClassId($element)][$property->getName()] = view(
-                    'moonlight::properties.'.$property->getClassName().'.list', $propertyScope
-                )->render();
+                    $views[Element::getClassId($element)][$property->getName()] = view(
+                        'moonlight::properties.'.$property->getClassName().'.editable', $propertyScope
+                    )->render();
+                } else {
+                    $propertyScope = $property->setElement($element)->getListView();
+                
+                    $views[Element::getClassId($element)][$property->getName()] = view(
+                        'moonlight::properties.'.$property->getClassName().'.list', $propertyScope
+                    )->render();
+                }
             }
         }
 

@@ -152,6 +152,104 @@ $(function() {
         parent.find('input:text[name="' + name + '_autocomplete"]').val('');
     });
 
+    $('body').on('click', 'table.elements td.editable', function() {
+        var td = $(this);
+        var tr = td.parent();
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+        var mode = td.attr('mode');
+        var elementId = tr.attr('elementId');
+
+        if (mode == 'edit') {
+            td.attr('mode', 'view');
+
+            td.find('.view-container').show();
+            td.find('.edit-container').hide();
+
+            td.find('.edit-container').find('input,textarea')
+                .attr('disabled', 'disabled');
+        } else {
+            td.attr('mode', 'edit');
+
+            td.find('.view-container').hide();
+            td.find('.edit-container').show();
+
+            td.find('.edit-container').find('input,textarea')
+                .removeAttr('disabled')
+                .focus();
+        }
+
+        var count = itemContainer.find('td.editable[mode="edit"]').length;
+
+        if (count) {
+            itemContainer.find('.button.save:not(.disabled)').addClass('enabled');
+        } else {
+            itemContainer.find('.button.save:not(.disabled)').removeClass('enabled');
+        }
+    });
+
+    $('body').on('click', 'table.elements td.editable input', function(e) {
+        e.stopPropagation();
+    });
+
+    $('body').on('click', 'table.elements td.editable textarea', function(e) {
+        e.stopPropagation();
+    });
+
+    $('body').on('click', 'table.elements td.editable div.checkbox', function(e) {
+        var checkbox = $(this);
+        var td = checkbox.parents('td');
+        var tr = td.parent();
+        var name = checkbox.attr('name');
+        var input = td.find('input:hidden[name="' + name + '"]');
+
+        if (input.val() == 1) {
+            $(this).removeClass('checked');
+            input.val(0);
+        } else {
+            $(this).addClass('checked');
+            input.val(1);
+        }
+
+        e.stopPropagation();
+    });
+
+    $('body').on('submit', 'form[name="save"]', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+        var classId = itemContainer.attr('classId');
+        var count = itemContainer.find('td.editable[mode="edit"]').length;
+
+        if (! count) return false;
+        
+        $(this).ajaxSubmit({
+            url: this.action,
+            dataType: 'json',
+            success: function(data) {
+                $.unblockUI();
+                
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.saved) {
+                    getElements(item, classId, null);
+                }
+            },
+            error: function() {
+                $.unblockUI();
+            }
+        });
+
+        return false;
+    });
+
+    $('body').on('click', '.button.save.enabled', function() {
+        var itemContainer = $(this).parents('div[item]');
+        
+        itemContainer.find('form[name="save"]').submit();
+
+        return false;
+    });
+
     $('body').on('click', 'th.check', function() {
         var tr = $(this).parent();
         var table = tr.parents('table');

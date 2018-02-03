@@ -18,6 +18,11 @@ class IntegerProperty extends BaseProperty
 		return new self($name);
 	}
 
+	public function getEditable()
+	{
+		return $this->editable;
+	}
+
 	public function searchQuery($query)
 	{
         $request = $this->getRequest();
@@ -49,6 +54,18 @@ class IntegerProperty extends BaseProperty
 
 		return strlen($from) || strlen($to)
 			? true : false;
+	}
+
+	public function getEditableView()
+	{
+		$scope = [
+			'name' => $this->getName(),
+			'title' => $this->getTitle(),
+			'value' => $this->getValue(),
+			'element' => $this->getElement(),
+		];
+
+		return $scope;
 	}
 
 	public function getSearchView()

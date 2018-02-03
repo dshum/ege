@@ -145,6 +145,8 @@ Route::group(['prefix' => 'moonlight'], function() {
         
         Route::post('/elements/favorite', ['as' => 'moonlight.home.favorite', 'uses' => 'Moonlight\Controllers\HomeController@favorite']);
         
+        Route::post('/elements/save', ['as' => 'moonlight.elements.save', 'uses' => 'Moonlight\Controllers\BrowseController@save']);
+
         Route::post('/elements/copy', ['as' => 'moonlight.elements.copy', 'uses' => 'Moonlight\Controllers\BrowseController@copy']);
         
         Route::post('/elements/move', ['as' => 'moonlight.elements.move', 'uses' => 'Moonlight\Controllers\BrowseController@move']);

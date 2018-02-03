@@ -83,6 +83,80 @@ class BrowseController extends Controller
 
         return response()->json($scope);
     }
+
+    /**
+     * Save elements.
+     *
+     * @return Response
+     */
+    public function save(Request $request)
+    {
+        $scope = [];
+        
+        $loggedUser = Auth::guard('moonlight')->user();
+
+        $class = $request->input('item');
+
+        $site = \App::make('site');
+
+        $currentItem = $site->getItemByName($class);
+        
+        if (! $currentItem) {
+            $scope['error'] = 'Класс элементов не найден.';
+            
+            return response()->json($scope);
+        }
+
+        $editing = $request->input('editing');
+
+        if (! is_array($editing) || ! sizeof($editing)) {
+            $scope['error'] = 'Пустой список элементов.';
+            
+            return response()->json($scope);
+        }
+        
+        $elements = [];
+        
+        foreach ($editing as $id => $fields) {
+            $element = $currentItem->getClass()->find($id);
+            
+            if (! $element) continue;
+            if (! $loggedUser->hasUpdateAccess($element)) continue;
+            if (! is_array($fields)) continue;
+            if (! sizeof($fields)) continue;
+            
+            foreach ($fields as $name => $value) {
+                $element->$name = $value;
+            }
+
+            $element->save();
+
+            $elements[] = $element;
+        }
+        
+        if (! sizeof($elements)) {
+            $scope['error'] = 'Нет элементов для редактирования.';
+            
+            return response()->json($scope);
+        }
+
+        $saved = [];
+
+        foreach ($elements as $element) {
+            $saved[] = Element::getClassId($element);
+        }
+        
+        if ($saved) {
+            UserAction::log(
+                UserActionType::ACTION_TYPE_SAVE_ELEMENT_LIST_ID,
+                implode(', ', $saved)
+            );
+        }
+
+        $scope['saved'] = 'ok';
+        
+        return response()->json($scope);
+    }
     
     /**
      * Copy elements.
@@ -1117,7 +1191,10 @@ class BrowseController extends Controller
             foreach ($properties as $property) {
                 $classId = Element::getClassId($element);
 
-                if ($property->getEditable()) {
+                if (
+                    $property->getEditable()
+                    && ! $property->getReadonly()
+                ) {
                     $propertyScope = $property->setElement($element)->getEditableView();
                 
                     $views[$classId][$property->getName()] = view(

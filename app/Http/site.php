@@ -53,22 +53,26 @@ $site->
 		addProperty(
 			TextfieldProperty::create('title')->
 			setTitle('Title')->
-			setShow(true)
+			setShow(true)->
+			setEditable(true)
 		)->
 		addProperty(
 			TextfieldProperty::create('h1')->
 			setTitle('H1')->
-			setShow(true)
+			setShow(true)->
+			setEditable(true)
 		)->
 		addProperty(
 			TextfieldProperty::create('meta_keywords')->
 			setTitle('META Keywords')->
-			setShow(true)
+			setShow(true)->
+			setEditable(true)
 		)->
 		addProperty(
 			TextareaProperty::create('meta_description')->
 			setTitle('META Description')->
-			setShow(true)
+			setShow(true)->
+			setEditable(true)
 		)->
 		addProperty(
 			RichtextProperty::create('fullcontent')->
@@ -187,12 +191,14 @@ $site->
         addProperty(
 			CheckboxProperty::create('activated')->
 			setTitle('Активирован')->
-			setShow(true)
+			setShow(true)->
+			setEditable(true)
 		)->
         addProperty(
 			CheckboxProperty::create('banned')->
 			setTitle('Заблокирован')->
-			setShow(true)
+			setShow(true)->
+			setEditable(true)
 		)->
         addProperty(
 			OneToOneProperty::create('service_section_id')->
@@ -223,7 +229,8 @@ $site->
 		addProperty(
 			CheckboxProperty::create('hidden')->
 			setTitle('Скрыто')->
-			setShow(true)
+			setShow(true)->
+			setEditable(true)
 		)->
 		addProperty(
 			OneToOneProperty::create('service_section_id')->
@@ -287,7 +294,8 @@ $site->
 		addProperty(
 			CheckboxProperty::create('hidden')->
 			setTitle('Скрыто')->
-			setShow(true)
+			setShow(true)->
+			setEditable(true)
 		)->
 		addProperty(
 			OneToOneProperty::create('topic_id')->
@@ -377,7 +385,8 @@ $site->
 		addProperty(
 			IntegerProperty::create('mark')->
 			setTitle('Баллы')->
-			setShow(true)
+			setShow(true)->
+			setEditable(true)
 		)->
 		addProperty(
 			TextfieldProperty::create('answer')->

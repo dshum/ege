@@ -64,6 +64,11 @@ small {
   color: #999;
 }
 
+form {
+  margin: 0;
+  padding: 0;
+}
+
 /* Inputs */
 
 input[type="text"],
@@ -520,6 +525,10 @@ div.item {
   min-width: 40rem;
 }
 
+div.item div[list] form input[type="submit"] {
+  display: none;
+}
+
 ul.header {
   margin: 0;
 }
@@ -652,7 +661,7 @@ div.empty > div:last-child {
 }
 
 .buttons .button.enabled.save > .fa {
-  color: rgb(145, 185, 25);
+  color: #26a69a;
   transition: 0.3s;
 }
 
@@ -812,10 +821,6 @@ table.elements td.date {
   width: 5rem;
 }
 
-table.elements td.editable {
-  
-}
-
 table.elements td.editable .view-container {
   display: inline-block;
   border-bottom: 1px dashed #666;
@@ -824,6 +829,38 @@ table.elements td.editable .view-container {
 
 table.elements td.editable .edit-container {
   display: none;
+}
+
+table.elements td.editable input {
+  width: 8rem;
+  height: 2rem;
+}
+
+table.elements td.editable input.number {
+  width: 4rem;
+}
+
+table.elements td.editable select {
+  width: 2rem;
+  height: 2rem;
+}
+
+table.elements td.editable textarea {
+  width: 8rem;
+  height: 5rem;
+}
+
+table.elements div.checkbox {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 5px;
+  background-color: silver;
+  cursor: pointer;
+}
+
+table.elements div.checkbox.checked {
+  background-color: #395;
 }
 
 table.elements th.check {

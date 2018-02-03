@@ -22,6 +22,11 @@ class CheckboxProperty extends BaseProperty {
 		return $this;
 	}
 
+	public function getEditable()
+	{
+		return $this->editable;
+	}
+
 	public function searchQuery($query)
 	{
         $request = $this->getRequest();
@@ -69,7 +74,6 @@ class CheckboxProperty extends BaseProperty {
 			'title' => $this->getTitle(),
 			'value' => $this->getValue(),
 			'element' => $this->getElement(),
-			'readonly' => $this->getReadonly(),
 		);
 
 		return $scope;

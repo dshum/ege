@@ -73,7 +73,7 @@ class MainProperty extends BaseProperty
 		];
 
 		return $scope;
-	}
+    }
     
     public function getSearchView()
 	{

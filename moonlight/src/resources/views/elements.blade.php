@@ -40,48 +40,52 @@
             <div class="button delete"><i class="fa fa-trash-o"></i>Удалить</div>
             @endif
         </div>
-        <table class="elements">
-            <thead>
-                <tr>
-                    <th class="browse"><i class="fa fa-sort"></i></th>
-                    @foreach ($properties as $property)
-                    <th>
-                        <a href>{{ $property->getTitle() }}</a>
-                        @if (isset($orderByList[$property->getName()]))
-                            @if ($orderByList[$property->getName()] == 'desc')
-                            <i class="fa fa-sort-desc"></i>
-                            @else
-                            <i class="fa fa-sort-asc"></i>
+        <form name="save" action="{{ route('moonlight.elements.save') }}" method="POST">
+            <input type="hidden" name="item" value="{{ $currentItem->getNameId() }}">
+            <table class="elements">
+                <thead>
+                    <tr>
+                        <th class="browse"><i class="fa fa-sort"></i></th>
+                        @foreach ($properties as $property)
+                        <th>
+                            <a href>{{ $property->getTitle() }}</a>
+                            @if (isset($orderByList[$property->getName()]))
+                                @if ($orderByList[$property->getName()] == 'desc')
+                                <i class="fa fa-sort-desc"></i>
+                                @else
+                                <i class="fa fa-sort-asc"></i>
+                                @endif
                             @endif
-                        @endif
-                    </th>
-                    @endforeach
-                    <th class="check"><div class="check"></div></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($elements as $element)
-                <tr elementId="{{ $element->id }}">
-                    @if ($mode == 'browse')
-                    <td class="browse">
-                        <a href="{{ route('moonlight.browse.element', \Moonlight\Main\Element::getClassId($element)) }}"><i class="fa fa-angle-right"></i></a>
-                        <span class="drag"><i class="fa fa-arrows-alt"></i></span>
-                    </td>
-                    @elseif ($mode == 'search')
-                    <td class="browse"><a href="{{ route('moonlight.browse.element', \Moonlight\Main\Element::getClassId($element)) }}"><i class="fa fa-angle-right"></i></a></td>
-                    @else
-                    <td class="browse"><i class="fa fa-angle-right"></i></td>
-                    @endif
-                    @if (isset($views[Moonlight\Main\Element::getClassId($element)]))
-                        @foreach ($views[Moonlight\Main\Element::getClassId($element)] as $view)
-                            {!! $view !!}
+                        </th>
                         @endforeach
-                    @endif
-                    <td class="check"><div class="check"></div></td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+                        <th class="check"><div class="check"></div></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($elements as $element)
+                    <tr elementId="{{ $element->id }}">
+                        @if ($mode == 'browse')
+                        <td class="browse">
+                            <a href="{{ route('moonlight.browse.element', \Moonlight\Main\Element::getClassId($element)) }}"><i class="fa fa-angle-right"></i></a>
+                            <span class="drag"><i class="fa fa-arrows-alt"></i></span>
+                        </td>
+                        @elseif ($mode == 'search')
+                        <td class="browse"><a href="{{ route('moonlight.browse.element', \Moonlight\Main\Element::getClassId($element)) }}"><i class="fa fa-angle-right"></i></a></td>
+                        @else
+                        <td class="browse"><i class="fa fa-angle-right"></i></td>
+                        @endif
+                        @if (isset($views[Moonlight\Main\Element::getClassId($element)]))
+                            @foreach ($views[Moonlight\Main\Element::getClassId($element)] as $view)
+                                {!! $view !!}
+                            @endforeach
+                        @endif
+                        <td class="check"><div class="check"></div></td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            <input type="submit">
+        </form>
         @if ($lastPage > 1)
         <ul class="pager" classId="{{ isset($classId) ? $classId : ''}}" item="{{ $currentItem->getNameId() }}" page="{{ $currentPage }}" last="{{ $lastPage }}">
             <li prev class="arrow {{ $currentPage > 1 ? 'active' : '' }}"><i class="fa fa-arrow-left"></i></li>

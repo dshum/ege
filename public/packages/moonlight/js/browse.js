@@ -3,7 +3,6 @@ $(function() {
     var itemCount = 0;
     var empty = true;
     var checked = {};
-    var editing = [];
 
     if (typeof jQuery !== 'undefined') {
         jQuery.fn.sortable = function (options) {
@@ -182,32 +181,98 @@ $(function() {
         var td = $(this);
         var tr = td.parent();
         var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
         var mode = td.attr('mode');
         var elementId = tr.attr('elementId');
-        var index = editing.indexOf(elementId);
 
         if (mode == 'edit') {
             td.attr('mode', 'view');
 
-            if (index > -1) {
-                editing.splice(index, 1);
-            }
+            td.find('.view-container').show();
+            td.find('.edit-container').hide();
+
+            td.find('.edit-container').find('input,textarea')
+                .attr('disabled', 'disabled');
         } else {
             td.attr('mode', 'edit');
 
-            if (index === -1) {
-                editing.push(elementId);
-            }
+            td.find('.view-container').hide();
+            td.find('.edit-container').show();
+
+            td.find('.edit-container').find('input,textarea')
+                .removeAttr('disabled')
+                .focus();
         }
 
-        td.find('.view-container').toggle();
-        td.find('.edit-container').toggle();
+        var count = itemContainer.find('td.editable[mode="edit"]').length;
 
-        if (editing.length) {
+        if (count) {
             itemContainer.find('.button.save:not(.disabled)').addClass('enabled');
         } else {
             itemContainer.find('.button.save:not(.disabled)').removeClass('enabled');
         }
+    });
+
+    $('body').on('click', 'table.elements td.editable input', function(e) {
+        e.stopPropagation();
+    });
+
+    $('body').on('click', 'table.elements td.editable textarea', function(e) {
+        e.stopPropagation();
+    });
+
+    $('body').on('click', 'table.elements td.editable div.checkbox', function(e) {
+        var checkbox = $(this);
+        var td = checkbox.parents('td');
+        var tr = td.parent();
+        var name = checkbox.attr('name');
+        var input = td.find('input:hidden[name="' + name + '"]');
+
+        if (input.val() == 1) {
+            $(this).removeClass('checked');
+            input.val(0);
+        } else {
+            $(this).addClass('checked');
+            input.val(1);
+        }
+
+        e.stopPropagation();
+    });
+
+    $('body').on('submit', 'form[name="save"]', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+        var classId = itemContainer.attr('classId');
+        var count = itemContainer.find('td.editable[mode="edit"]').length;
+
+        if (! count) return false;
+        
+        $(this).ajaxSubmit({
+            url: this.action,
+            dataType: 'json',
+            success: function(data) {
+                $.unblockUI();
+                
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.saved) {
+                    getElements(item, classId, null);
+                }
+            },
+            error: function() {
+                $.unblockUI();
+            }
+        });
+
+        return false;
+    });
+
+    $('body').on('click', '.button.save.enabled', function() {
+        var itemContainer = $(this).parents('div[item]');
+        
+        itemContainer.find('form[name="save"]').submit();
+
+        return false;
     });
 
     $('body').on('mouseover', 'table.elements td.check', function() {

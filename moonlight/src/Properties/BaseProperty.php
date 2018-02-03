@@ -159,7 +159,7 @@ abstract class BaseProperty
 
 	public function getEditable()
 	{
-		return $this->editable;
+		return false;
 	}
     
     public function setOpenItem($openItem)
@@ -293,7 +293,7 @@ abstract class BaseProperty
 
 	public function getEditableView()
 	{
-		return $this->getListView();
+		return null;
 	}
 
 	public function getSearchView()
