@@ -262,6 +262,8 @@ $(function() {
                                 .replaceWith(data.views[id][name]);
                         }
                     }
+
+                    itemContainer.find('.button.save:not(.disabled)').removeClass('enabled');
                 }
             },
             error: function() {
