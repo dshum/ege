@@ -122,6 +122,7 @@ class BrowseController extends Controller
         $saved = [];
         $properties = [];
         $views = [];
+        $errors = [];
 
         foreach ($propertyList as $property) {
             if ($property->getHidden()) continue;
@@ -150,9 +151,10 @@ class BrowseController extends Controller
         foreach ($elements as $element) {
             $inputs = [];
             $rules = [];
+            $messages = [];
 
             foreach ($properties as $property) {
-                if (! isset($editing[$element->id][$property->getName()])) continue;
+                if (! array_key_exists($property->getName(), $editing[$element->id])) continue;
 
                 $name = $property->getName();
                 $value = $editing[$element->id][$property->getName()];
@@ -161,15 +163,33 @@ class BrowseController extends Controller
 
                 foreach ($property->getRules() as $rule => $message) {
                     $rules[$name][] = $rule;
+
+                    if (strpos($rule, ':')) {
+                        list($name2, $value2) = explode(':', $rule, 2);
+                        $messages[$name.'.'.$name2] = $message;
+                    } else {
+                        $messages[$name.'.'.$rule] = $message;
+                    }
                 }
             }
 
-            $validator = Validator::make($inputs, $rules);
+            $validator = Validator::make($inputs, $rules, $messages);
 
-            if ($validator->fails()) continue;
+            if ($validator->fails()) {
+                $messages = $validator->errors();
+            
+                foreach ($properties as $property) {
+                    if ($messages->has($property->getName())) {
+                        $errors[$element->id][$property->getName()] = 
+                            $messages->first($property->getName());
+                    }
+                }
+
+                continue;
+            }
 
             foreach ($properties as $property) {
-                if (! isset($editing[$element->id][$property->getName()])) continue;
+                if (! array_key_exists($property->getName(), $editing[$element->id])) continue;
 
                 $name = $property->getName();
                 $value = $editing[$element->id][$property->getName()];
@@ -208,6 +228,7 @@ class BrowseController extends Controller
 
         $scope['saved'] = 'ok';
         $scope['views'] = $views;
+        $scope['errors'] = $errors;
         
         return response()->json($scope);
     }

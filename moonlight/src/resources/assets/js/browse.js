@@ -246,6 +246,8 @@ $(function() {
         var count = itemContainer.find('td.editable[mode="edit"]').length;
 
         if (! count) return false;
+
+        itemContainer.find('td.editable.invalid').removeClass('invalid');
         
         $(this).ajaxSubmit({
             url: this.action,
@@ -255,7 +257,18 @@ $(function() {
                 
                 if (data.error) {
                     $.alert(data.error);
-                } else if (data.views) {
+                }
+
+                if (data.errors) {
+                    for (var id in data.errors) {
+                        for (var name in data.errors[id]) {
+                            itemContainer.find('table.elements tr[elementId="' + id + '"] td.editable[name="' + name + '"]')
+                                .addClass('invalid');
+                        }
+                    }
+                }
+                
+                if (data.views) {
                     for (var id in data.views) {
                         for (var name in data.views[id]) {
                             itemContainer.find('table.elements tr[elementId="' + id + '"] td.editable[name="' + name + '"]')
@@ -263,7 +276,11 @@ $(function() {
                         }
                     }
 
-                    itemContainer.find('.button.save:not(.disabled)').removeClass('enabled');
+                    var count = itemContainer.find('td.editable[mode="edit"]').length;
+
+                    if (! count) {
+                        itemContainer.find('.button.save:not(.disabled)').removeClass('enabled');
+                    }
                 }
             },
             error: function() {

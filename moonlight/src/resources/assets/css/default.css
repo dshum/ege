@@ -840,14 +840,14 @@ table.elements td.editable input.number {
   width: 4rem;
 }
 
-table.elements td.editable select {
-  width: 2rem;
-  height: 2rem;
-}
-
 table.elements td.editable textarea {
   width: 8rem;
   height: 5rem;
+}
+
+table.elements td.editable.invalid input,
+table.elements td.editable.invalid textarea {
+  background-color: lightpink;
 }
 
 table.elements div.checkbox {
