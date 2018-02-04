@@ -174,13 +174,15 @@ $site->
 			TextfieldProperty::create('first_name')->
 			setTitle('Имя')->
 			setRequired(true)->
-			setShow(true)
+			setShow(true)->
+			setEditable(true)
 		)->
         addProperty(
 			TextfieldProperty::create('last_name')->
 			setTitle('Фамилия')->
 			setRequired(true)->
-			setShow(true)
+			setShow(true)->
+			setEditable(true)
 		)->
 		addProperty(
 			ImageProperty::create('photo')->

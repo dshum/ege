@@ -1,4 +1,4 @@
-<td class="editable" mode="view">
+<td class="editable" mode="view" name="{{ $name }}">
     <div  class="view-container">
         {{ $value }}
     </div>

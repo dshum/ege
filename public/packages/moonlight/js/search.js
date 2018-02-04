@@ -201,7 +201,7 @@ $(function() {
         var td = checkbox.parents('td');
         var tr = td.parent();
         var name = checkbox.attr('name');
-        var input = td.find('input:hidden[name="' + name + '"]');
+        var input = td.find('input:hidden');
 
         if (input.val() == 1) {
             $(this).removeClass('checked');
@@ -229,8 +229,13 @@ $(function() {
                 
                 if (data.error) {
                     $.alert(data.error);
-                } else if (data.saved) {
-                    getElements(item, null);
+                } else if (data.views) {
+                    for (var id in data.views) {
+                        for (var name in data.views[id]) {
+                            $('table.elements tr[elementId="' + id + '"] td.editable[name="' + name + '"]')
+                                .replaceWith(data.views[id][name]);
+                        }
+                    }
                 }
             },
             error: function() {

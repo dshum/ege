@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Pagination\Paginator;
 use Moonlight\Main\Element;
 use Moonlight\Main\Site;
@@ -107,6 +108,8 @@ class BrowseController extends Controller
             return response()->json($scope);
         }
 
+        $propertyList = $currentItem->getPropertyList();
+
         $editing = $request->input('editing');
 
         if (! is_array($editing) || ! sizeof($editing)) {
@@ -116,7 +119,17 @@ class BrowseController extends Controller
         }
         
         $elements = [];
-        
+        $saved = [];
+        $properties = [];
+        $views = [];
+
+        foreach ($propertyList as $property) {
+            if ($property->getHidden()) continue;
+            if (! $property->getShow()) continue;
+
+            $properties[] = $property;
+        }
+
         foreach ($editing as $id => $fields) {
             $element = $currentItem->getClass()->find($id);
             
@@ -124,26 +137,72 @@ class BrowseController extends Controller
             if (! $loggedUser->hasUpdateAccess($element)) continue;
             if (! is_array($fields)) continue;
             if (! sizeof($fields)) continue;
-            
-            foreach ($fields as $name => $value) {
-                $element->$name = $value;
-            }
-
-            $element->save();
 
             $elements[] = $element;
         }
-        
+
         if (! sizeof($elements)) {
             $scope['error'] = 'Нет элементов для редактирования.';
             
             return response()->json($scope);
         }
 
-        $saved = [];
+        foreach ($elements as $element) {
+            $inputs = [];
+            $rules = [];
+
+            foreach ($properties as $property) {
+                if (! isset($editing[$element->id][$property->getName()])) continue;
+
+                $name = $property->getName();
+                $value = $editing[$element->id][$property->getName()];
+
+                if ($value) $inputs[$name] = $value;
+
+                foreach ($property->getRules() as $rule => $message) {
+                    $rules[$name][] = $rule;
+                }
+            }
+
+            $validator = Validator::make($inputs, $rules);
+
+            if ($validator->fails()) continue;
+
+            foreach ($properties as $property) {
+                if (! isset($editing[$element->id][$property->getName()])) continue;
+
+                $name = $property->getName();
+                $value = $editing[$element->id][$property->getName()];
+
+                $element->$name = $value;
+            }
+
+            $element->save();
+
+            $saved[] = Element::getClassId($element);
+        }
 
         foreach ($elements as $element) {
-            $saved[] = Element::getClassId($element);
+            foreach ($properties as $property) {
+                if (! isset($editing[$element->id][$property->getName()])) continue;
+
+                if (
+                    $property->getEditable()
+                    && ! $property->getReadonly()
+                ) {
+                    $propertyScope = $property->setElement($element)->getEditableView();
+                
+                    $views[$element->id][$property->getName()] = view(
+                        'moonlight::properties.'.$property->getClassName().'.editable', $propertyScope
+                    )->render();
+                } else {
+                    $propertyScope = $property->setElement($element)->getListView();
+                
+                    $views[$element->id][$property->getName()] = view(
+                        'moonlight::properties.'.$property->getClassName().'.list', $propertyScope
+                    )->render();
+                }
+            }
         }
         
         if ($saved) {
@@ -154,6 +213,7 @@ class BrowseController extends Controller
         }
 
         $scope['saved'] = 'ok';
+        $scope['views'] = $views;
         
         return response()->json($scope);
     }
