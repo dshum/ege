@@ -175,16 +175,6 @@ class BrowseController extends Controller
                 $value = $editing[$element->id][$property->getName()];
 
                 $element->$name = $value;
-            }
-
-            $element->save();
-
-            $saved[] = Element::getClassId($element);
-        }
-
-        foreach ($elements as $element) {
-            foreach ($properties as $property) {
-                if (! isset($editing[$element->id][$property->getName()])) continue;
 
                 if (
                     $property->getEditable()
@@ -203,6 +193,10 @@ class BrowseController extends Controller
                     )->render();
                 }
             }
+
+            $element->save();
+
+            $saved[] = Element::getClassId($element);
         }
         
         if ($saved) {

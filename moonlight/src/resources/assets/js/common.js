@@ -15,7 +15,7 @@ $(function() {
 		}
 
 		if (code == 83 && event.ctrlKey == true) {
-			$('form').submit();
+			$('form[save="true"]').submit();
 			return false;
 		}
 

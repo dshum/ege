@@ -15,7 +15,7 @@
         <div class="path">
             <div class="part"><span>Профиль пользователя <b>{{ $login }}</b></span></div>
         </div>
-        <form action="{{ route('moonlight.profile') }}" autocomplete="off" method="POST">
+        <form save="true" action="{{ route('moonlight.profile') }}" autocomplete="off" method="POST">
             <div class="edit">
                 @if (sizeof($groups))
                 <div class="row">

@@ -17,7 +17,7 @@
             <div class="divider">/</div>
             <div class="part"><span>{{ $group ? $group->name : 'Новая группа' }}</span></div>
         </div>
-        <form action="{{ $group ? route('moonlight.group.save', $group->id) : route('moonlight.group.add') }}" autocomplete="off" method="POST">
+        <form save="true" action="{{ $group ? route('moonlight.group.save', $group->id) : route('moonlight.group.add') }}" autocomplete="off" method="POST">
             <input type="hidden" name="back" value="{{ route('moonlight.groups') }}">
             <div class="edit">    
                 <div class="row">

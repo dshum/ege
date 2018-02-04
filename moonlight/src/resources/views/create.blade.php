@@ -27,7 +27,7 @@
             <ul class="header">
                 <li class="h2"><span>Создание элемента типа &laquo;{{ $currentItem->getTitle() }}&raquo;</span></li>
             </ul>
-            <form action="{{ route('moonlight.element.add', $currentItem->getNameId()) }}" method="POST">
+            <form save="true" action="{{ route('moonlight.element.add', $currentItem->getNameId()) }}" method="POST">
                 <div class="edit">
                     @foreach ($views as $name => $view)
                     <div class="row" name="{{ $name }}">

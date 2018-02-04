@@ -15,7 +15,7 @@
         <div class="path">
             <div class="part"><span>Пароль</b></span></div>
         </div>
-        <form action="{{ route('moonlight.password') }}" autocomplete="off" method="POST">
+        <form save="true" action="{{ route('moonlight.password') }}" autocomplete="off" method="POST">
             <div class="edit">
                 <div class="row">
                     <label>Текущий пароль:</label><span name="password_old" class="error"></span><br>

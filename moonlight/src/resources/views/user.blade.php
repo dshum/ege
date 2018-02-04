@@ -14,7 +14,7 @@
             <div class="divider">/</div>
             <div class="part"><span>{{ $user ? $user->login : 'Новый пользователь' }}</span></div>
         </div>
-        <form action="{{ $user ? route('moonlight.user.save', $user->id ) : route('moonlight.user.add') }}" autocomplete="off" method="POST">
+        <form save="true" action="{{ $user ? route('moonlight.user.save', $user->id ) : route('moonlight.user.add') }}" autocomplete="off" method="POST">
             <input type="hidden" name="back" value="{{ route('moonlight.users') }}">    
             <div class="edit">    
                 <div class="row">

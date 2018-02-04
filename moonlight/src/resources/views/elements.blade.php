@@ -40,7 +40,7 @@
             <div class="button delete"><i class="fa fa-trash-o"></i>Удалить</div>
             @endif
         </div>
-        <form name="save" action="{{ route('moonlight.elements.save') }}" method="POST">
+        <form name="save" save="true" action="{{ route('moonlight.elements.save') }}" method="POST">
             <input type="hidden" name="item" value="{{ $currentItem->getNameId() }}">
             <table class="elements">
                 <thead>

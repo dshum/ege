@@ -232,7 +232,7 @@ $(function() {
                 } else if (data.views) {
                     for (var id in data.views) {
                         for (var name in data.views[id]) {
-                            $('table.elements tr[elementId="' + id + '"] td.editable[name="' + name + '"]')
+                            itemContainer.find('table.elements tr[elementId="' + id + '"] td.editable[name="' + name + '"]')
                                 .replaceWith(data.views[id][name]);
                         }
                     }

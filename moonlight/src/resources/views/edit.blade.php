@@ -44,7 +44,7 @@
                 @endif
                 <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
             </div>
-            <form action="{{ route('moonlight.element.save', $classId) }}" method="POST">
+            <form save="true" action="{{ route('moonlight.element.save', $classId) }}" method="POST">
                 <div class="edit">
                     @foreach ($views as $name => $view)
                     <div class="row" name="{{ $name }}">
