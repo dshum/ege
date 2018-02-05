@@ -52,7 +52,7 @@ class Handler extends ExceptionHandler
     {
         if ($this->isHttpException($exception)) {
             return response()->view('errors.404', [], 404);
-        } elseif ($exception instanceof Exception) {
+        } elseif ($this->shouldReport($exception)) {
             return response()->view('errors.500', [
                 'exception' => $exception,
             ], 500);

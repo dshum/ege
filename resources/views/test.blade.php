@@ -18,7 +18,7 @@
             @if ($answer->correct)
                 <div class="correct-answer"><i class="fa fa-check"></i>{!! $answer->answer !!}</div>
             @elseif (isset($answerChecked[$answer->id]))
-                <div class="incorrect-answer"><i class="fa fa-ban"></i>{!! $answer->answer !!}</div>
+                <div class="incorrect-answer"><span class="empty"></span>{!! $answer->answer !!}</div>
             @else
                 <div><span class="empty"></span>{!! $answer->answer !!}</div>
             @endif
