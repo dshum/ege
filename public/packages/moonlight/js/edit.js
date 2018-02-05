@@ -316,4 +316,6 @@ $(function() {
     init();
 
     $('div.item').fadeIn(200);
+
+    $('input[type="password"]').val('');
 });
