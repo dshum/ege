@@ -22,6 +22,23 @@ class Test extends Model
 	 * @var string
 	 */
 	public static $testsQuestionsPivot = 'tests_questions_pivot';
+
+	public static function boot()
+	{
+		parent::boot();
+
+		static::created(function($element) {
+			cache()->tags('tests')->flush();
+		});
+
+		static::saved(function($element) {
+            cache()->tags('tests')->flush();
+		});
+
+		static::deleted(function($element) {
+            cache()->tags('tests')->flush();
+		});
+    }
     
     public function questions()
 	{
