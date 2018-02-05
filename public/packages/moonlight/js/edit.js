@@ -317,5 +317,7 @@ $(function() {
 
     $('div.item').fadeIn(200);
 
-    $('input[type="password"]').val('');
+    setTimeout(function() {
+        $('input[type="password"]').val('');
+    }, 1000);
 });
