@@ -845,9 +845,9 @@ table.elements td.editable textarea {
   height: 5rem;
 }
 
-table.elements td.editable.invalid input,
-table.elements td.editable.invalid textarea {
+table.elements td.editable.invalid {
   background-color: lightpink;
+  transition: all .3s;
 }
 
 table.elements div.checkbox {
