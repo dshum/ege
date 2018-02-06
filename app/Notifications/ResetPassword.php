@@ -49,13 +49,14 @@ class ResetPassword extends Notification
     public function toMail($notifiable)
     {
         $url = url('password/reset', $this->token).'?email='.urlencode($notifiable->email);
+        $textUrl = url('password/reset', $this->token).'?email='.$notifiable->email;
 
         return (new MailMessage)
             ->subject('Сброс пароля')
             ->view('mails.resetPassword')
             ->line('Вы получили это письмо, потому что был отправлен запрос на сброс пароля на сайте &laquo;ЕГЭ по биологии&raquo;.')
             ->line('Перейдите по ссылке ниже:')
-            ->action($url, $url)
+            ->action($textUrl, $url)
             ->line('Если вы не отправляли запрос, ничего делать не требуется.');
     }
 
