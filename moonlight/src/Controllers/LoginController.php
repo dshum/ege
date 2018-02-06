@@ -2,6 +2,7 @@
 
 namespace Moonlight\Controllers;
 
+use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Moonlight\Main\UserActionType;

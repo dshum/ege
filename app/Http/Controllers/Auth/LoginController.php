@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Moonlight\Utils\RussianText;
 use Carbon\Carbon;
@@ -26,6 +27,16 @@ class LoginController extends Controller
 	{
 		$scope = [];
 
+		$validator = Validator::make($request->all(), [
+            'email' => 'required|string',
+            'password' => 'required|string',
+        ], [
+            'email.required' => 'Введите e-mail.',
+            'email.string' => 'E-mail должен быть строкой.',
+            'password.required' => 'Введите пароль.',
+            'password.string' => 'Пароль должен быть строкой.',
+        ]);
+
 		$email = $request->input('email');
 		$password = $request->input('password');
 		$remember = $request->input('remember');
@@ -34,15 +45,10 @@ class LoginController extends Controller
 		$scope['password'] = $password;
 		$scope['remember'] = $remember;
 
-		if (! $email) {
-			$scope['error'] = 'Введите e-mail.';
+		if ($validator->fails()) {
+            $scope['errors'] = $validator->errors();
 			return view('auth.login', $scope);
-		}
-
-		if (! $password) {
-			$scope['error'] = 'Введите пароль.';
-			return view('auth.login', $scope);
-		}
+        }
 
 		if ($this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
@@ -62,29 +68,15 @@ class LoginController extends Controller
 		
 		$this->incrementLoginAttempts($request);
 
-		$user = User::where('email', $email)->first();
-
-		if (! $user) {
+		if (! Auth::attempt([
+			'email' => $email, 
+			'password' => $password, 
+			'activated' => true, 
+			'banned' => false
+		], $remember)) {
 			$scope['error'] = 'Неправильный e-mail или пароль.';
 			return view('auth.login', $scope);
 		}
-
-		if (! Hash::check($password, $user->password)) {
-			$scope['error'] = 'Неправильный логин или пароль.';
-			return view('auth.login', $scope);
-		}
-
-		if (! $user->activated) {
-			$scope['error'] = 'Пользователь не активирован.';
-			return view('auth.login', $scope);
-		}
-
-		if ($user->banned) {
-			$scope['error'] = 'Пользователь заблокирован.';
-			return view('auth.login', $scope);
-		}
-
-		Auth::login($user, $remember);
 
 		$request->session()->regenerate();
 

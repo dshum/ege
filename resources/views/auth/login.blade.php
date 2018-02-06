@@ -5,9 +5,17 @@
 @stop
 
 @section('content')
-@isset ($error)
-<div class="error">{{ $error }}</div>
-@endisset
+@if (isset($errors) && $errors->any())
+    <div class="errors">
+    @foreach ($errors->all() as $error)
+        <div>{{ $error }}</div>
+    @endforeach
+    </div>
+@elseif (isset($error))
+    <div class="errors">
+        <div>{{ $error }}</div>
+    </div>
+@endif
 <form action="{{ route('login') }}" method="post">
     {{ csrf_field() }}
     <div class="row">
