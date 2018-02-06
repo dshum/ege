@@ -29,7 +29,7 @@
     </div>
     <div class="row">
         <label>Подтверждение:</label><br>
-        <input type="password" name="confirmation" value="">
+        <input type="password" name="password_confirmation" value="">
     </div>
     <div class="row submit">
         <input type="submit" value="Сохранить" class="btn">

@@ -2,18 +2,24 @@
 
 @section('title')
 Тесты ЕГЭ по биологии
-@stop
+@endsection
 
 @section('content')
+@isset ($register)
+<div class="ok">Вы успешно зарегистрировались!</div>
+@endisset
+
 <h1>Результаты</h1>
-@foreach ($userTests as $userTest)
-<a href="{{ route('test', $userTest->test_id) }}">{{ $userTest->name }}</a><br>
-{{ $userTest->created_at->format('d.m.Y H:i:s') }}<br>
-@if ($userTest->complete)
-Завершен<br>
+
+@if (sizeof($userTests))
+    @foreach ($userTests as $userTest)
+    <p>
+    <a href="{{ route('test', $userTest->test_id) }}">{{ $userTest->name }}</a><br>
+    {{ $userTest->created_at->format('d.m.Y H:i:s') }}<br>
+    @if ($userTest->complete)Завершен@elseВ процессе@endif
+    </p>
+    @endforeach
 @else
-В процессе<br>
+    <p>Тесты еще не выполнялись.</p>
 @endif
-<br>
-@endforeach
-@stop
+@endsection

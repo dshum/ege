@@ -11,33 +11,28 @@
 |
 */
 
-Route::group(['before' => 'guest'], function() {
-	Route::get('/register', ['as' => 'register', 'uses' => 'RegisterController@index']);
-	Route::post('/register', ['as' => 'register', 'uses' => 'RegisterController@register']);
+Route::get('/register', 'Auth\RegisterController@index')->name('register');
+Route::post('/register', 'Auth\RegisterController@register');
 
-	Route::get('/register/success', ['as' => 'success', 'uses' => 'RegisterController@success']);
-	Route::get('/register/activate', ['as' => 'activate', 'uses' => 'RegisterController@activate']);
-	Route::get('/register/complete', ['as' => 'complete', 'uses' => 'RegisterController@complete']);
+Route::get('/register/success', 'Auth\RegisterController@success')->name('register.success');
+Route::get('/register/activate', 'Auth\RegisterController@activate')->name('register.activate');
+Route::get('/register/complete', 'Auth\RegisterController@complete')->name('register.complete');
 
-	Route::get('/login', ['as' => 'login', 'uses' => 'LoginController@index']);
-	Route::post('/login', ['as' => 'login', 'uses' => 'LoginController@login']);
+Route::get('/login', 'Auth\LoginController@index')->name('login');
+Route::post('/login', 'Auth\LoginController@login');
+Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
-	Route::get('/restore', ['as' => 'restore', 'uses' => 'RestoreController@index']);
-	Route::post('/restore', ['as' => 'restore', 'uses' => 'RestoreController@restore']);
-});
-
-Route::group(['before' => 'auth'], function() {
-	Route::get('/logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
-
-	Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
-
-	Route::get('/profile', ['as' => 'profile', 'uses' => 'HomeController@profile']);
-	Route::post('/profile', ['as' => 'profile', 'uses' => 'HomeController@save']);
-
-	Route::get('/test_{id}', ['as' => 'test', 'uses' => 'TestController@index']);
-	Route::post('/test_{id}', ['as' => 'test', 'uses' => 'TestController@save']);
-});
-
-Route::get('/', ['as' => 'welcome', 'uses' => 'WelcomeController@index']);
+Route::get('/password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('/password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/profile', 'HomeController@profile')->name('profile');
+Route::post('/profile', 'HomeController@save');
+
+Route::get('/test_{id}', 'TestController@index')->name('test');
+Route::post('/test_{id}', 'TestController@save');
+
+Route::get('/', 'WelcomeController@index')->name('welcome');

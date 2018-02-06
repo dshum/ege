@@ -457,6 +457,16 @@ div.errors {
   font-weight: bold;
 }
 
+div.ok {
+  display: table;
+  margin-bottom: 1rem;
+  padding: 1rem 2rem;
+  border-radius: 2px;
+  background-color: green;
+  color: white;
+  font-weight: bold;
+}
+
 html {
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-size: 16px;

@@ -5,16 +5,12 @@ namespace App\Http\Controllers;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Test;
 use App\UserTest;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('auth');
@@ -53,7 +49,7 @@ class HomeController extends Controller
         $user->last_name = $last_name;
         
 		if ($password) {
-			$user->password = password_hash($password, PASSWORD_DEFAULT);
+			$user->password = Hash::make($password);
         }
         
         $user->save();
@@ -100,7 +96,10 @@ class HomeController extends Controller
             
 			$tests[] = $test;
         }
+
+        $register = $request->input('register');
         
+        $scope['register'] = $register;
         $scope['userTests'] = $userTests;
         
 		return view('home', $scope);

@@ -20,20 +20,22 @@ class ResetPasswordController extends Controller
 
     use ResetsPasswords;
 
-    /**
-     * Where to redirect users after resetting their password.
-     *
-     * @var string
-     */
     protected $redirectTo = '/home';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest');
+    }
+
+    protected function validationErrorMessages()
+    {
+        return [
+            'token.required' => 'Токен не указан.',
+            'email.required' => 'Введите адрес электронной почты.',
+            'email.email' => 'Некорректный адрес электронной почты.',
+            'password.required' => 'Введите новый пароль.',
+            'password.min' => 'Минимальная длина пароля 6 символов.',
+            'password.confirmed' => 'Введенные пароли должны совпадать.',
+        ];
     }
 }

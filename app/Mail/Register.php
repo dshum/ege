@@ -31,12 +31,14 @@ class Register extends Mailable
      */
     public function build()
     {
-        $code = substr(md5($this->user->email), 8, 8);
-		$url = route('activate').'?email='.$this->user->email.'&code='.$code;
+		$url = route('register.activate', [
+            'token' => $this->user->remember_token,
+            'email' => $this->user->email,
+        ]);
 
         return $this->
             to($this->user->email)->
-            subject('Подтверждение регистрации на сайте «ЕГЭ по биологии»')->
+            subject('Подтверждение регистрации')->
             view('mails.register')->with([
 			    'url' => $url
 		    ]);

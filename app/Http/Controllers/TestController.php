@@ -10,12 +10,12 @@ use App\UserQuestion;
 use App\UserAnswer;
 use Log;
 
-class TestController extends Controller {
-
-	public function __construct()
-	{
-		$this->middleware('auth');
-	}
+class TestController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
 	public function save(Request $request, $id)
 	{

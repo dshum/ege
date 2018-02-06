@@ -38,7 +38,8 @@
     </div>
     <div class="row">
         <label>Пароль:</label><br>
-        <input type="password" name="password" value="">
+        <input type="password" name="password" value=""><br>
+        <a href="{{ route('password.request') }}">Забыли пароль?</a>
     </div>
     <div class="row">
         <input type="checkbox" id="remember" name="remember" value="1">

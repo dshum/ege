@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Log;
 use Illuminate\Auth\AuthenticationException;
+use \Illuminate\Session\TokenMismatchException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Moonlight\Utils\ErrorMessage;
 
@@ -51,11 +52,23 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($this->isHttpException($exception)) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Страница не найдена.'], 404);
+            }
+    
             return response()->view('errors.404', [], 404);
         } elseif ($this->shouldReport($exception)) {
-            return response()->view('errors.500', [
-                'exception' => $exception,
-            ], 500);
+            if ($request->expectsJson()) {
+                return response()->json(['error' => $exception->getMessage()], 500);
+            }
+
+            return response()->view('errors.500', ['exception' => $exception], 500);
+        } elseif ($exception instanceof TokenMismatchException) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Данные формы устарели.']);
+            }
+
+            return redirect()->route('welcome');
         }
 
         return parent::render($request, $exception);
