@@ -31,8 +31,8 @@ class ResetPassword extends Mailable
      */
     public function build()
     {
-        $token = $scope['token'];
-        $email = $scope['email'];
+        $token = $this->scope['token'];
+        $email = $this->scope['email'];
 
         $url = url('password/reset', $token).'?email='.urlencode($email);
 
