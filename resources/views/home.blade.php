@@ -9,6 +9,12 @@
 <div class="ok">Вы успешно зарегистрировались!</div>
 @endisset
 
+@if (session('status'))
+<div class="ok">
+    {{ session('status') }}
+</div>
+@endif
+
 <h1>Результаты</h1>
 
 @if (sizeof($userTests))
