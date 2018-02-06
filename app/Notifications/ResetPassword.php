@@ -5,8 +5,7 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ResetPassword as ResetPasswordMail;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class ResetPassword extends Notification
 {
@@ -49,12 +48,14 @@ class ResetPassword extends Notification
      */
     public function toMail($notifiable)
     {
-        $scope = [];
+        $url = url('password/reset', $this->token).'?email='.urlencode($notifiable->email);
 
-        $scope['email'] = $notifiable->email;
-        $scope['url'] = url('password/reset', $this->token).'?email='.urlencode($notifiable->email);
-
-        Mail::send(new ResetPasswordMail($scope));
+        return (new MailMessage)
+            ->subject('Сброс пароля')
+            ->view('mails.resetPassword')
+            ->line('Вы получили это письмо, потому что был отправлен запрос на сброс пароля на сайте &laquo;ЕГЭ по биологии&raquo;.<br>Перейдите по ссылке ниже:')
+            ->action($url, $url)
+            ->line('Если вы не отправляли запрос, ничего делать не требуется.');
     }
 
     /**

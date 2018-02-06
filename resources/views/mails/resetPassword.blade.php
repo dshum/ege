@@ -1,6 +1,13 @@
-<p>Вы получили это письмо, потому что был отправлен запрос на сброс пароля вашего аккаунта на сайте &laquo;ЕГЭ по биологии&raquo;.<br>
-Перейдите по ссылке ниже:</p>
+<p>
+@foreach ($introLines as $line)
+{{ $line }}<br>
+@endforeach
+</p>
 
-<p><a href="{!! $url !!}" target="_blank">{!! $url !!}</a></p>
+<p><a href="{{ $actionUrl }}" target="_blank">{{ $actionText }}</a></p>
 
-<p>Если вы не отправляли запрос, ничего делать не требуется.<p>
+<p>
+@foreach ($outroLines as $line)
+{{ $line }}<br>
+@endforeach
+<p>
