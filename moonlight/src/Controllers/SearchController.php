@@ -59,7 +59,9 @@ class SearchController extends Controller
         $loggedUser = Auth::guard('moonlight')->user();
         
         $class = $request->input('item');
-        $page = $request->input('page');
+        $order = $request->input('order');
+        $direction = $request->input('direction');
+        $resetorder = $request->input('resetorder');
         
         $site = \App::make('site');
         
@@ -67,6 +69,23 @@ class SearchController extends Controller
         
         if (! $currentItem) {
             return response()->json([]);
+        }
+
+        if ($order && in_array($direction, ['asc', 'desc'])) {
+            $propertyList = $currentItem->getPropertyList();
+
+            foreach ($propertyList as $property) {
+                if ($order == $property->getName()) {
+                    cache()->put("order_{$loggedUser->id}_{$class}", [
+                        'field' => $order,
+                        'direction' => $direction,
+                    ], 1440);
+
+                    break;
+                }
+            }
+        } elseif ($resetorder) {
+            cache()->forget("order_{$loggedUser->id}_{$class}");
         }
         
         $elements = $this->elementListView($request, $currentItem);
@@ -407,27 +426,10 @@ class SearchController extends Controller
         
         $criteria = $currentItem->getClass()->where(
             function($query) use ($loggedUser, $currentItem, $propertyList, $request) {
-                $search = cache()->get("search_items_{$loggedUser->id}", []);
-
                 foreach ($propertyList as $property) {
                     $property->setRequest($request);
                     $query = $property->searchQuery($query);
-                    
-                    if ($property->searching()) {
-                        $itemName = $currentItem->getNameId();
-                        $propertyName = $property->getName();
-                        $search['sortPropertyDate'][$itemName][$propertyName]
-                            = Carbon::now()->toDateTimeString();
-                        
-                        if (isset($search['sortPropertyRate'][$itemName][$propertyName])) {
-                            $search['sortPropertyRate'][$itemName][$propertyName]++;
-                        } else {
-                            $search['sortPropertyRate'][$itemName][$propertyName] = 1;
-                        }
-                    }
                 }
-                
-                $search = cache()->forever("search_items_{$loggedUser->id}", $search);
             }
 		);
 
@@ -446,16 +448,12 @@ class SearchController extends Controller
                 return response()->json(['count' => 0]);
 			}
         }
-        
-        $sort = $request->input('sort');
-        $property = $currentItem->getPropertyByName($sort);
-        
-        if ($property instanceof DateProperty) {
-            $orderByList = [$sort => 'desc'];
-        } elseif ($property instanceof DatetimeProperty) {
-            $orderByList = [$sort => 'desc'];
-        } elseif ($property instanceof BaseProperty) {
-            $orderByList = [$sort => 'asc'];
+
+        $class = $currentItem->getNameId();
+        $order = cache()->get("order_{$loggedUser->id}_{$class}");
+
+        if (isset($order['field']) && isset($order['direction'])) {
+            $orderByList = [$order['field'] => $order['direction']];
         } else {
             $orderByList = $currentItem->getOrderByList();
         }
@@ -464,7 +462,9 @@ class SearchController extends Controller
 
 		foreach ($orderByList as $field => $direction) {
             $criteria->orderBy($field, $direction);
+
             $property = $currentItem->getPropertyByName($field);
+
             if ($property instanceof OrderProperty) {
                 $orders[$field] = 'порядку';
             } elseif ($property->getName() == 'created_at') {

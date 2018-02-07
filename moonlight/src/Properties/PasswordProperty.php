@@ -9,6 +9,11 @@ class PasswordProperty extends BaseProperty
 		return new self($name);
 	}
 
+	public function isSortable()
+	{
+		return false;
+	}
+
 	public function set()
 	{   
 		$name = $this->getName();

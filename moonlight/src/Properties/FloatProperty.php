@@ -44,18 +44,6 @@ class FloatProperty extends BaseProperty
 		return $query;
 	}
 
-	public function searching()
-	{
-		$request = $this->getRequest();
-        $name = $this->getName();
-
-		$from = $request->input($name.'_from');
-        $to = $request->input($name.'_to');
-
-		return strlen($from) || strlen($to)
-			? true : false;
-	}
-
 	public function getEditableView()
 	{
 		$scope = array(

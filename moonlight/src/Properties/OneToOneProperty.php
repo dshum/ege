@@ -99,17 +99,6 @@ class OneToOneProperty extends BaseProperty
 		return $query;
 	}
 
-	public function searching()
-	{
-		$request = $this->getRequest();
-        $name = $this->getName();
-
-		$value = $request->input($name);
-
-		return $value
-			? true : false;
-	}
-
 	public function getListView()
 	{
 		$site = \App::make('site');

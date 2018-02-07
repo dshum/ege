@@ -984,6 +984,9 @@ class BrowseController extends Controller
         $open = $request->input('open');
         $class = $request->input('item');
         $classId = $request->input('classId');
+        $order = $request->input('order');
+        $direction = $request->input('direction');
+        $resetorder = $request->input('resetorder');
         $page = $request->input('page');
         
         $site = \App::make('site');
@@ -994,14 +997,31 @@ class BrowseController extends Controller
             return response()->json([]);
         }
 
+        $cid = $classId ?: Site::ROOT;
+
         if ($open) {
-            $cid = $classId ?: Site::ROOT;
             cache()->forever("open_{$loggedUser->id}_{$cid}_{$class}", true);
         }
 
         if ($page) {
-            $cid = $classId ?: Site::ROOT;
             cache()->put("page_{$loggedUser->id}_{$cid}_{$class}", $page, 60);
+        }
+
+        if ($order && in_array($direction, ['asc', 'desc'])) {
+            $propertyList = $currentItem->getPropertyList();
+
+            foreach ($propertyList as $property) {
+                if ($order == $property->getName()) {
+                    cache()->put("order_{$loggedUser->id}_{$class}", [
+                        'field' => $order,
+                        'direction' => $direction,
+                    ], 1440);
+
+                    break;
+                }
+            }
+        } elseif ($resetorder) {
+            cache()->forget("order_{$loggedUser->id}_{$class}");
         }
         
         $element = $classId 
@@ -1190,7 +1210,14 @@ class BrowseController extends Controller
             return view('moonlight::count', $scope)->render();
         }
         
-        $orderByList = $currentItem->getOrderByList();
+        $class = $currentItem->getNameId();
+        $order = Cache()->get("order_{$loggedUser->id}_{$class}");
+
+        if (isset($order['field']) && isset($order['direction'])) {
+            $orderByList = [$order['field'] => $order['direction']];
+        } else {
+            $orderByList = $currentItem->getOrderByList();
+        }
         
         $orders = [];
         $hasOrderProperty = false;
@@ -1437,14 +1464,11 @@ class BrowseController extends Controller
 		}
 
         $criteria = $currentItem->getClass()->query();
-
-        $criteria->whereNull('deleted_at');
         
         if ($query) {
-            $criteria->whereRaw(
-                "id = :id or $mainProperty ilike :query",
-                ['id' => (int)$query, 'query' => '%'.$query.'%']
-            );
+            $criteria->
+                where('id', (int)$query)->
+                orWhere($mainProperty, 'ilike', "%$query%");
         }
 
 		if (! $loggedUser->isSuperUser()) {
@@ -1469,7 +1493,7 @@ class BrowseController extends Controller
             $criteria->orderBy($field, $direction);
         }
 
-		$elements = $criteria->limit(10)->get();
+		$elements = $criteria->limit(static::PER_PAGE)->get();
         
         $scope['suggestions'] = [];
         

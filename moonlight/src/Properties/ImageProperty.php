@@ -38,6 +38,11 @@ class ImageProperty extends BaseProperty
 		return new self($name);
 	}
 
+	public function isSortable()
+	{
+		return false;
+	}
+
 	public function setAssetsName($assetsName)
 	{
 		$this->assetsName = $assetsName;

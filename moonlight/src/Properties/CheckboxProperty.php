@@ -43,17 +43,6 @@ class CheckboxProperty extends BaseProperty {
 		return $query;
 	}
 
-	public function searching()
-	{
-		$request = $this->getRequest();
-        $name = $this->getName();
-
-		$value = $request->input($name);
-
-		return $value === 'true' || $value === 'false'
-			? true : false;
-	}
-
 	public function set()
 	{
 		$request = $this->getRequest();

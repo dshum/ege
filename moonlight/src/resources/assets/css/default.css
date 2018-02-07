@@ -618,7 +618,9 @@ div.empty > div:last-child {
 }
 
 .buttons .button .fa {
+  display: inline-block;
   margin-right: 0.5rem;
+  width: 1.5rem;
 }
 
 .buttons .button.enabled {
@@ -719,11 +721,27 @@ table.elements > thead > tr > th {
   white-space: nowrap;
 }
 
-table.elements th a {
+table.elements > thead > tr > th .fa {
+  width: 0.5rem;
+  color: black;
+}
+
+table.elements > thead > tr > th.browse .fa {
+  width: 1rem;
   color: inherit;
 }
 
-table.elements th small {
+table.elements > thead > tr > th span[order] {
+  color: #798;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+table.elements > thead > tr > th span[resetorder] {
+  cursor: pointer;
+}
+
+table.elements > thead > tr > th small {
   margin-left: 0.25rem;
   color: inherit;
 }
@@ -775,6 +793,7 @@ table.elements td.browse {
 table.elements td.browse .fa {
   position: relative;
   top: -2px;
+  width: 1rem;
   font-size: 1.6rem;
   color: #3a7;
 }
@@ -785,6 +804,7 @@ table.elements td.browse > .drag {
 
 table.elements td.browse > .drag > .fa {
   top: 2px;
+  width: 1rem;
   font-size: 1rem;
   cursor: pointer;
 }
@@ -800,6 +820,7 @@ table.elements td.name a {
 
 table.elements td.name a .fa {
   margin-right: 0.5rem;
+  width: 1rem;
   color: goldenrod;
   font-size: 1rem;
 }

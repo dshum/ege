@@ -161,6 +161,11 @@ abstract class BaseProperty
 	{
 		return false;
 	}
+
+	public function isSortable()
+	{
+		return true;
+	}
     
     public function setOpenItem($openItem)
 	{
@@ -231,17 +236,6 @@ abstract class BaseProperty
 		}
 
 		return $query;
-	}
-
-	public function searching()
-	{
-		$request = $this->getRequest();
-        $name = $this->getName();
-
-		$value = $request->input($name);
-
-		return $value !== null
-			? true : false;
 	}
     
     public function buildInput()

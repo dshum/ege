@@ -79,18 +79,6 @@ class DatetimeProperty extends BaseProperty
 		return $query;
 	}
 
-	public function searching()
-	{
-		$request = $this->getRequest();
-        $name = $this->getName();
-
-		$from = $request->input($name.'_from');
-        $to = $request->input($name.'_to');
-
-		return $from || $to
-			? true : false;
-	}
-
 	public function getSearchView()
 	{
 		$request = $this->getRequest();

@@ -27,6 +27,11 @@ class ManyToManyProperty extends BaseProperty
 		return new self($name);
 	}
 
+	public function isSortable()
+	{
+		return false;
+	}
+
 	public function setRelatedClass($relatedClass)
 	{
 		Item::assertClass($relatedClass);
@@ -192,17 +197,6 @@ class ManyToManyProperty extends BaseProperty
 		}
 
 		return $query;
-	}
-
-	public function searching()
-	{
-		$request = $this->getRequest();
-        $name = $this->getName();
-
-		$value = $request->input($name);
-
-		return $value
-			? true : false;
 	}
     
     public function getListView()

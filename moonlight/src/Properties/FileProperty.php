@@ -31,6 +31,30 @@ class FileProperty extends BaseProperty
 		return new self($name);
 	}
 
+	public function isSortable()
+	{
+		return false;
+	}
+
+	public function setAssetsName($assetsName)
+	{
+		$this->assetsName = $assetsName;
+
+		return $this;
+	}
+
+	public function getAssetsName()
+	{
+		return $this->assetsName;
+	}
+
+	public function getFolderName()
+	{
+		return method_exists($this->getItemClass(), 'getFolder')
+			? $this->getItemClass()->getFolder()
+			: $this->getItemClass()->getTable();
+	}
+
 	public function setMaxSize($maxSize)
 	{
 		$this->maxSize = $maxSize;

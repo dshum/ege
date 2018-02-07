@@ -11,6 +11,11 @@ class VirtualProperty extends BaseProperty
 		return new self($name);
 	}
 
+	public function isSortable()
+	{
+		return false;
+	}
+
 	public function setElement(Model $element)
 	{
 		$this->element = $element;

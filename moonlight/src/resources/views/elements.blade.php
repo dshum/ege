@@ -45,16 +45,21 @@
             <table class="elements">
                 <thead>
                     <tr>
-                        <th class="browse"><i class="fa fa-sort"></i></th>
+                        <th class="browse"><span resetorder="true" title="Сортировать по умолчанию"><i class="fa fa-sort"></i></span></th>
                         @foreach ($properties as $property)
                         <th>
-                            <a href>{{ $property->getTitle() }}</a>
                             @if (isset($orderByList[$property->getName()]))
                                 @if ($orderByList[$property->getName()] == 'desc')
+                                <span order="{{ $property->getName() }}" direction="asc">{{ $property->getTitle() }}</span>
                                 <i class="fa fa-sort-desc"></i>
                                 @else
+                                <span order="{{ $property->getName() }}" direction="desc">{{ $property->getTitle() }}</span>
                                 <i class="fa fa-sort-asc"></i>
                                 @endif
+                            @elseif ($property->isSortable())
+                            <span order="{{ $property->getName() }}" direction="asc">{{ $property->getTitle() }}</span>
+                            @else
+                            <span>{{ $property->getTitle() }}</span>
                             @endif
                         </th>
                         @endforeach

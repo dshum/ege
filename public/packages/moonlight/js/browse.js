@@ -98,14 +98,21 @@ $(function() {
         });
     };
 
-    var getElements = function(item, classId = null, page = 1) {
+    var getElements = function(item, classId = null, addition = null) {
+        var params = {
+            item: item,
+            classId: classId
+        };
+
+        if (addition) {
+            for (var index in addition) {
+                params[index] = addition[index];
+            }
+        }
+
         $.blockUI();
 
-        $.getJSON('/moonlight/elements/list', {
-            item: item,
-            classId: classId,
-            page: page
-        }, function(data) {
+        $.getJSON('/moonlight/elements/list', params, function(data) {
             $.unblockUI();
 
             if (data.html && data.html.length) {
@@ -175,6 +182,29 @@ $(function() {
                 }
             });
         }
+    });
+
+    $('body').on('click', 'table.elements th span[resetorder]', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+        var classId = itemContainer.attr('classId');
+
+        getElements(item, classId, {
+            resetorder: true
+        });
+    });
+
+    $('body').on('click', 'table.elements th span[order][direction]', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+        var classId = itemContainer.attr('classId');
+        var order = $(this).attr('order');
+        var direction = $(this).attr('direction');
+
+        getElements(item, classId, {
+            order: order,
+            direction: direction
+        });
     });
 
     $('body').on('click', 'table.elements td.editable', function() {
@@ -649,7 +679,7 @@ $(function() {
 
         if (page < 1) page = 1;
 
-        getElements(item, classId, page);
+        getElements(item, classId, {page: page});
     });
 
     $('body').on('click', 'ul.pager > li[first].active', function () {
@@ -657,7 +687,7 @@ $(function() {
         var classId = pager.attr('classId');
         var item = pager.attr('item');
 
-        getElements(item, classId, 1);
+        getElements(item, classId, {page: 1});
     });
 
     $('body').on('keydown', 'ul.pager > li.page > input', function (event) {
@@ -682,7 +712,7 @@ $(function() {
         var item = pager.attr('item');
         var last = pager.attr('last');
 
-        getElements(item, classId, last);
+        getElements(item, classId, {page: last});
     });
 
     $('body').on('click', 'ul.pager > li[next].active', function () {
@@ -694,7 +724,7 @@ $(function() {
 
         if (page > last) page = last;
 
-        getElements(item, classId, page);
+        getElements(item, classId, {page: page});
     });
 
     $('.sidebar .elements .h2 span').click(function() {

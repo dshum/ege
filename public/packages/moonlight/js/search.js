@@ -28,16 +28,23 @@ $(function() {
         });
     };
 
-    var getElements = function(item, page) {
+    var getElements = function(item, addition = null) {
+        var params = {
+            item: item
+        };
+
+        if (addition) {
+            for (var index in addition) {
+                params[index] = addition[index];
+            }
+        }
+
         $.blockUI();
 
         $('form#search-form').ajaxSubmit({
             url: '/moonlight/search/list',
             dataType: 'json',
-            data: {
-                item: item,
-                page: page
-            },
+            data: params,
             success: function(data) {
                 $.unblockUI();
             
@@ -150,6 +157,27 @@ $(function() {
 
         parent.find('input:hidden[name="' + name + '"]').val('');
         parent.find('input:text[name="' + name + '_autocomplete"]').val('');
+    });
+
+    $('body').on('click', 'table.elements th span[resetorder]', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        getElements(item, {
+            resetorder: true
+        });
+    });
+
+    $('body').on('click', 'table.elements th span[order][direction]', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+        var order = $(this).attr('order');
+        var direction = $(this).attr('direction');
+
+        getElements(item, {
+            order: order,
+            direction: direction
+        });
     });
 
     $('body').on('click', 'table.elements td.editable', function() {
