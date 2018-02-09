@@ -141,10 +141,6 @@ Route::group(['prefix' => 'moonlight'], function() {
 
         Route::post('/elements/order', ['as' => 'moonlight.elements.order', 'uses' => 'Moonlight\Controllers\BrowseController@order']);
         
-        Route::get('/elements/favorites', ['as' => 'moonlight.home.favorites', 'uses' => 'Moonlight\Controllers\HomeController@favorites']);
-        
-        Route::post('/elements/favorite', ['as' => 'moonlight.home.favorite', 'uses' => 'Moonlight\Controllers\HomeController@favorite']);
-        
         Route::post('/elements/save', ['as' => 'moonlight.elements.save', 'uses' => 'Moonlight\Controllers\BrowseController@save']);
 
         Route::post('/elements/copy', ['as' => 'moonlight.elements.copy', 'uses' => 'Moonlight\Controllers\BrowseController@copy']);
@@ -154,6 +150,8 @@ Route::group(['prefix' => 'moonlight'], function() {
         Route::post('/elements/bind', ['as' => 'moonlight.elements.move', 'uses' => 'Moonlight\Controllers\BrowseController@bind']);
 
         Route::post('/elements/unbind', ['as' => 'moonlight.elements.move', 'uses' => 'Moonlight\Controllers\BrowseController@unbind']);
+
+        Route::post('/elements/favorite', ['as' => 'moonlight.elements.favorite', 'uses' => 'Moonlight\Controllers\BrowseController@favorite']);
 
         Route::post('/elements/delete', ['as' => 'moonlight.elements.delete', 'uses' => 'Moonlight\Controllers\BrowseController@delete']);
 
@@ -178,6 +176,8 @@ Route::group(['prefix' => 'moonlight'], function() {
         
         Route::post('/browse/{classId}/move', ['as' => 'moonlight.element.move', 'uses' => 'Moonlight\Controllers\EditController@move'])->
             where(['classId' => '[A-Za-z0-9\.]+']);
+
+        Route::post('/browse/{classId}/favorite', ['as' => 'moonlight.element.favorite', 'uses' => 'Moonlight\Controllers\EditController@favorite']);
         
         Route::post('/browse/{classId}/delete', ['as' => 'moonlight.element.delete', 'uses' => 'Moonlight\Controllers\EditController@delete'])->
             where(['classId' => '[A-Za-z0-9\.]+']);

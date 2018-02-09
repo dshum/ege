@@ -53,13 +53,13 @@ class Handler extends ExceptionHandler
     {
         if ($this->isHttpException($exception)) {
             if ($request->expectsJson()) {
-                return response()->json(['error' => 'Страница не найдена.'], 404);
+                return response()->json(['error' => 'Страница не найдена.']);
             }
     
             return response()->view('errors.404', [], 404);
         } elseif ($this->shouldReport($exception)) {
             if ($request->expectsJson()) {
-                return response()->json(['error' => $exception->getMessage()], 500);
+                return response()->json(['error' => $exception->getMessage()]);
             }
 
             return response()->view('errors.500', ['exception' => $exception], 500);

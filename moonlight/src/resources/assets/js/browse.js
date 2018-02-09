@@ -379,12 +379,14 @@ $(function() {
             itemContainer.find('.button.move:not(.disabled)').addClass('enabled');
             itemContainer.find('.button.bind:not(.disabled)').addClass('enabled');
             itemContainer.find('.button.unbind:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.favorite:not(.disabled)').addClass('enabled');
             itemContainer.find('.button.delete:not(.disabled)').addClass('enabled');
         } else {
             itemContainer.find('.button.copy:not(.disabled)').removeClass('enabled');
             itemContainer.find('.button.move:not(.disabled)').removeClass('enabled');
             itemContainer.find('.button.bind:not(.disabled)').removeClass('enabled');
             itemContainer.find('.button.unbind:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.favorite:not(.disabled)').removeClass('enabled');
             itemContainer.find('.button.delete:not(.disabled)').removeClass('enabled');
         }
     });
@@ -420,12 +422,14 @@ $(function() {
             itemContainer.find('.button.move:not(.disabled)').addClass('enabled');
             itemContainer.find('.button.bind:not(.disabled)').addClass('enabled');
             itemContainer.find('.button.unbind:not(.disabled)').addClass('enabled');
+            itemContainer.find('.button.favorite:not(.disabled)').addClass('enabled');
             itemContainer.find('.button.delete:not(.disabled)').addClass('enabled');
         } else {
             itemContainer.find('.button.copy:not(.disabled)').removeClass('enabled');
             itemContainer.find('.button.move:not(.disabled)').removeClass('enabled');
             itemContainer.find('.button.bind:not(.disabled)').removeClass('enabled');
             itemContainer.find('.button.unbind:not(.disabled)').removeClass('enabled');
+            itemContainer.find('.button.favorite:not(.disabled)').removeClass('enabled');
             itemContainer.find('.button.delete:not(.disabled)').removeClass('enabled');
         }
     });
@@ -465,6 +469,45 @@ $(function() {
         var item = itemContainer.attr('item');
 
         $.confirm(null, '.confirm[id="' + item + '_unbind"]');
+    });
+
+    $('body').on('click', '.button.favorite.enabled', function() {
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        itemContainer.find('div[name="add"]').hide();
+        itemContainer.find('div[name="remove"]').hide();
+        itemContainer.find('.favorite-list.add div[rubric]').hide();
+        itemContainer.find('.favorite-list.remove div[rubric]').hide();
+
+        for (var i1 in checked[item]) {
+            var id = checked[item][i1];
+            var tr = itemContainer.find('table.elements tr[elementId="' + id + '"]');
+            var rubrics = tr.attr('rubrics');
+            var rubricIds = rubrics.split(',');
+
+            itemContainer.find('.favorite-list.add div[rubric]').each(function() {
+                var rubricId = $(this).attr('rubric');
+                var index = rubricIds.indexOf(rubricId);
+
+                if (index === -1) {
+                    $(this).show();
+                    itemContainer.find('div[name="add"]').show();
+                } 
+            });
+
+            for (var i2 in rubricIds) {
+                var rubricId = rubricIds[i2];
+
+                itemContainer.find('.favorite-list.remove div[rubric="' + rubricId + '"]').show();
+
+                if (rubricId) {
+                    itemContainer.find('div[name="remove"]').show();
+                }
+            }
+        }
+
+        $.confirm(null, '.confirm[id="' + item + '_favorite"]');
     });
 
     $('body').on('click', '.button.delete.enabled', function() {
@@ -643,6 +686,102 @@ $(function() {
                 }
             }
         );
+    });
+
+    $('body').on('click', '.confirm .favorite-list.add div[rubric]', function() {
+        var parent = $(this).parents('.confirm');
+        var itemContainer = $(this).parents('div[item]');
+        var classId = itemContainer.attr('classId');
+        var item = itemContainer.attr('item');
+        var url = parent.attr('url');
+        var addRubric = $(this).attr('rubric');
+
+        if (! url) return false;
+        if (! addRubric) return false;
+
+        $.confirmClose();
+        $.blockUI();
+
+        $.post(url, {
+            item: item,
+            checked: checked[item],
+            add_favorite_rubric: addRubric
+        }, function(data) {
+            $.unblockUI(function() {
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.saved) {
+                    getElements(item, classId);
+                }
+            });
+        }).fail(function() {
+            $.unblockUI(); 
+            $.alertDefaultError();
+        });
+    });
+
+    $('body').on('click', '.confirm .favorite-list.remove div[rubric]', function() {
+        var parent = $(this).parents('.confirm');
+        var itemContainer = $(this).parents('div[item]');
+        var classId = itemContainer.attr('classId');
+        var item = itemContainer.attr('item');
+        var url = parent.attr('url');
+        var removedRubric = $(this).attr('rubric');
+
+        if (! url) return false;
+        if (! removedRubric) return false;
+
+        $.confirmClose();
+        $.blockUI();
+
+        $.post(url, {
+            item: item,
+            checked: checked[item],
+            remove_favorite_rubric: removedRubric
+        }, function(data) {
+            $.unblockUI(function() {
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.saved) {
+                    getElements(item, classId);
+                }
+            });
+        }).fail(function() {
+            $.unblockUI(); 
+            $.alertDefaultError();
+        });
+    });
+
+    $('body').on('click', '.confirm .btn.favorite', function() {
+        var parent = $(this).parents('.confirm');
+        var itemContainer = $(this).parents('div[item]');
+        var classId = itemContainer.attr('classId');
+        var item = itemContainer.attr('item');
+        var url = parent.attr('url');
+        var newRubric = parent.find('input[type="text"]').val();
+
+        if (! url) return false;
+        if (! newRubric) return false;
+
+        $.confirmClose();
+        $.blockUI();
+
+        $.post(url, {
+            item: item,
+            checked: checked[item],
+            new_favorite_rubric: newRubric
+        }, function(data) {
+            $.unblockUI(function() {
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.saved) {
+                    getElements(item, classId);
+                }
+            });
+        }).fail(function() {
+            $.unblockUI(); 
+            $.alertDefaultError();
+        });
     });
 
     $('body').on('click', '.confirm .btn.remove', function() {

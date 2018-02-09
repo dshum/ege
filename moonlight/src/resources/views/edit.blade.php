@@ -42,6 +42,7 @@
                 @else
                 <div class="button move"><i class="fa fa-arrow-right"></i>Перенести</div>
                 @endif
+                <div class="button favorite enabled"><i class="fa fa-tag"></i>Избранное</div>
                 <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
             </div>
             <form save="true" action="{{ route('moonlight.element.save', $classId) }}" method="POST">
@@ -65,7 +66,7 @@
         <div class="container">
             <div class="content">
                 <div>Куда копируем?</div>
-                <div class="edit" radiogroup="copy">
+                <div class="edit">
                     <div class="row">
                         {!! $copyPropertyView !!}
                     </div>
@@ -99,6 +100,37 @@
     </div>
 </div>
 @endif
+<div class="confirm" id="favorite" url="{{ route('moonlight.element.favorite', $classId) }}">
+    <div class="wrapper">
+        <div class="container">
+            <div class="content">
+                @if (sizeof($nonselectedRubrics))
+                <div>Добавить в рубрику:</div>
+                <div class="favorite-list add">
+                    @foreach ($nonselectedRubrics as $favoriteRubric)                
+                    <div rubric="{{ $favoriteRubric->id }}">{{ $favoriteRubric->name }}</div>
+                    @endforeach
+                </div>
+                @endif
+                @if (sizeof($selectedRubrics))
+                <div>Убрать из рубрики:</div>
+                <div class="favorite-list remove">
+                    @foreach ($selectedRubrics as $favoriteRubric)                
+                    <div rubric="{{ $favoriteRubric->id }}">{{ $favoriteRubric->name }}</div>
+                    @endforeach
+                </div>
+                @endif
+                <div class="favorite-new">
+                    <input type="text" class="one" name="favorite_rubric_new" value="" placeholder="Новая рубрика">
+                </div>
+            </div>
+            <div class="bottom">
+            <input type="button" value="Добавить" class="btn favorite">
+                <input type="button" value="Отмена" class="btn cancel">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="confirm" id="delete">
     <div class="wrapper">
         <div class="container">
@@ -106,7 +138,7 @@
                 Удалить элемент &laquo;{{ $element->$mainProperty }}&raquo;?
             </div>
             <div class="bottom">
-                <input type="button" value="Удалить" class="btn danger remove" url="{{ route('moonlight.element.delete', $classId) }}">
+                <input type="button" value="Удалить" class="btn remove" url="{{ route('moonlight.element.delete', $classId) }}">
                 <input type="button" value="Отмена" class="btn cancel">
             </div>
         </div>

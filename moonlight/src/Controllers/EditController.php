@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Moonlight\Main\Element;
 use Moonlight\Main\UserActionType;
+use Moonlight\Models\FavoriteRubric;
+use Moonlight\Models\Favorite;
 use Moonlight\Models\UserAction;
 use Moonlight\Properties\MainProperty;
 use Moonlight\Properties\OrderProperty;
@@ -18,6 +20,7 @@ use Moonlight\Properties\ImageProperty;
 use Moonlight\Properties\ManyToManyProperty;
 use Moonlight\Properties\PluginProperty;
 use Moonlight\Properties\VirtualProperty;
+use Carbon\Carbon;
 
 class EditController extends Controller
 {
@@ -166,6 +169,127 @@ class EditController extends Controller
             $scope['moved'] = $classId;
         }
         
+        return response()->json($scope);
+    }
+
+    /**
+     * Set favorite.
+     *
+     * @return Response
+     */
+    public function favorite(Request $request, $classId)
+    {
+        $scope = [];
+        
+        $loggedUser = Auth::guard('moonlight')->user();
+        
+		$element = Element::getByClassId($classId);
+        
+        if (! $element) {
+            $scope['error'] = 'Элемент не найден.';
+            
+            return response()->json($scope);
+        }
+        
+        if (! $loggedUser->hasViewAccess($element)) {
+			$scope['error'] = 'Нет прав на добавление элемента в избранное.';
+            
+			return response()->json($scope);
+        }
+        
+        $addRubric = $request->input('add_favorite_rubric');
+        $removeRubric = $request->input('remove_favorite_rubric');
+        $newRubric = $request->input('new_favorite_rubric');
+
+        $favoriteRubrics = FavoriteRubric::where('user_id', $loggedUser->id)->
+            orderBy('order')->
+            get();
+
+        $favorites = Favorite::where('user_id', $loggedUser->id)->
+            where('class_id', $classId)->
+            orderBy('order')->
+            get();
+
+        $favoritesAll = Favorite::where('user_id', $loggedUser->id)->
+            get();
+
+        $selectedRubrics = [];
+        $rubricOrders = [];
+        $favoriteOrders = [];
+
+        foreach ($favorites as $favorite) {
+            $selectedRubrics[$favorite->rubric_id] = $favorite->rubric;
+        }
+
+        foreach ($favoriteRubrics as $favoriteRubric) {
+            $rubricOrders[] = $favoriteRubric->order;
+
+            if ($newRubric == $favoriteRubric->name) {
+                $newRubric = null;
+            }
+        }
+
+        foreach ($favoritesAll as $favorite) {
+            $favoriteOrders[$favorite->rubric_id][] = $favorite->order;
+        }
+
+        if (
+            $addRubric 
+            && ! isset($selectedRubrics[$addRubric])
+        ) {
+            $nextOrder = isset($favoriteOrders[$addRubric]) 
+                ? max($favoriteOrders[$addRubric]) + 1
+                : 1;
+
+            $favorite = new Favorite;
+
+            $favorite->user_id = $loggedUser->id;
+            $favorite->rubric_id = $addRubric;
+            $favorite->class_id = $classId;
+            $favorite->order = $nextOrder;
+            $favorite->created_at = Carbon::now();
+
+            $favorite->save();
+        }
+
+        if (
+            $removeRubric 
+            && isset($selectedRubrics[$removeRubric])
+        ) {
+            foreach ($favorites as $favorite) {
+                if ($favorite->rubric_id == $removeRubric) {
+                    $favorite->delete();
+                }
+            }
+        }
+
+        if ($newRubric) {
+            $nextOrder = isset($rubricOrders) 
+                ? max($rubricOrders) + 1
+                : 1;
+
+            $favoriteRubric = new FavoriteRubric;
+
+            $favoriteRubric->user_id = $loggedUser->id;
+            $favoriteRubric->name = $newRubric;
+            $favoriteRubric->order = $nextOrder;
+            $favoriteRubric->created_at = Carbon::now();
+
+            $favoriteRubric->save();            
+
+            $favorite = new Favorite;
+
+            $favorite->user_id = $loggedUser->id;
+            $favorite->rubric_id = $favoriteRubric->id;
+            $favorite->class_id = $classId;
+            $favorite->order = 1;
+            $favorite->created_at = Carbon::now();
+
+            $favorite->save();
+        }
+        
+        $scope['saved'] = 'ok';
+
         return response()->json($scope);
     }
     
@@ -657,6 +781,10 @@ class EditController extends Controller
             }
         }
 
+        /*
+         * Views
+         */
+
         $mainProperty = $currentItem->getMainProperty();
         $propertyList = $currentItem->getPropertyList();
 
@@ -678,6 +806,10 @@ class EditController extends Controller
                 'moonlight::properties.'.$property->getClassName().'.edit', $propertyScope
             )->render();
         }
+
+        /*
+         * Copy and move views
+         */
 
         $movePropertyView = null;
         $copyPropertyView = null;
@@ -710,9 +842,39 @@ class EditController extends Controller
             $copyPropertyView = 'Корень сайта';
         }
 
+        /*
+         * Rubrics
+         */
+
         $rubricController = new RubricController;
         
         $rubrics = $rubricController->sidebar($classId);
+
+        /*
+         * Favorites
+         */
+
+        $favoriteRubrics = FavoriteRubric::where('user_id', $loggedUser->id)->
+            orderBy('order')->
+            get();
+
+        $favorites = Favorite::where('user_id', $loggedUser->id)->
+            where('class_id', $classId)->
+            orderBy('order')->
+            get();
+
+        $selectedRubrics = [];
+        $nonselectedRubrics = [];
+
+        foreach ($favorites as $favorite) {
+            $selectedRubrics[$favorite->rubric_id] = $favorite->rubric;
+        }
+
+        foreach ($favoriteRubrics as $favoriteRubric) {
+            if (! isset($selectedRubrics[$favoriteRubric->id])) {
+                $nonselectedRubrics[$favoriteRubric->id] = $favoriteRubric;
+            }
+        }
 
         $scope['element'] = $element;
         $scope['classId'] = $classId;
@@ -726,6 +888,8 @@ class EditController extends Controller
         $scope['movePropertyView'] = $movePropertyView;
         $scope['copyPropertyView'] = $copyPropertyView;
         $scope['rubrics'] = $rubrics;
+        $scope['selectedRubrics'] = $selectedRubrics;
+        $scope['nonselectedRubrics'] = $nonselectedRubrics;
 
         view()->share([
             'styles' => $styles,

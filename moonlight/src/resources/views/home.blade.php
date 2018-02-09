@@ -16,6 +16,7 @@
             {!! $homePluginView !!}
         @endif
         <div class="leaf">
+            <div class="favorite-settings" title="Настройка"><a href=""><i class="fa fa-cog"></i></a></div>
             {!! $rubrics !!}
         </div>
     </div>

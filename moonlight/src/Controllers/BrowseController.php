@@ -11,6 +11,7 @@ use Illuminate\Pagination\Paginator;
 use Moonlight\Main\Element;
 use Moonlight\Main\Site;
 use Moonlight\Main\UserActionType;
+use Moonlight\Models\FavoriteRubric;
 use Moonlight\Models\Favorite;
 use Moonlight\Models\UserAction;
 use Moonlight\Properties\OrderProperty;
@@ -19,6 +20,7 @@ use Moonlight\Properties\ImageProperty;
 use Moonlight\Properties\ManyToManyProperty;
 use Moonlight\Properties\PluginProperty;
 use Moonlight\Properties\VirtualProperty;
+use Carbon\Carbon;
 
 class BrowseController extends Controller
 {
@@ -638,6 +640,165 @@ class BrowseController extends Controller
         );
 
         $scope['detached'] = 'ok';
+
+        return response()->json($scope);
+    }
+
+    /**
+     * Set favorites.
+     *
+     * @return Response
+     */
+    public function favorite(Request $request)
+    {
+        $scope = [];
+        
+        $loggedUser = Auth::guard('moonlight')->user();
+        
+		$class = $request->input('item');
+
+        $site = \App::make('site');
+        
+        $currentItem = $site->getItemByName($class);
+        
+        if (! $currentItem) {
+            $scope['error'] = 'Класс элементов не найден.';
+            
+            return response()->json($scope);
+        }
+
+        $mainProperty = $currentItem->getMainProperty();
+
+        $checked = $request->input('checked');
+        
+        if (! is_array($checked) || ! sizeof($checked)) {
+            $scope['error'] = 'Пустой список элементов.';
+            
+            return response()->json($scope);
+        }
+        
+        $elements = [];
+        
+        foreach ($checked as $id) {
+            $element = $currentItem->getClass()->find($id);
+            
+            if ($element && $loggedUser->hasViewAccess($element)) {
+                $elements[] = $element;
+            }
+        }
+        
+        if ( ! sizeof($elements)) {
+            $scope['error'] = 'Нет элементов для добавление в избранное.';
+            
+            return response()->json($scope);
+        }
+        
+        $addRubric = $request->input('add_favorite_rubric');
+        $removeRubric = $request->input('remove_favorite_rubric');
+        $newRubric = $request->input('new_favorite_rubric');
+
+        $favoriteRubrics = FavoriteRubric::where('user_id', $loggedUser->id)->
+            orderBy('order')->
+            get();
+
+        $favoritesAll = Favorite::where('user_id', $loggedUser->id)->
+            get();
+           
+        $rubricOrders = [];
+        $favoriteOrders = [];
+        $selectedRubrics = [];
+        $favorites = [];
+
+        foreach ($favoriteRubrics as $favoriteRubric) {
+            $rubricOrders[] = $favoriteRubric->order;
+
+            if ($newRubric == $favoriteRubric->name) {
+                $newRubric = null;
+            }
+        }
+
+        foreach ($favoritesAll as $favorite) {
+            $favorites[$favorite->rubric_id][$favorite->class_id] = $favorite;
+            $favoriteOrders[$favorite->rubric_id][] = $favorite->order;
+            $selectedRubrics[$favorite->class_id][$favorite->rubric_id] = $favorite->rubric;
+        }
+
+        if (
+            $addRubric
+        ) {
+            $nextOrder = isset($favoriteOrders[$addRubric]) 
+                ? max($favoriteOrders[$addRubric]) + 1
+                : 1;
+
+            foreach ($elements as $element) {
+                $classId = Element::getClassId($element);
+    
+                if (isset($selectedRubrics[$classId][$addRubric])) continue;
+
+                $favorite = new Favorite;
+
+                $favorite->user_id = $loggedUser->id;
+                $favorite->rubric_id = $addRubric;
+                $favorite->class_id = $classId;
+                $favorite->order = $nextOrder;
+                $favorite->created_at = Carbon::now();
+
+                $favorite->save();
+
+                $nextOrder++;
+            }
+        }
+
+        if (
+            $removeRubric
+        ) {
+            foreach ($elements as $element) {
+                $classId = Element::getClassId($element);
+
+                if (! isset($favorites[$removeRubric][$classId])) continue;
+
+                $favorite = $favorites[$removeRubric][$classId];
+
+                $favorite->delete();
+            }
+        }
+
+        if (
+            $newRubric
+        ) {
+            $nextOrder = isset($rubricOrders) 
+                ? max($rubricOrders) + 1
+                : 1;
+
+            $favoriteRubric = new FavoriteRubric;
+
+            $favoriteRubric->user_id = $loggedUser->id;
+            $favoriteRubric->name = $newRubric;
+            $favoriteRubric->order = $nextOrder;
+            $favoriteRubric->created_at = Carbon::now();
+
+            $favoriteRubric->save();
+
+            $nextOrder = 1;
+
+            foreach ($elements as $element) {
+                $classId = Element::getClassId($element);
+
+                $favorite = new Favorite;
+    
+                $favorite->user_id = $loggedUser->id;
+                $favorite->rubric_id = $favoriteRubric->id;
+                $favorite->class_id = $classId;
+                $favorite->order = $nextOrder;
+                $favorite->created_at = Carbon::now();
+    
+                $favorite->save();
+
+                $nextOrder++;
+            }
+        }
+        
+        $scope['saved'] = 'ok';
 
         return response()->json($scope);
     }
@@ -1278,6 +1439,10 @@ class BrowseController extends Controller
             $nextPage = $elements->currentPage() + 1;
             $lastPage = $elements->lastPage();
         }
+
+        /*
+         * Views
+         */
         
         $properties = [];
         $views = [];
@@ -1311,6 +1476,10 @@ class BrowseController extends Controller
                 }
             }
         }
+
+        /*
+         * Copy and move views
+         */
 
         $copyPropertyView = null;
         $movePropertyView = null;
@@ -1370,6 +1539,32 @@ class BrowseController extends Controller
             $copyPropertyView = 'Корень сайта';
         }
 
+        /*
+         * Favorites
+         */
+
+        $favoriteRubrics = FavoriteRubric::where('user_id', $loggedUser->id)->
+            orderBy('order')->
+            get();
+
+        $favorites = Favorite::where('user_id', $loggedUser->id)->
+            get();
+
+        $favoriteRubricMap = [];
+        $elementFavoriteRubrics = [];
+
+        foreach ($favorites as $favorite) {
+            $favoriteRubricMap[$favorite->class_id][$favorite->rubric_id] = $favorite->rubric_id;
+        }
+
+        foreach ($elements as $element) {
+            $classId = Element::getClassId($element);
+
+            $elementFavoriteRubrics[$element->id] = isset($favoriteRubricMap[$classId])
+                ? implode(',', $favoriteRubricMap[$classId])
+                : '';
+        }
+
         $scope['classId'] = $currentClassId;
         $scope['currentElement'] = $currentElement;
         $scope['currentItem'] = $currentItem;
@@ -1391,6 +1586,8 @@ class BrowseController extends Controller
         $scope['movePropertyView'] = $movePropertyView;
         $scope['bindPropertyViews'] = $bindPropertyViews;
         $scope['unbindPropertyViews'] = $unbindPropertyViews;
+        $scope['favoriteRubrics'] = $favoriteRubrics;
+        $scope['elementFavoriteRubrics'] = $elementFavoriteRubrics;
         
         return view('moonlight::elements', $scope)->render();
     }

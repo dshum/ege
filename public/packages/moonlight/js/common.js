@@ -93,6 +93,10 @@ $(function() {
         $('.alert').fadeOut('fast');
     });
 
+    $('body').on('click', '.confirm .hide', function() {
+        $('.confirm').fadeOut('fast');
+    });
+
     $('body').on('click', '.confirm .cancel', function() {
         $('.confirm').fadeOut('fast');
     });

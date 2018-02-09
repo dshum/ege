@@ -177,6 +177,10 @@ $(function() {
         $.confirm(null, '#move');
     });
 
+    $('.button.favorite.enabled').click(function() {
+        $.confirm(null, '#favorite');
+    });
+
     $('.button.delete.enabled').click(function() {
         $.confirm(null, '#delete');
     });
@@ -250,6 +254,87 @@ $(function() {
             });
         }).fail(function() {
             $.unblockUI();
+            $.alertDefaultError();
+        });
+    });
+
+    $('.confirm .favorite-list.add div[rubric]').click(function() {
+        var parent = $(this).parents('.confirm');
+        var url = parent.attr('url');
+        var addRubric = $(this).attr('rubric');
+
+        if (! url) return false;
+        if (! addRubric) return false;
+
+        $.confirmClose();
+        $.blockUI();
+
+        $.post(url, {
+            add_favorite_rubric: addRubric
+        }, function(data) {
+            $.unblockUI(function() {
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.saved) {
+                    location.reload();
+                }
+            });
+        }).fail(function() {
+            $.unblockUI(); 
+            $.alertDefaultError();
+        });
+    });
+
+    $('.confirm .favorite-list.remove div[rubric]').click(function() {
+        var parent = $(this).parents('.confirm');
+        var url = parent.attr('url');
+        var removedRubric = $(this).attr('rubric');
+
+        if (! url) return false;
+        if (! removedRubric) return false;
+
+        $.confirmClose();
+        $.blockUI();
+
+        $.post(url, {
+            remove_favorite_rubric: removedRubric
+        }, function(data) {
+            $.unblockUI(function() {
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.saved) {
+                    location.reload();
+                }
+            });
+        }).fail(function() {
+            $.unblockUI(); 
+            $.alertDefaultError();
+        });
+    });
+
+    $('.confirm .btn.favorite').click(function() {
+        var parent = $(this).parents('.confirm');
+        var url = parent.attr('url');
+        var newRubric = parent.find('input[type="text"]').val();
+
+        if (! url) return false;
+        if (! newRubric) return false;
+
+        $.confirmClose();
+        $.blockUI();
+
+        $.post(url, {
+            new_favorite_rubric: newRubric
+        }, function(data) {
+            $.unblockUI(function() {
+                if (data.error) {
+                    $.alert(data.error);
+                } else if (data.saved) {
+                    location.reload();
+                }
+            });
+        }).fail(function() {
+            $.unblockUI(); 
             $.alertDefaultError();
         });
     });

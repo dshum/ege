@@ -21,4 +21,8 @@ class Favorite extends Model {
 		return Element::getByClassId($this->class_id);
 	}
 
+	public function rubric()
+	{
+		return $this->belongsTo('Moonlight\Models\FavoriteRubric');
+	}
 }

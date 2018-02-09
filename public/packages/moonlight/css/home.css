@@ -1,4 +1,5 @@
 .leaf {
+  position: relative;
   margin: 1rem 0;
   width: 60rem;
 }
@@ -21,6 +22,10 @@
   font-size: 1.3rem;
 }
 
+.main .favorite.elements .h2 {
+  color: royalblue;
+}
+
 .main .elements ul {
   margin: -0.25rem 0 0 0;
   padding: 0;
@@ -29,4 +34,21 @@
 .main .elements ul li {
   margin: 0.5rem 0;
   padding: 0;
+}
+
+.main .favorite-settings {
+  position: absolute;
+  right: 0;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+}
+
+.main .favorite-settings .fa {
+  margin-right: 0.5rem;
+  font-size: 1.5rem;
+  color: silver;
+}
+
+.main .favorite-settings:hover .fa {
+  color: midnightblue;
 }

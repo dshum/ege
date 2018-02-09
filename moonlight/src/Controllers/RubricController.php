@@ -9,6 +9,8 @@ use Moonlight\Main\Site;
 use Moonlight\Main\Item;
 use Moonlight\Main\Element;
 use Moonlight\Main\Rubric;
+use \Moonlight\Models\FavoriteRubric;
+use \Moonlight\Models\Favorite;
 
 class RubricController extends Controller
 {
@@ -28,6 +30,10 @@ class RubricController extends Controller
         $site = \App::make('site');
         
         $rubric = $site->getRubricByName($name);
+
+        if (! $rubric) {
+            $rubric = FavoriteRubric::find($name);
+        }
         
         if (! $rubric) {
             return response()->json([]);
@@ -35,33 +41,55 @@ class RubricController extends Controller
 
         cache()->forever("rubric_{$loggedUser->id}_{$name}", true);
 
+        $favorites = [];
         $rubricElements = [];
 
-        $all = $rubric->getAll();
-        
-        foreach ($all as $data) {
-            if (isset($data['classId'])) {
-                $classId = $data['classId'];
+        if ($rubric instanceof FavoriteRubric) {
+            $favoriteList = Favorite::where('rubric_id', $rubric->id)->
+                orderBy('order')->
+                get();
 
-                $element = $this->getElement($classId);
+            foreach ($favoriteList as $favorite) {
+                $element = $favorite->getElement();
 
                 if ($element) {
-                    $rubricElements[] = $element;
-                }
-            } elseif (isset($data['className'])) {
-                $parent = isset($data['parent']) ? $data['parent']: null;
-                $className = $data['className'];
+                    $item = Element::getItem($element);
+                    $mainProperty = $item->getMainProperty();
 
-                $elements = $this->getElements($parent, $className);
-                
-                if ($elements) {
-                    foreach ($elements as $element) {
+                    $favorites[] = [
+                        'classId' => $favorite->class_id,
+                        'name' => $element->{$mainProperty},
+                    ];
+                }
+            }
+        } else {
+            $all = $rubric->getAll();
+        
+            foreach ($all as $data) {
+                if (isset($data['classId'])) {
+                    $classId = $data['classId'];
+
+                    $element = $this->getElement($classId);
+
+                    if ($element) {
                         $rubricElements[] = $element;
+                    }
+                } elseif (isset($data['className'])) {
+                    $parent = isset($data['parent']) ? $data['parent']: null;
+                    $className = $data['className'];
+
+                    $elements = $this->getElements($parent, $className);
+                    
+                    if ($elements) {
+                        foreach ($elements as $element) {
+                            $rubricElements[] = $element;
+                        }
                     }
                 }
             }
         }
 
+        $scope['favorites'] = $favorites;
         $scope['rubricElements'] = $rubricElements;
 
         $html = view('moonlight::rubrics.rubric', $scope)->render();
@@ -85,7 +113,11 @@ class RubricController extends Controller
         $site = \App::make('site');
         
         $rubric = $site->getRubricByName($name);
-        
+
+        if (! $rubric) {
+            $rubric = FavoriteRubric::find($name);
+        }
+
         if (! $rubric) {
             return response()->json([]);
         }
@@ -111,6 +143,10 @@ class RubricController extends Controller
         $site = \App::make('site');
         
         $rubric = $site->getRubricByName($name);
+
+        if (! $rubric) {
+            $rubric = FavoriteRubric::find($name);
+        }
         
         if (! $rubric) {
             return response()->json([]);
@@ -128,6 +164,33 @@ class RubricController extends Controller
         $loggedUser = Auth::guard('moonlight')->user();
         
         $site = \App::make('site');
+
+        $favoriteRubrics = FavoriteRubric::orderBy('order')->get();
+        $favorites = [];
+
+        foreach ($favoriteRubrics as $favoriteRubric) {
+            $open = cache()->get("rubric_{$loggedUser->id}_{$favoriteRubric->id}", false);
+
+            if (! $open) continue;
+
+            $favoriteList = Favorite::where('rubric_id', $favoriteRubric->id)->
+                orderBy('order')->
+                get();
+
+            foreach ($favoriteList as $favorite) {
+                $element = $favorite->getElement();
+
+                if ($element) {
+                    $item = Element::getItem($element);
+                    $mainProperty = $item->getMainProperty();
+
+                    $favorites[$favoriteRubric->id][] = [
+                        'classId' => $favorite->class_id,
+                        'name' => $element->{$mainProperty},
+                    ];
+                }
+            }
+        }
 
         $rubrics = $site->getRubricList();
         $rubricElements = [];
@@ -164,7 +227,7 @@ class RubricController extends Controller
 
                     $elements = $this->getElements($parent, $className);
                     
-                    if ($elements) {
+                    if (sizeof($elements)) {
                         foreach ($elements as $element) {
                             $rubricElements[$name][] = $element;
                         }
@@ -176,6 +239,8 @@ class RubricController extends Controller
         $scope['classId'] = $currentClassId;
         $scope['rubrics'] = $rubrics;
         $scope['rubricElements'] = $rubricElements;
+        $scope['favoriteRubrics'] = $favoriteRubrics;
+        $scope['favorites'] = $favorites;
 
         return view('moonlight::rubrics.sidebar', $scope);
     }
@@ -187,6 +252,31 @@ class RubricController extends Controller
         $loggedUser = Auth::guard('moonlight')->user();
         
         $site = \App::make('site');
+
+        $favoriteRubrics = FavoriteRubric::orderBy('order')->get();
+        $favorites = [];
+
+        foreach ($favoriteRubrics as $favoriteRubric) {
+            $favorites[$favoriteRubric->id] = [];
+            
+            $favoriteList = Favorite::where('rubric_id', $favoriteRubric->id)->
+                orderBy('order')->
+                get();
+
+            foreach ($favoriteList as $favorite) {
+                $element = $favorite->getElement();
+
+                if ($element) {
+                    $item = Element::getItem($element);
+                    $mainProperty = $item->getMainProperty();
+
+                    $favorites[$favoriteRubric->id][] = [
+                        'classId' => $favorite->class_id,
+                        'name' => $element->{$mainProperty},
+                    ];
+                }
+            }
+        }
 
         $rubricList = $site->getRubricList();
 
@@ -236,6 +326,8 @@ class RubricController extends Controller
 
         $scope['rubrics'] = $rubrics;
         $scope['rubricElements'] = $rubricElements;
+        $scope['favoriteRubrics'] = $favoriteRubrics;
+        $scope['favorites'] = $favorites;
 
         return view('moonlight::rubrics.index', $scope);
     }

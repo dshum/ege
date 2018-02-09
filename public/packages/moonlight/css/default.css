@@ -367,11 +367,16 @@ nav .dropdown ul > li span {
   padding: 0;
 }
 
-.sidebar .h2 span {
+.sidebar .elements .h2 span {
   font-size: 1.4rem;
   color: steelblue;
-  border-bottom: 1px dashed #37a;
+  border-bottom: 1px dotted steelblue;
   cursor: pointer;
+}
+
+.sidebar .favorite.elements .h2 span {
+  color: royalblue;
+  border-color: royalblue;
 }
 
 .sidebar .elements ul {
@@ -556,7 +561,7 @@ ul.header li.h2 span {
 
 div.item.active ul.header li.h2 span {
   color: #37a;
-  border-bottom: 1px dashed steelblue;
+  border-bottom: 1px dotted steelblue;
   cursor: pointer;
 }
 
@@ -580,7 +585,7 @@ ul.header li.checked > span {
 }
 
 .sort-toggler {
-  border-bottom: 1px dashed #999;
+  border-bottom: 1px dotted #999;
   cursor: pointer;
 }
 
@@ -689,6 +694,11 @@ div.empty > div:last-child {
 
 .buttons .button.enabled.unbind > .fa {
   color: darkslateblue;
+  transition: 0.3s;
+}
+
+.buttons .button.enabled.favorite > .fa {
+  color: royalblue;
   transition: 0.3s;
 }
 
@@ -844,7 +854,7 @@ table.elements td.date {
 
 table.elements td.editable .view-container {
   display: inline-block;
-  border-bottom: 1px dashed #666;
+  border-bottom: 1px dotted #666;
   cursor: pointer;
 }
 
@@ -1569,6 +1579,7 @@ form .loadfile .reset {
 }
 
 .confirm .container {
+  position: relative;
   display: table;
   margin: auto;
   padding: 0;
@@ -1579,14 +1590,60 @@ form .loadfile .reset {
   text-align: left;
 }
 
+.confirm .hide {
+  position: absolute;
+  top: 0;
+  right: 0rem;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+  font-size: 2rem;
+  border-top-right-radius: 2px;
+  background-color: #789;
+  color: #fff;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.confirm .hide:hover {
+  background-color: crimson;
+  transition: 0.2s ease;
+}
+
 .confirm .content {
   margin: 0;
-  border-bottom: 1px solid #bcc;
   padding: 1.5rem 2rem;
   font-size: 1.2rem;
 }
 
+.confirm .content .favorite-list {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.confirm .content .favorite-list > div {
+  display: table;
+  margin-top: 0.25rem;
+  cursor: pointer;
+}
+
+.confirm .content .favorite-list > div:hover {
+  text-decoration: underline;
+}
+
+.confirm .content .favorite-new input[type="text"] {
+  border-width: 2px;
+}
+
 .confirm .bottom {
+  border-top: 1px solid #bcc;
   padding: 1.5rem 2rem;
   white-space: nowrap;
 }
@@ -1616,6 +1673,10 @@ form .loadfile .reset {
 
 .confirm .btn.restore {
   background-color: forestgreen;
+}
+
+.confirm .btn.favorite {
+  background-color: royalblue;
 }
 
 .confirm .btn.remove {
@@ -1768,7 +1829,7 @@ form .loadfile .reset {
   margin-left: 1rem;
   padding: 0;
   font-size: 0.8rem;
-  border-bottom: 1px dashed #999;
+  border-bottom: 1px dotted #999;
   cursor: pointer;
 }
 
@@ -1805,7 +1866,7 @@ form .loadfile .reset {
 }
 
 .dashed {
-  border-bottom: 1px dashed inherit;
+  border-bottom: 1px dotted inherit;
 }
 
 .red {

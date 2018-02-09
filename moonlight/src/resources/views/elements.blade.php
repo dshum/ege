@@ -37,6 +37,7 @@
             @if ($unbindPropertyViews)
             <div class="button unbind"><i class="fa fa-chain-broken"></i>Отвязать</div>
             @endif
+            <div class="button favorite"><i class="fa fa-thumb-tack"></i>Избранное</div>
             <div class="button delete"><i class="fa fa-trash-o"></i>Удалить</div>
             @endif
         </div>
@@ -68,7 +69,7 @@
                 </thead>
                 <tbody>
                     @foreach ($elements as $element)
-                    <tr elementId="{{ $element->id }}">
+                    <tr elementId="{{ $element->id }}" rubrics="{{ $elementFavoriteRubrics[$element->id] }}">
                         @if ($mode == 'browse')
                         <td class="browse">
                             <a href="{{ route('moonlight.browse.element', \Moonlight\Main\Element::getClassId($element)) }}"><i class="fa fa-angle-right"></i></a>
@@ -198,6 +199,39 @@
             </div>
             <div class="bottom">
                 <input type="button" value="Отвязать" class="btn unbind">
+                <input type="button" value="Отмена" class="btn cancel">
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+@if ($mode != 'trash')
+<div class="confirm" id="{{ $currentItem->getNameId() }}_favorite" url="{{ route('moonlight.elements.favorite') }}">
+    <div class="wrapper">
+        <div class="container">
+            <div class="content">
+                @if (sizeof($favoriteRubrics))
+                <div name="add">Добавить в рубрику:</div>
+                <div class="favorite-list add">
+                    @foreach ($favoriteRubrics as $favoriteRubric)                
+                    <div rubric="{{ $favoriteRubric->id }}">{{ $favoriteRubric->name }}</div>
+                    @endforeach
+                </div>
+                @endif
+                @if (sizeof($favoriteRubrics))
+                <div name="remove">Убрать из рубрики:</div>
+                <div class="favorite-list remove">
+                    @foreach ($favoriteRubrics as $favoriteRubric)                
+                    <div rubric="{{ $favoriteRubric->id }}">{{ $favoriteRubric->name }}</div>
+                    @endforeach
+                </div>
+                @endif
+                <div class="favorite-new">
+                    <input type="text" class="one" name="favorite_rubric_new" value="" placeholder="Новая рубрика">
+                </div>
+            </div>
+            <div class="bottom">
+            <input type="button" value="Добавить" class="btn favorite">
                 <input type="button" value="Отмена" class="btn cancel">
             </div>
         </div>

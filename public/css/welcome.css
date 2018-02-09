@@ -4,13 +4,19 @@
     padding: 0;
 }
 
+.wrapper .elements {
+    float: left;
+    width: 20rem;
+    margin-bottom: 1.5rem;
+}
+
 .wrapper small {
     color: #357;
     font-size: 0.8rem;
 }
 
 .wrapper .h2 a {
-    color: royalblue;
+    color: navy;
 }
 
 .wrapper .correct {
