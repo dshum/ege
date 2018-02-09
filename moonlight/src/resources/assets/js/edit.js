@@ -315,7 +315,7 @@ $(function() {
     $('.confirm .btn.favorite').click(function() {
         var parent = $(this).parents('.confirm');
         var url = parent.attr('url');
-        var newRubric = parent.find('input[type="text"]').val();
+        var newRubric = parent.find('.favorite-new input[type="text"]').val();
 
         if (! url) return false;
         if (! newRubric) return false;

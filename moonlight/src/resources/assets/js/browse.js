@@ -758,7 +758,7 @@ $(function() {
         var classId = itemContainer.attr('classId');
         var item = itemContainer.attr('item');
         var url = parent.attr('url');
-        var newRubric = parent.find('input[type="text"]').val();
+        var newRubric = parent.find('.favorite-new input[type="text"]').val();
 
         if (! url) return false;
         if (! newRubric) return false;
