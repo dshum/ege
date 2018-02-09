@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Moonlight\Main\Element;
+use Moonlight\Models\FavoriteRubric;
+use Moonlight\Models\Favorite;
 use Moonlight\Properties\BaseProperty;
 use Moonlight\Properties\OrderProperty;
 use Moonlight\Properties\DateProperty;
@@ -567,6 +569,32 @@ class SearchController extends Controller
             $copyPropertyView = 'Корень сайта';
         }
 
+        /*
+         * Favorites
+         */
+
+        $favoriteRubrics = FavoriteRubric::where('user_id', $loggedUser->id)->
+            orderBy('order')->
+            get();
+
+        $favorites = Favorite::where('user_id', $loggedUser->id)->
+            get();
+
+        $favoriteRubricMap = [];
+        $elementFavoriteRubrics = [];
+
+        foreach ($favorites as $favorite) {
+            $favoriteRubricMap[$favorite->class_id][$favorite->rubric_id] = $favorite->rubric_id;
+        }
+
+        foreach ($elements as $element) {
+            $classId = Element::getClassId($element);
+
+            $elementFavoriteRubrics[$element->id] = isset($favoriteRubricMap[$classId])
+                ? implode(',', $favoriteRubricMap[$classId])
+                : '';
+        }
+
         $scope['currentItem'] = $currentItem;
         $scope['itemPluginView'] = $itemPluginView;
         $scope['properties'] = $properties;
@@ -585,6 +613,8 @@ class SearchController extends Controller
         $scope['movePropertyView'] = $movePropertyView;
         $scope['bindPropertyViews'] = $bindPropertyViews;
         $scope['unbindPropertyViews'] = $unbindPropertyViews;
+        $scope['favoriteRubrics'] = $favoriteRubrics;
+        $scope['elementFavoriteRubrics'] = $elementFavoriteRubrics;
         
         return view('moonlight::elements', $scope)->render();
     }

@@ -608,6 +608,8 @@ class TrashController extends Controller
         $scope['movePropertyView'] = null;
         $scope['bindPropertyViews'] = null;
         $scope['unbindPropertyViews'] = null;
+        $scope['favoriteRubrics'] = null;
+        $scope['elementFavoriteRubrics'] = null;
         
         return view('moonlight::elements', $scope)->render();
     }
