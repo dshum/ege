@@ -237,7 +237,9 @@ class EditController extends Controller
             $addRubric 
             && ! isset($selectedRubrics[$addRubric])
         ) {
-            $nextOrder = isset($favoriteOrders[$addRubric]) 
+            $nextOrder = 
+                isset($favoriteOrders[$addRubric]) 
+                && sizeof($favoriteOrders[$addRubric])
                 ? max($favoriteOrders[$addRubric]) + 1
                 : 1;
 
@@ -264,7 +266,9 @@ class EditController extends Controller
         }
 
         if ($newRubric) {
-            $nextOrder = isset($rubricOrders) 
+            $nextOrder = 
+                isset($rubricOrders) 
+                && sizeof($rubricOrders)
                 ? max($rubricOrders) + 1
                 : 1;
 

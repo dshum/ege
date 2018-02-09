@@ -726,7 +726,9 @@ class BrowseController extends Controller
         if (
             $addRubric
         ) {
-            $nextOrder = isset($favoriteOrders[$addRubric]) 
+            $nextOrder = 
+                isset($favoriteOrders[$addRubric])
+                && sizeof($favoriteOrders[$addRubric])
                 ? max($favoriteOrders[$addRubric]) + 1
                 : 1;
 
@@ -766,7 +768,9 @@ class BrowseController extends Controller
         if (
             $newRubric
         ) {
-            $nextOrder = isset($rubricOrders) 
+            $nextOrder = 
+                isset($rubricOrders)
+                && sizeof($rubricOrders)
                 ? max($rubricOrders) + 1
                 : 1;
 
