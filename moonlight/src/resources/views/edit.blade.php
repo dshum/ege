@@ -104,24 +104,20 @@
     <div class="wrapper">
         <div class="container">
             <div class="content">
-                @if (sizeof($nonselectedRubrics))
-                <div>Добавить в рубрику:</div>
-                <div class="favorite-list add">
-                    @foreach ($nonselectedRubrics as $favoriteRubric)                
-                    <div rubric="{{ $favoriteRubric->id }}">{{ $favoriteRubric->name }}</div>
+                <div name="add" class="{{ sizeof($elementFavoriteRubrics) < sizeof($favoriteRubrics) ? '' : 'dnone' }}">Добавить в рубрику:</div>
+                <div class="favorite-list add {{ sizeof($elementFavoriteRubrics) < sizeof($favoriteRubrics) ? '' : 'dnone' }}">
+                    @foreach ($favoriteRubrics as $favoriteRubric)                
+                    <div rubric="{{ $favoriteRubric->id }}" display="{{ isset($elementFavoriteRubrics[$favoriteRubric->id]) ? 'hide' : 'show' }}">{{ $favoriteRubric->name }}</div>
                     @endforeach
                 </div>
-                @endif
-                @if (sizeof($selectedRubrics))
-                <div>Убрать из рубрики:</div>
-                <div class="favorite-list remove">
-                    @foreach ($selectedRubrics as $favoriteRubric)                
-                    <div rubric="{{ $favoriteRubric->id }}">{{ $favoriteRubric->name }}</div>
+                <div name="remove" class="{{ sizeof($elementFavoriteRubrics) ? '' : 'dnone' }}">Убрать из рубрики:</div>
+                <div class="favorite-list remove {{ sizeof($elementFavoriteRubrics) ? '' : 'dnone' }}">
+                    @foreach ($favoriteRubrics as $favoriteRubric)                
+                    <div rubric="{{ $favoriteRubric->id }}" display="{{ isset($elementFavoriteRubrics[$favoriteRubric->id]) ? 'show' : 'hide' }}">{{ $favoriteRubric->name }}</div>
                     @endforeach
                 </div>
-                @endif
                 <div class="favorite-new">
-                    <input type="text" class="one" name="favorite_rubric_new" value="" placeholder="Новая рубрика">
+                    <input type="text" name="favorite_rubric_new" value="" placeholder="Новая рубрика">
                 </div>
             </div>
             <div class="bottom">

@@ -1628,17 +1628,22 @@ form .loadfile .reset {
   font-size: 1rem;
 }
 
-.confirm .content .favorite-list > div {
+.confirm .content .favorite-list > div[rubric] {
   display: table;
   margin-top: 0.25rem;
   cursor: pointer;
 }
 
-.confirm .content .favorite-list > div:hover {
+.confirm .content .favorite-list > div[rubric]:hover {
   text-decoration: underline;
 }
 
+.confirm .content .favorite-list > div[rubric][display="hide"] {
+  display: none;
+}
+
 .confirm .content .favorite-new input[type="text"] {
+  width: 15rem;
   border-width: 2px;
 }
 
@@ -1856,8 +1861,7 @@ form .loadfile .reset {
 
 /* Common */
 
-.dnone,
-*.dnone {
+.dnone {
   display: none;
 }
 

@@ -713,6 +713,7 @@ class BrowseController extends Controller
             $rubricOrders[] = $favoriteRubric->order;
 
             if ($newRubric == $favoriteRubric->name) {
+                $addRubric = $favoriteRubric->id;
                 $newRubric = null;
             }
         }

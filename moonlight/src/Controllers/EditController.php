@@ -225,6 +225,7 @@ class EditController extends Controller
             $rubricOrders[] = $favoriteRubric->order;
 
             if ($newRubric == $favoriteRubric->name) {
+                $addRubric = $favoriteRubric->id;
                 $newRubric = null;
             }
         }
@@ -234,7 +235,7 @@ class EditController extends Controller
         }
 
         if (
-            $addRubric 
+            $addRubric
             && ! isset($selectedRubrics[$addRubric])
         ) {
             $nextOrder = 
@@ -252,6 +253,8 @@ class EditController extends Controller
             $favorite->created_at = Carbon::now();
 
             $favorite->save();
+
+            $scope['added'] = $addRubric;
         }
 
         if (
@@ -261,6 +264,8 @@ class EditController extends Controller
             foreach ($favorites as $favorite) {
                 if ($favorite->rubric_id == $removeRubric) {
                     $favorite->delete();
+
+                    $scope['removed'] = $removeRubric;
                 }
             }
         }
@@ -290,6 +295,11 @@ class EditController extends Controller
             $favorite->created_at = Carbon::now();
 
             $favorite->save();
+
+            $scope['new'] = [
+                'id' => $favoriteRubric->id,
+                'name' => $newRubric,
+            ];
         }
         
         $scope['saved'] = 'ok';
@@ -864,20 +874,12 @@ class EditController extends Controller
 
         $favorites = Favorite::where('user_id', $loggedUser->id)->
             where('class_id', $classId)->
-            orderBy('order')->
             get();
 
-        $selectedRubrics = [];
-        $nonselectedRubrics = [];
+        $elementFavoriteRubrics = [];
 
         foreach ($favorites as $favorite) {
-            $selectedRubrics[$favorite->rubric_id] = $favorite->rubric;
-        }
-
-        foreach ($favoriteRubrics as $favoriteRubric) {
-            if (! isset($selectedRubrics[$favoriteRubric->id])) {
-                $nonselectedRubrics[$favoriteRubric->id] = $favoriteRubric;
-            }
+            $elementFavoriteRubrics[$favorite->rubric_id] = $favorite->rubric_id;
         }
 
         $scope['element'] = $element;
@@ -892,8 +894,8 @@ class EditController extends Controller
         $scope['movePropertyView'] = $movePropertyView;
         $scope['copyPropertyView'] = $copyPropertyView;
         $scope['rubrics'] = $rubrics;
-        $scope['selectedRubrics'] = $selectedRubrics;
-        $scope['nonselectedRubrics'] = $nonselectedRubrics;
+        $scope['favoriteRubrics'] = $favoriteRubrics;
+        $scope['elementFavoriteRubrics'] = $elementFavoriteRubrics;
 
         view()->share([
             'styles' => $styles,

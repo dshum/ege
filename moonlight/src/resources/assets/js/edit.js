@@ -258,7 +258,7 @@ $(function() {
         });
     });
 
-    $('.confirm .favorite-list.add div[rubric]').click(function() {
+    $('body').on('click', '.confirm .favorite-list.add div[rubric]', function() {
         var parent = $(this).parents('.confirm');
         var url = parent.attr('url');
         var addRubric = $(this).attr('rubric');
@@ -275,8 +275,17 @@ $(function() {
             $.unblockUI(function() {
                 if (data.error) {
                     $.alert(data.error);
-                } else if (data.saved) {
-                    location.reload();
+                } else if (data.added) {
+                    parent.find('.favorite-list.add div[rubric="' + data.added + '"]').attr('display', 'hide');
+                    parent.find('.favorite-list.remove div[rubric="' + data.added + '"]').attr('display', 'show');
+
+                    if (parent.find('.favorite-list.add div[rubric][display="show"]').length) {
+                        parent.find('div[name="add"], .favorite-list.add').show();
+                    } else {
+                        parent.find('div[name="add"], .favorite-list.add').hide();
+                    }
+
+                    parent.find('div[name="remove"], .favorite-list.remove').show();
                 }
             });
         }).fail(function() {
@@ -285,7 +294,7 @@ $(function() {
         });
     });
 
-    $('.confirm .favorite-list.remove div[rubric]').click(function() {
+    $('body').on('click', '.confirm .favorite-list.remove div[rubric]', function() {
         var parent = $(this).parents('.confirm');
         var url = parent.attr('url');
         var removedRubric = $(this).attr('rubric');
@@ -302,14 +311,39 @@ $(function() {
             $.unblockUI(function() {
                 if (data.error) {
                     $.alert(data.error);
-                } else if (data.saved) {
-                    location.reload();
+                } else if (data.removed) {
+                    parent.find('.favorite-list.add div[rubric="' + data.removed + '"]').attr('display', 'show');
+                    parent.find('.favorite-list.remove div[rubric="' + data.removed + '"]').attr('display', 'hide');
+
+                    parent.find('div[name="add"], .favorite-list.add').show();
+
+                    if (parent.find('.favorite-list.remove div[rubric][display="show"]').length) {
+                        parent.find('div[name="remove"], .favorite-list.remove').show();
+                    } else {
+                        parent.find('div[name="remove"], .favorite-list.remove').hide();
+                    }
                 }
             });
         }).fail(function() {
             $.unblockUI(); 
             $.alertDefaultError();
         });
+    });
+
+    $('.confirm .favorite-new input[type="text"]').on('keypress', function(event) {
+        if (! event) event = window.event;
+
+		if (event.keyCode) {
+			var code = event.keyCode;
+		} else if (event.which) {
+			var code = event.which;
+		}
+
+		if (code == 13) {
+            var parent = $(this).parents('.confirm');
+
+            parent.find('.btn.favorite').click();
+        }
     });
 
     $('.confirm .btn.favorite').click(function() {
@@ -329,8 +363,27 @@ $(function() {
             $.unblockUI(function() {
                 if (data.error) {
                     $.alert(data.error);
-                } else if (data.saved) {
-                    location.reload();
+                } else if (data.new) {
+                    parent.find('.favorite-list.remove').append(
+                        '<div rubric="' + data.new.id + '">' + data.new.name + '</div>'
+                    );
+
+                    parent.find('.favorite-new input[type="text"]').val('');
+
+                    parent.find('div[name="remove"], .favorite-list.remove').show();
+                } else if (data.added) {
+                    parent.find('.favorite-list.add div[rubric="' + data.added + '"]').attr('display', 'hide');
+                    parent.find('.favorite-list.remove div[rubric="' + data.added + '"]').attr('display', 'show');
+
+                    parent.find('.favorite-new input[type="text"]').val('');
+
+                    if (parent.find('.favorite-list.add div[rubric][display="show"]').length) {
+                        parent.find('div[name="add"], .favorite-list.add').show();
+                    } else {
+                        parent.find('div[name="add"], .favorite-list.add').hide();
+                    }
+
+                    parent.find('div[name="remove"], .favorite-list.remove').show();
                 }
             });
         }).fail(function() {

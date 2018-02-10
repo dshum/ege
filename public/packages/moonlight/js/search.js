@@ -424,8 +424,8 @@ $(function() {
         var itemContainer = $(this).parents('div[item]');
         var item = itemContainer.attr('item');
 
-        itemContainer.find('div[name="add"]').hide();
-        itemContainer.find('div[name="remove"]').hide();
+        itemContainer.find('div[name="add"], .favorite-list.add').hide();
+        itemContainer.find('div[name="remove"], .favorite-list.remove').hide();
         itemContainer.find('.favorite-list.add div[rubric]').hide();
         itemContainer.find('.favorite-list.remove div[rubric]').hide();
 
@@ -441,8 +441,8 @@ $(function() {
 
                 if (index === -1) {
                     $(this).show();
-                    itemContainer.find('div[name="add"]').show();
-                } 
+                    itemContainer.find('div[name="add"], .favorite-list.add').show();
+                }
             });
 
             for (var i2 in rubricIds) {
@@ -451,7 +451,7 @@ $(function() {
                 itemContainer.find('.favorite-list.remove div[rubric="' + rubricId + '"]').show();
 
                 if (rubricId) {
-                    itemContainer.find('div[name="remove"]').show();
+                    itemContainer.find('div[name="remove"], .favorite-list.remove').show();
                 }
             }
         }
@@ -687,6 +687,22 @@ $(function() {
             $.unblockUI(); 
             $.alertDefaultError();
         });
+    });
+
+    $('body').on('keypress', '.confirm .favorite-new input[type="text"]', function(event) {
+        if (! event) event = window.event;
+
+		if (event.keyCode) {
+			var code = event.keyCode;
+		} else if (event.which) {
+			var code = event.which;
+		}
+
+		if (code == 13) {
+            var parent = $(this).parents('.confirm');
+
+            parent.find('.btn.favorite').click();
+        }
     });
 
     $('body').on('click', '.confirm .btn.favorite', function() {

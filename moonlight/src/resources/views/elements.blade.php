@@ -217,8 +217,6 @@
                     <div rubric="{{ $favoriteRubric->id }}">{{ $favoriteRubric->name }}</div>
                     @endforeach
                 </div>
-                @endif
-                @if (sizeof($favoriteRubrics))
                 <div name="remove">Убрать из рубрики:</div>
                 <div class="favorite-list remove">
                     @foreach ($favoriteRubrics as $favoriteRubric)                
@@ -227,7 +225,7 @@
                 </div>
                 @endif
                 <div class="favorite-new">
-                    <input type="text" class="one" name="favorite_rubric_new" value="" placeholder="Новая рубрика">
+                    <input type="text" name="favorite_rubric_new" value="" placeholder="Новая рубрика">
                 </div>
             </div>
             <div class="bottom">
