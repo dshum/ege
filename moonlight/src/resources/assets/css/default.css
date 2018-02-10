@@ -1592,15 +1592,16 @@ form .loadfile .reset {
 
 .confirm .favorite-settings {
   position: absolute;
-  top: 0;
+  top: 1.5rem;
   right: 0;
   width: 2rem;
   height: 2rem;
   line-height: 2rem;
   vertical-align: middle;
   text-align: center;
-  border-top-right-radius: 2px;
-  background-color: skyblue;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+  background-color: lightblue;
   cursor: pointer;
 }
 

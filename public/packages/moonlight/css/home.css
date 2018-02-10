@@ -39,16 +39,26 @@
 .main .favorite-settings {
   position: absolute;
   right: 0;
-  padding: 0.25rem 0.5rem;
-  font-size: 1rem;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  vertical-align: middle;
+  text-align: center;
+  border-radius: 2px;
+  background-color: lightblue;
+}
+
+.main .favorite-settings:hover {
+  background-color: navy;
+  transition: 0.2s ease;
 }
 
 .main .favorite-settings .fa {
-  margin-right: 0.5rem;
-  font-size: 1.5rem;
-  color: skyblue;
-}
-
-.main .favorite-settings:hover .fa {
-  color: midnightblue;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 1.2rem;
+  color: white;
 }
