@@ -16,6 +16,7 @@
         <div class="path">
             <div class="part"><span>Избранное</span></div>
         </div>
+        @if (sizeof($favoriteRubrics))
         <div class="favorites">
             @foreach ($favoriteRubrics as $favoriteRubric)
             <div class="elements" rubric="{{ $favoriteRubric->id }}">
@@ -34,6 +35,9 @@
             </div>
             @endforeach
         </div>
+        @else
+        <div class="empty">Избранных элементов не найдено.</div>
+        @endif
     </div>
 </div>
 @endsection
