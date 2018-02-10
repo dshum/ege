@@ -14,8 +14,9 @@ $(function() {
                     document.location.href = data.url;
                 }
             },
-            error: function() {
+            error: function(data) {
                 $.unblockUI();
+                $.alert(data.statusText);
             }
         });
 

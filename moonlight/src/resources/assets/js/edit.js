@@ -137,8 +137,6 @@ $(function() {
             dataType: 'json',
             success: function(data) {
                 $.unblockUI();
-
-                console.log(data);
                 
                 if (data.error) {
                     $.alert(data.error);
@@ -160,9 +158,8 @@ $(function() {
                 }
             },
             error: function(data) {
-                console.log(data);
                 $.unblockUI();
-                $.alertDefaultError();
+                $.alert(data.statusText);
             }
         });
 

@@ -29,9 +29,9 @@ $(function() {
                     $('.list-container').html(data.html);
                 }
             },
-            error: function() {
+            error: function(data) {
                 $.unblockUI();
-                $.alertDefaultError();
+                $.alert(data.statusText);
             }
         });
     };

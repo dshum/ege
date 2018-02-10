@@ -54,9 +54,9 @@ $(function() {
                     init(item);
                 }
             },
-            error: function() {
+            error: function(data) {
                 $.unblockUI();
-                $.alertDefaultError();
+                $.alert(data.statusText);
             }
         });
     };
@@ -283,8 +283,9 @@ $(function() {
                     }
                 }
             },
-            error: function() {
+            error: function(data) {
                 $.unblockUI();
+                $.alert(data.statusText);
             }
         });
 

@@ -16,8 +16,9 @@ $(function() {
                     $('div.ok').html(data.ok).fadeIn(200);
                 }
             },
-            error: function() {
+            error: function(data) {
                 $.unblockUI();
+                $.alert(data.statusText);
             }
         });
 

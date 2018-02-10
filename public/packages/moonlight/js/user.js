@@ -25,8 +25,9 @@ $(function() {
                     $('.path > .part > span').html(name);
                 }
             },
-            error: function() {
+            error: function(data) {
                 $.unblockUI();
+                $.alert(data.statusText);
             }
         });
 

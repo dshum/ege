@@ -313,8 +313,9 @@ $(function() {
                     }
                 }
             },
-            error: function() {
+            error: function(data) {
                 $.unblockUI();
+                $.alert(data.statusText);
             }
         });
 
