@@ -16,7 +16,7 @@
             {!! $homePluginView !!}
         @endif
         <div class="leaf">
-            <div class="favorite-settings" title="Настройка"><a href="{{ route('moonlight.favorites.edit') }}"><i class="fa fa-cog"></i></a></div>
+            <div class="favorite-settings" title="Настроить избранное"><a href="{{ route('moonlight.favorites.edit') }}"><i class="fa fa-cog"></i></a></div>
             {!! $rubrics !!}
         </div>
     </div>

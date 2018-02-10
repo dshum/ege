@@ -1590,31 +1590,33 @@ form .loadfile .reset {
   text-align: left;
 }
 
-.confirm .hide {
+.confirm .favorite-settings {
   position: absolute;
   top: 0;
-  right: 0rem;
+  right: 0;
   width: 2rem;
   height: 2rem;
   line-height: 2rem;
   vertical-align: middle;
   text-align: center;
-  cursor: pointer;
-  font-size: 2rem;
   border-top-right-radius: 2px;
-  background-color: #789;
-  color: #fff;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  background-color: skyblue;
+  cursor: pointer;
 }
 
-.confirm .hide:hover {
-  background-color: crimson;
+.confirm .favorite-settings:hover {
+  background-color: navy;
   transition: 0.2s ease;
+}
+
+.confirm .favorite-settings .fa {
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 1.2rem;
+  color: white;
 }
 
 .confirm .content {

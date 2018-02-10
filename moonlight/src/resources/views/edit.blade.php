@@ -103,6 +103,9 @@
 <div class="confirm" id="favorite" url="{{ route('moonlight.element.favorite', $classId) }}">
     <div class="wrapper">
         <div class="container">
+            @if (sizeof($favoriteRubrics))
+            <div class="favorite-settings" title="Настроить избранное"><a href="{{ route('moonlight.favorites.edit') }}"><i class="fa fa-cog"></i></a></div>
+            @endif
             <div class="content">
                 <div name="add" class="{{ sizeof($elementFavoriteRubrics) < sizeof($favoriteRubrics) ? '' : 'dnone' }}">Добавить в рубрику:</div>
                 <div class="favorite-list add {{ sizeof($elementFavoriteRubrics) < sizeof($favoriteRubrics) ? '' : 'dnone' }}">
