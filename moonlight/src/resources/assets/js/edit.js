@@ -159,8 +159,10 @@ $(function() {
                     init();
                 }
             },
-            error: function() {
+            error: function(data) {
+                console.log(data);
                 $.unblockUI();
+                $.alertDefaultError();
             }
         });
 
