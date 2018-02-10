@@ -324,10 +324,10 @@ class RubricController extends Controller
             }
         }
 
-        $scope['rubrics'] = $rubrics;
-        $scope['rubricElements'] = $rubricElements;
         $scope['favoriteRubrics'] = $favoriteRubrics;
         $scope['favorites'] = $favorites;
+        $scope['rubrics'] = $rubrics;
+        $scope['rubricElements'] = $rubricElements;
 
         return view('moonlight::rubrics.index', $scope);
     }

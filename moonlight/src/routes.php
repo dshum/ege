@@ -98,6 +98,16 @@ Route::group(['prefix' => 'moonlight'], function() {
         Route::get('/log', ['as' => 'moonlight.log', 'uses' => 'Moonlight\Controllers\LogController@index']);
         
         Route::get('/log/next', ['as' => 'moonlight.log.next', 'uses' => 'Moonlight\Controllers\LogController@next']);
+
+        Route::get('/favorites/edit', ['as' => 'moonlight.favorites.edit', 'uses' => 'Moonlight\Controllers\HomeController@edit']);
+
+        Route::post('/favorites/order/rubrics', ['as' => 'moonlight.favorites.orderRubrics', 'uses' => 'Moonlight\Controllers\HomeController@orderRubrics']);
+
+        Route::post('/favorites/order/favorites', ['as' => 'moonlight.favorites.orderFavorites', 'uses' => 'Moonlight\Controllers\HomeController@orderFavorites']);
+
+        Route::post('/favorites/delete/rubric', ['as' => 'moonlight.favorites.deleteRubric', 'uses' => 'Moonlight\Controllers\HomeController@deleteRubric']);
+
+        Route::post('/favorites/delete/favorite', ['as' => 'moonlight.favorites.deleteFavorite', 'uses' => 'Moonlight\Controllers\HomeController@deleteFavorite']);
         
         Route::get('/search', ['as' => 'moonlight.search', 'uses' => 'Moonlight\Controllers\SearchController@index']);
 
