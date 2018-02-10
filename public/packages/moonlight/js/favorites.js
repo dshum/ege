@@ -32,8 +32,6 @@ $(function() {
                 order.push(rubric);
             });
 
-            console.log(order);
-
             $.blockUI();
 
             $.post('/moonlight/favorites/order/rubrics', {
