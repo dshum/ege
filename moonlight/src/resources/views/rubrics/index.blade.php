@@ -1,3 +1,6 @@
+@if (sizeof($favoriteRubrics))
+<div class="favorite-settings" title="Настроить избранное"><a href="{{ route('moonlight.favorites.edit') }}"><i class="fa fa-cog"></i></a></div>
+@endif
 @php $index = 0; @endphp
 <div class="row">
 @foreach ($favoriteRubrics as $favoriteRubric)
