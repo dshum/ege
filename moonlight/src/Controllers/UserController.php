@@ -6,6 +6,7 @@ use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\Group;
 use Moonlight\Models\User;
@@ -133,8 +134,7 @@ class UserController extends Controller
          * Set password
          */
         
-        $chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-        $password = substr(str_shuffle($chars), 0, 8);
+        $password = Str::random(8);
         $user->password = password_hash($password, PASSWORD_DEFAULT);
         
         $user->save();
