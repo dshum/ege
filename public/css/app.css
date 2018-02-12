@@ -512,9 +512,6 @@ nav {
   display: block;
   height: 5rem;
   line-height: 5rem;
-  vertical-align: middle;
-  border-bottom: 5px solid lightblue;
-  background-color: #def;
   padding: 0;
 }
 
@@ -539,9 +536,7 @@ nav user {
   display: block;
   float: right;
   font-size: 1.2rem;
-  border-bottom: 5px solid lightseagreen;
-  background-color: yellowgreen;
-  color: white;
+  color: black;
   padding: 0 2rem;
 }
 
@@ -560,7 +555,6 @@ footer {
   display: block;
   height: 5rem;
   line-height: 5rem;
-  border-top: 2px solid lightskyblue;
   background-color: white;
   padding: 0 2rem;
   font-size: 1rem;

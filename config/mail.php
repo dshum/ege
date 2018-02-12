@@ -63,7 +63,7 @@ return [
     'buglover' => [
         'address' => env('MAIL_BUGLOVER_ADDRESS', 'denis-shumeev@yandex.ru'),
         'name' => env('MAIL_BUGLOVER_NAME', 'Moonlight Buglover'),
-    ],
+    ], 
 
     /*
     |--------------------------------------------------------------------------
