@@ -25,7 +25,7 @@ class MoonlightUserTableSeeder extends Seeder {
             'updated_at' => Carbon::now(),
 		]);
 
-		Log:info($user->login);
-		Log:info($password);
+		Log::info($user->login);
+		Log::info($password);
 	}
 }
