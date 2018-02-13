@@ -1,8 +1,8 @@
 <?php
 
-use Log;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Fasade\Log;
 use Illuminate\Support\Str;
 use Moonlight\Models\User;
 use Moonlight\Models\Group;
