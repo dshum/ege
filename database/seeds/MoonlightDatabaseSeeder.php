@@ -12,6 +12,6 @@ class MoonlightDatabaseSeeder extends Seeder {
 	 */
 	public function run()
 	{
-        $this->call(MoonlightUserTableSeeder::class);
+		$this->call(MoonlightUserTableSeeder::class);
 	}
 }
