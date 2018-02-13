@@ -25,7 +25,7 @@ class Welcome extends Controller {
             return User::orderBy('created_at', 'desc')->limit(10)->get();
         });
 
-        $scope['lastUsers'] = [];
+        $scope['users'] = [];
 
         foreach ($users as $user) {
             $lastUser = [
