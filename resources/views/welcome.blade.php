@@ -2,7 +2,7 @@
 
 @section('title')
 ЕГЭ по биологии
-@stop
+@endsection
 
 @section('content')
 @if (Auth::check())
@@ -50,4 +50,4 @@
     </div>
 </form>
 @endif
-@stop
+@endsection
