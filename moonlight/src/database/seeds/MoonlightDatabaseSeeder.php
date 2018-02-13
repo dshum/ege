@@ -12,8 +12,6 @@ class MoonlightDatabaseSeeder extends Seeder {
 	 */
 	public function run()
 	{
-		$this->call(MoonlightGroupTableSeeder::class);
         $this->call(MoonlightUserTableSeeder::class);
-        $this->call(MoonlightUserGroupPivotTableSeeder::class);
 	}
 }
