@@ -39,14 +39,17 @@ class User extends Authenticatable
 
 		if (method_exists(cache()->getStore(), 'tags')) {
 			static::created(function($element) {
+				cache()->tags('admin_groups')->flush();
 				cache()->tags('admin_users')->flush();
 			});
 	
 			static::saved(function($element) {
+				cache()->tags('admin_groups')->flush();
 				cache()->tags('admin_users')->flush();
 			});
 	
 			static::deleted(function($element) {
+				cache()->tags('admin_groups')->flush();
 				cache()->tags('admin_users')->flush();
 			});
 		}
