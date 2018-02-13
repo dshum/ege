@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Moonlight\Models\User;
 use Moonlight\Models\Group;
@@ -26,7 +25,7 @@ class MoonlightUserTableSeeder extends Seeder {
             'updated_at' => Carbon::now(),
 		]);
 
-		Log::info($login);
-		Log::info($password);
+		echo 'Superuser login: '.$login.PHP_EOL;
+		echo 'Superuser password: '.$password.PHP_EOL;
 	}
 }

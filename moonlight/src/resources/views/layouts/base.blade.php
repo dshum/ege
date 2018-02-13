@@ -32,6 +32,12 @@
 @endif
 </head>
 <body>
+@section('nav')
+@show
+@section('body')
+@show
+@section('sidebar')
+@show
     <div class="block-ui">
         <div class="container">
             <div class="wrapper">
@@ -47,11 +53,5 @@
             </div>
         </div>
     </div>
-@section('nav')
-@show
-@section('body')
-@show
-@section('sidebar')
-@show
 </body>
 </html>
