@@ -1,5 +1,3 @@
-/public/assets
-/public/pictures
 /vendor
 composer.lock
 .env
