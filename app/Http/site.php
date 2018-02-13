@@ -124,7 +124,7 @@ $site->
 		Item::create('App\SiteSettings')->
 		setTitle('Настройки сайта')->
 		setRoot(true)->
-		setCreate(false)->
+		setCreate(true)->
 		addProperty(
 			MainProperty::create('name')->
 			setTitle('Название')->
