@@ -12,10 +12,11 @@ class MoonlightUserTableSeeder extends Seeder {
 
 	public function run()
 	{
+		$login = 'magus';
 		$password = Str::random(8);
 
-		$user = DB::table('admin_users')->insert([
-			'login' => 'magus',
+		DB::table('admin_users')->insert([
+			'login' => $login,
 			'password' => password_hash($password, PASSWORD_DEFAULT),
 			'email' => 'denis-shumeev@yandex.ru',
 			'first_name' => 'Super',
@@ -25,7 +26,7 @@ class MoonlightUserTableSeeder extends Seeder {
             'updated_at' => Carbon::now(),
 		]);
 
-		Log::info($user->login);
+		Log::info($login);
 		Log::info($password);
 	}
 }
