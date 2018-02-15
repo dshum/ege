@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 
 class BackupDatabase extends Command
 {
@@ -40,9 +41,12 @@ class BackupDatabase extends Command
         $output = [];
 
         $filename = 'biology_'.date('Y-m-d').'.txt';
+        $dbname = Config::get('pgsql.database');
+        $user = Config::get('pgsql.username');
+        $password = Config::get('pgsql.password');
 
         $output[] = system("cd ~/backups");
-        $output[] = system("pg_dump --host localhost --port 5432 --username postgres --format plain --verbose --file {$filename} --dbname=biology");
+        $output[] = system("pg_dump --username={$user} --format plain --verbose --file {$filename} --dbname={$dbname}");
 
         foreach ($output as $line) {
             $this->info($line);
