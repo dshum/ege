@@ -42,7 +42,7 @@ class BackupDatabase extends Command
 
         $filename = storage_path().'/backups/biology_'.date('Y-m-d').'.txt';
 
-        $output[] = system("pg_dump --username=karl --format plain --verbose --file {$filename} --dbname=biology");
+        $output[] = system("pg_dump --username=forge --format plain --verbose --file {$filename} --dbname=biology");
 
         foreach ($output as $line) {
             $this->info($line);
