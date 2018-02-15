@@ -8,3 +8,4 @@ Route::post('/loader', ['uses' => 'TestLoader@load']);
 
 Route::get('/photos', ['uses' => 'PhotoLoader@getPhotos']);
 Route::post('/photos/load', ['uses' => 'PhotoLoader@loadPhoto']);
+Route::post('/photos/delete', ['uses' => 'PhotoLoader@deletePhoto']);

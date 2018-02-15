@@ -3,7 +3,7 @@
         Изображение загружено!
     </div>
 </div>
-<form action="/plugins/photos/load" method="POST">
+<form name="photo-loader" action="/plugins/photos/load" method="POST">
     <div class="edit">
         <div class="row">
             <label>Изображение:</label><span name="photo" class="error"></span><br>

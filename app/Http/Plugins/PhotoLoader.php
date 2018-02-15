@@ -7,10 +7,35 @@ use Illuminate\Http\Request;
 use Validator;
 use Moonlight\Main\UserActionType;
 use Moonlight\Models\UserAction;
-use Moonlight\Utils\ImageUtils;
+use Moonlight\Utils\Image;
 use App\Http\Controllers\Controller;
 
-class PhotoLoader extends Controller {
+class PhotoLoader extends Controller
+{
+    public function deletePhoto(Request $request)
+    {
+        $scope = [];
+
+        $folderPath = public_path().'/pictures/';
+
+        $filename = $request->input('filename');
+
+        if (
+            $filename
+            && file_exists($folderPath.$filename)
+        ) {
+            unlink($folderPath.$filename);
+        }
+
+        UserAction::log(
+			UserActionType::ACTION_TYPE_PLUGIN_ID,
+			'Удалена фотография: '.$filename
+		);
+
+        $scope['deleted'] = $filename;
+
+		return response()->json($scope);
+    }
 
     public function loadPhoto(Request $request)
 	{
@@ -59,7 +84,7 @@ class PhotoLoader extends Controller {
                 $path = $file->getRealPath();
                 $filename = $file->getClientOriginalName();
                 
-                ImageUtils::resizeAndCopy(
+                Image::resizeAndCopy(
                     $path,
                     $folderPath.$filename,
                     640,
@@ -71,7 +96,7 @@ class PhotoLoader extends Controller {
         
         UserAction::log(
 			UserActionType::ACTION_TYPE_PLUGIN_ID,
-			'Загружена фотография '.$filename
+			'Загружена фотография: '.$filename
 		);
 
         $scope['loaded'] = $filename;
@@ -94,7 +119,8 @@ class PhotoLoader extends Controller {
         $dir = opendir($folderPath);
 
         while($filename = readdir($dir)) {
-            if($filename == '.' || $filename == '..') continue;
+            if ($filename == '.' || $filename == '..') continue;
+            if ($filename == '.gitignore') continue;
 
             $scope['photos'][] = $filename;
         }
