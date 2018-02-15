@@ -496,19 +496,8 @@ div.path div.divider {
   color: silver;
 }
 
-div.path div.part a.edit {
-  margin-left: 1rem;
-  text-decoration: none;
-  border-bottom: none;
-}
-
-div.path div.part a.edit .fa {
-  color: firebrick;
-  font-size: 1.3rem;
-}
-
 div.path div.part a.external-link {
-  margin-left: 1rem;
+  margin-left: 1.5rem;
   text-decoration: none;
   border-bottom: none;
 }

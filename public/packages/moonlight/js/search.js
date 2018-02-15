@@ -41,7 +41,7 @@ $(function() {
 
         $.blockUI();
 
-        $('form#search-form').ajaxSubmit({
+        $('form[name="search-form"]').ajaxSubmit({
             url: '/moonlight/search/list',
             dataType: 'json',
             data: params,
@@ -64,7 +64,7 @@ $(function() {
     var submit = function(page) {
         $('input:hidden[name="page"]').val(page);
 
-        $('form#search-form').submit();
+        $('form[name="search-form"]').submit();
     };
 
     $('.main div[item]').each(function () {

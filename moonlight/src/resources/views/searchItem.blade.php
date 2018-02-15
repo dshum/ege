@@ -18,7 +18,7 @@
             <div class="divider">/</div>
             <div class="part"><span>{{ $currentItem->getTitle() }}</span></div>
         </div>
-        <form id="search-form">
+        <form name="search-form">
             <input type="hidden" name="action" value="search">
             <input type="hidden" name="page" value="1">
             <div class="search-form">

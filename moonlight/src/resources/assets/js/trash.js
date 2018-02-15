@@ -18,7 +18,7 @@ $(function() {
 
         $.blockUI();
 
-        $('form').ajaxSubmit({
+        $('form[name="trash-form"]').ajaxSubmit({
             url: '/moonlight/trash/list',
             dataType: 'json',
             data: params,
@@ -39,7 +39,7 @@ $(function() {
     var submit = function(page) {
         $('input:hidden[name="page"]').val(page);
 
-        $('form').submit();
+        $('form[name="trash-form"]').submit();
     };
 
     $('body').on('keyup change', '#filter', function () {

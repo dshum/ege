@@ -342,7 +342,7 @@ footer .right .fa {
 
 .question {
   margin: 1rem 0 2rem 0;
-  box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.18), 0 2px 11px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 7px 0 rgba(15, 45, 65, 0.18), 0 2px 11px 0 rgba(15, 45, 65, 0.15);
   border: 1px solid #def;
   border-radius: 2px;
   background-color: white;
@@ -351,10 +351,12 @@ footer .right .fa {
 }
 
 .question.complete.correct {
+  box-shadow: 0 3px 7px 0 rgba(50, 205, 50, 0.18), 0 2px 11px 0 rgba(50, 205, 50, 0.15);
   border-color: limegreen;
 }
 
 .question.complete.incorrect {
+  box-shadow: 0 3px 7px 0 rgba(220, 20, 60, 0.18), 0 2px 11px 0 rgba(220, 20, 60, 0.15);
   border-color: crimson;
 }
 
