@@ -38,33 +38,27 @@ class UpdateBackgroundJpg extends Command
      */
     public function handle()
     {
-        try {
-            $url = 'http://yandex.ru/images/today?size=1920x1080';
-            $path = public_path().'/assets/background.jpg';
+        $url = 'http://yandex.ru/images/today?size=1920x1080';
+        $path = public_path().'/assets/background.jpg';
 
-            $date = file_exists($path) ? date('Y-m-d', filemtime($path)) : null;
+        $date = file_exists($path) ? date('Y-m-d', filemtime($path)) : null;
 
-            if ($date < date('Y-m-d')) {
-                $file = file($url);
+        if ($date < date('Y-m-d')) {
+            $file = file($url);
 
-                if ($f = fopen($path, 'w')) {
-                    foreach ($file as $line) {
-                        fwrite($f, $line);
-                    }
-
-                    fclose($f);
-
-                    $this->info('Background.jpg loaded.');
+            if ($f = fopen($path, 'w')) {
+                foreach ($file as $line) {
+                    fwrite($f, $line);
                 }
 
-                $this->info('OK. Complete.');
-            } else {
-                $this->info('Background.jpg is up-to-date.');
-            }
-        } catch (\Exception $e) {
-            ErrorMessage::send($e);
+                fclose($f);
 
-            $this->info($e->getMessage());
+                $this->info('Background.jpg loaded.');
+            }
+
+            $this->info('OK. Complete.');
+        } else {
+            $this->info('Background.jpg is up-to-date.');
         }
     }
 }
