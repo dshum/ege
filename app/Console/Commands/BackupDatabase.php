@@ -40,13 +40,9 @@ class BackupDatabase extends Command
     {
         $output = [];
 
-        $filename = 'biology_'.date('Y-m-d').'.txt';
-        $dbname = Config::get('pgsql.database');
-        $user = Config::get('pgsql.username');
-        $password = Config::get('pgsql.password');
+        $filename = storage_path().'/backups/biology_'.date('Y-m-d').'.txt';
 
-        $output[] = system("cd ~/backups");
-        $output[] = system("pg_dump --username={$user} --format plain --verbose --file {$filename} --dbname={$dbname}");
+        $output[] = system("pg_dump --username=karl --format plain --verbose --file {$filename} --dbname=biology");
 
         foreach ($output as $line) {
             $this->info($line);
