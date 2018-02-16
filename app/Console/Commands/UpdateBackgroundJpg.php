@@ -12,7 +12,7 @@ class UpdateBackgroundJpg extends Command
      *
      * @var string
      */
-    protected $signature = 'background:load';
+    protected $signature = 'background:load {--force}';
 
     /**
      * The console command description.
@@ -38,12 +38,14 @@ class UpdateBackgroundJpg extends Command
      */
     public function handle()
     {
+        $force = $this->option('force');
+
         $url = 'http://yandex.ru/images/today?size=1920x1080';
         $path = public_path().'/assets/background.jpg';
 
         $date = file_exists($path) ? date('Y-m-d', filemtime($path)) : null;
 
-        if ($date < date('Y-m-d')) {
+        if ($force || $date < date('Y-m-d')) {
             $file = file($url);
 
             if ($f = fopen($path, 'w')) {
