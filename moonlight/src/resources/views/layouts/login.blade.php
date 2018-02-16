@@ -13,9 +13,7 @@
 @section('css')
 @show
 <style>
-    body {
-        background-image: url(/assets/background.jpg?{{ date('Y-m-d') }});
-    }
+body {background-image: url(/assets/background.jpg?{{ date('Y-m-d-H-00') }});}
 </style>
 <script src="/packages/moonlight/js/jquery-3.2.1.min.js"></script>
 <script src="/packages/moonlight/js/jquery.form.min.js"></script>

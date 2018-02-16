@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
         ->emailOutputTo('denis-shumeev@yandex.ru');
         
         $schedule->command('background:load')
-        ->dailyAt('5:00')
+        ->dailyAt('7:00')
         ->emailOutputTo('denis-shumeev@yandex.ru');
     }
 
