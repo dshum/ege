@@ -24,12 +24,20 @@ class TestController extends Controller
 		$user = Auth::user();
 
         $test = cache()->tags('tests')->remember("test_{$id}", 1440, function() use ($id) {
-			return Test::where('id', $id)->first();
+			return Test::find($id);
 		});
 
         if (! $test) {
             return redirect()->route('welcome');
-        }
+		}
+		
+		$questions = cache()->tags('questions')->remember("test_{$test->id}_questions", 1440, function() use ($test) {
+			return $test->questions()->orderBy('order')->get();
+		});
+
+		if (! sizeof($questions)) {
+            return redirect()->route('welcome');
+		}
 
 		$userTest = cache()->tags('user_tests')->remember("user_test_where_user_{$user->id}_and_test_{$test->id}", 1440, function() use ($user, $test) {
 			return 
@@ -55,12 +63,8 @@ class TestController extends Controller
 			return redirect()->back();
 		}
 
-		foreach ($answers as $questionId => $answerId) {
-			$question = Question::where('id', $questionId)->first();
-			$answer = Answer::where('id', $answerId)->first();
-
-			if (! $question) continue;
-			if (! $answer) continue;
+		foreach ($questions as $question) {
+			if (! isset($answers[$question->id])) continue;
 
 			$userQuestion = UserQuestion::where('question_id', $question->id)->first();
 
@@ -69,37 +73,86 @@ class TestController extends Controller
 
 				$userQuestion->user_test_id = $userTest->id;
 				$userQuestion->question_id = $question->id;
+				$userQuestion->name = $question->name;
 			}
 
-			if ($answer->correct) {
-				$userQuestion->correct = true;
+			$userQuestion->correct = false;
+
+			if ($question->isSingle()) {
+				$answerId = $answers[$question->id];
+				$questionAnswer = Answer::find($answerId);
+
+				if ($questionAnswer->correct) {
+					$userQuestion->correct = true;
+				}
+
+				$userQuestion->save();
+
+				$userAnswer = UserAnswer::where('user_question_id', $userQuestion->id)->first();
+
+				if (! $userAnswer) {
+					$userAnswer = new UserAnswer;
+	
+					$userAnswer->user_question_id = $userQuestion->id;
+				}
+	
+				$userAnswer->name = $questionAnswer->name;
+				$userAnswer->answer_id = $questionAnswer->id;
+	
+				$userAnswer->save();
+			} elseif ($question->isMultiple()) {
+				$answerIds = $answers[$question->id];
+				$questionAnswers = Answer::where('question_id', $question->id)->get();
+
+				$invalidAnswers = [];
+
+				foreach ($questionAnswers as $questionAnswer) {
+					if (
+						$questionAnswer->correct 
+						&& ! in_array($questionAnswer->id, $answerIds)
+					) {
+						$invalidAnswers[] = $questionAnswer->id;
+					} elseif(
+						! $questionAnswer->correct 
+						&& in_array($questionAnswer->id, $answerIds)
+					) {
+						$invalidAnswers[] = $questionAnswer->id;
+					}
+				}
+
+				if (empty($invalidAnswers)) {
+					$userQuestion->correct = true;
+				}
+
+				$userQuestion->save();
+
+				foreach ($questionAnswers as $questionAnswer) {
+					$userAnswer = UserAnswer::where('user_question_id', $userQuestion->id)->
+						where('answer_id', $questionAnswer->id)->
+						first();
+
+					if (
+						! $userAnswer
+						&& in_array($questionAnswer->id, $answerIds)
+					) {
+						$userAnswer = new UserAnswer;
+	
+						$userAnswer->name = $questionAnswer->name;
+						$userAnswer->user_question_id = $userQuestion->id;
+						$userAnswer->answer_id = $questionAnswer->id;
+
+						$userAnswer->save();
+					} elseif (
+						$userAnswer
+						&& ! in_array($questionAnswer->id, $answerIds)
+					) {
+						$userAnswer->forceDelete();
+					}
+				}
 			}
-
-			$userQuestion->name = $question->name;
-
-			$userQuestion->save();
-
-			$userAnswer = UserAnswer::where('user_question_id', $userQuestion->id)->first();
-
-			if (! $userAnswer) {
-				$userAnswer = new UserAnswer;
-
-				$userAnswer->user_question_id = $userQuestion->id;
-			} elseif ($userAnswer->answer_id !== $answer->id) {
-				$userAnswer->forceDelete();
-
-				$userAnswer = new UserAnswer;
-
-				$userAnswer->user_question_id = $userQuestion->id;
-			}
-
-			$userAnswer->name = $answer->name;
-			$userAnswer->answer_id = $answer->id;
-
-			$userAnswer->save();
 		}
 
-		$questionsCount = $test->questions()->count();
+		$questionsCount = sizeof($questions);
 		$userQuestionsCount = UserQuestion::where('user_test_id', $userTest->id)->count();
 
 		if ($questionsCount === $userQuestionsCount) {
@@ -118,7 +171,7 @@ class TestController extends Controller
 		$user = Auth::user();
 		
 		$test = cache()->tags('tests')->remember("test_{$id}", 1440, function() use ($id) {
-			return Test::where('id', $id)->first();
+			return Test::find($id);
 		});
 
         if (! $test) {
@@ -157,6 +210,8 @@ class TestController extends Controller
 		$questions = cache()->tags('questions')->remember("test_{$test->id}_questions", 1440, function() use ($test) {
 			return $test->questions()->orderBy('order')->get();
 		});
+
+		$answers= [];
 
 		foreach ($questions as $question) {
 			$answers[$question->id] = cache()->tags('answers')->remember("question_{$question->id}_answers", 1440, function() use ($question) {

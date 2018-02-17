@@ -30,13 +30,26 @@ class Answers extends Controller {
 
         $answers = $question->answers()->get();
 
-        foreach ($answers as $answer) {
-            $answer->correct = $answer->id === $currentAnswer->id
-                ? true : false;
-            $answer->save();
+        if ($question->isSingle()) {
+            foreach ($answers as $answer) {
+                $answer->correct = $answer->id === $currentAnswer->id
+                    ? true : false;
+                $answer->save();
+            }
+        } elseif ($question->isMultiple()) {
+            foreach ($answers as $answer) {
+                if ($answer->id === $currentAnswer->id) {
+                    $answer->correct = ! $answer->correct;
+                    $answer->save();
+                }
+            }
         }
 
-        $scope['correct'] = $id;
+        $scope['answers'] = [];
+
+        foreach ($answers as $answer) {
+            $scope['answers'][$answer->id] = $answer->correct;
+        }
 
 		return response()->json($scope);
 	}

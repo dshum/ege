@@ -11,7 +11,7 @@ $(function() {
                 if (data.error) {
                     $('div.error').html(data.error).fadeIn(200);
                 } else if (data.url) {
-                    document.location.href = data.url;
+                    location.href = data.url;
                 }
             },
             error: function(data) {

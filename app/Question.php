@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\QuestionType;
 
 class Question extends Model
 {
@@ -55,5 +56,30 @@ class Question extends Model
         $plugin = new \App\Http\Plugins\Answers;
 
         return $plugin->field($this);
-    }
+	}
+	
+	public function isSingle()
+	{
+		return $this->question_type_id == QuestionType::TYPE_SINGLE_ID;
+	}
+
+	public function isMultiple()
+	{
+		return $this->question_type_id == QuestionType::TYPE_MULTIPLE_ID;
+	}
+
+	public function isSequence()
+	{
+		return $this->question_type_id == QuestionType::TYPE_SEQUENCE_ID;
+	}
+
+	public function isString()
+	{
+		return $this->question_type_id == QuestionType::TYPE_STRING_ID;
+	}
+
+	public function isText()
+	{
+		return $this->question_type_id == QuestionType::TYPE_TEXT_ID;
+	}
 }

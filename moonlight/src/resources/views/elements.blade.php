@@ -37,7 +37,7 @@
             @if ($unbindPropertyViews)
             <div class="button unbind"><i class="fa fa-chain-broken"></i>Отвязать</div>
             @endif
-            <div class="button favorite"><i class="fa fa-thumb-tack"></i>Избранное</div>
+            <div class="button favorite"><i class="fa fa-bookmark-o"></i>Избранное</div>
             <div class="button delete"><i class="fa fa-trash-o"></i>Удалить</div>
             @endif
         </div>

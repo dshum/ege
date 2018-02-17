@@ -42,7 +42,7 @@
                 @else
                 <div class="button move"><i class="fa fa-arrow-right"></i>Перенести</div>
                 @endif
-                <div class="button favorite enabled"><i class="fa fa-tag"></i>Избранное</div>
+                <div class="button favorite enabled"><i class="fa fa-bookmark-o"></i>Избранное</div>
                 <div class="button delete enabled"><i class="fa fa-trash-o"></i>Удалить</div>
             </div>
             <form save="true" action="{{ route('moonlight.element.save', $classId) }}" method="POST">
