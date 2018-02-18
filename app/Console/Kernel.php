@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
         ->emailOutputTo('denis-shumeev@yandex.ru');
         
         $schedule->command('background:load --force')
-        ->everyMinute()
+        ->twiceDaily(7, 15)
         ->emailOutputTo('denis-shumeev@yandex.ru');
     }
 
