@@ -28,8 +28,8 @@ class Kernel extends ConsoleKernel
         ->daily()
         ->emailOutputTo('denis-shumeev@yandex.ru');
         
-        $schedule->command('background:load')
-        ->hourly()
+        $schedule->command('background:load --force')
+        ->minutely()
         ->emailOutputTo('denis-shumeev@yandex.ru');
     }
 
