@@ -139,16 +139,6 @@ final class Element
 			}
 		}
 
-		foreach ($propertyList as $propertyName => $property) {
-			if (
-				$property->isOneToOne()
-				&& $property->getRelatedClass()
-				&& $element->$propertyName
-			) {
-				return $element->belongsTo($property->getRelatedClass(), $propertyName)->first();
-			}
-		}
-
 		return null;
 	}
 
@@ -187,6 +177,7 @@ final class Element
 		foreach ($propertyList as $propertyName => $property) {
 			if (
 				$property->isOneToOne()
+				&& $property->getParent()
 				&& $property->getRelatedClass() == static::getClass($parent)
 			) {
 				$element->$propertyName = $parent->id;

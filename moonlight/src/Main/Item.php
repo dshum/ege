@@ -16,12 +16,9 @@ class Item
 	protected $title = null;
 	protected $mainProperty = null;
 	protected $root = false;
-    protected $tree = false;
     protected $create = false;
-    protected $expand = false;
 	protected $orderProperty = null;
 	protected $elementPermissions = false;
-	protected $binds = false;
 	protected $perPage = null;
 	protected $orderBy = [];
 
@@ -112,18 +109,6 @@ class Item
 		return $this->root;
 	}
     
-    public function setTree($value = true)
-	{
-		$this->tree = $value;
-
-		return $this;
-	}
-
-	public function getTree()
-	{
-		return $this->tree;
-	}
-    
     public function setCreate($value = true)
 	{
 		$this->create = $value;
@@ -134,18 +119,6 @@ class Item
 	public function getCreate()
 	{
 		return $this->create;
-	}
-    
-    public function setExpand($value = true)
-	{
-		$this->expand = $value;
-
-		return $this;
-	}
-
-	public function getExpand()
-	{
-		return $this->expand;
 	}
 
 	public function setOrderProperty($orderProperty)
@@ -170,18 +143,6 @@ class Item
 	public function getElementPermissions()
 	{
 		return $this->elementPermissions;
-	}
-
-	public function bindItem($name)
-	{
-		$this->binds[$name] = $name;
-
-		return $this;
-	}
-
-	public function getBinds()
-	{
-		return $this->binds;
 	}
 
 	public function setPerPage($perPage)

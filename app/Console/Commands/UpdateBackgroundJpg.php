@@ -43,6 +43,8 @@ class UpdateBackgroundJpg extends Command
         $url = 'http://yandex.ru/images/today?size=1920x1080';
         $path = public_path().'/assets/background.jpg';
 
+        $this->info($path);
+
         $date = file_exists($path) ? date('Y-m-d', filemtime($path)) : null;
 
         if ($force || $date < date('Y-m-d')) {

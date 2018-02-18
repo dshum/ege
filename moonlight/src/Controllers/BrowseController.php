@@ -1290,6 +1290,7 @@ class BrowseController extends Controller
                     } elseif (
                         ! $currentElement
                         && $property->isOneToOne()
+                        && $property->getParent()
                     ) {
                         $query->orWhere(
                             $property->getName(), null

@@ -16,7 +16,7 @@
 		</nav>
 		<main>
 			<h1>Ой! Ошибка.</h1>
-			@if (env('APP_DEBUG') === true)
+			@if (config('app.env') == 'local')
 			<p>{{ $exception->getMessage() }}</p>
 			<p>{{ $exception->getFile() }} ({{ $exception->getLine() }})</p>
 			<p><small>{!! nl2br($exception->getTraceAsString()) !!}</small></p>
