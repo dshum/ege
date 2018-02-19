@@ -40,9 +40,12 @@ class BackupDatabase extends Command
     {
         $output = [];
 
-        $filename = storage_path().'/backups/biology_'.date('Y-m-d').'.txt';
+        $dbname = config('database.connections.pgsql.database');
+        $username = config('database.connections.pgsql.username');
 
-        $output[] = system("pg_dump --username=forge --format plain --verbose --file {$filename} --dbname=biology");
+        $filename = storage_path().'/backups/apples_'.date('Y-m-d').'.txt';
+
+        $output[] = system("pg_dump --username={$username} --format plain --verbose --file {$filename} --dbname={$dbname}");
 
         foreach ($output as $line) {
             $this->info($line);
