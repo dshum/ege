@@ -347,14 +347,13 @@ nav .dropdown ul > li span {
   display: table;
 }
 
-.sidebar ul li.active {
-  font-weight: normal;
-  color: dodgerblue;
-}
-
 .sidebar ul li a {
   text-decoration: underline;
   color: inherit;
+}
+
+.sidebar ul li.active > a {
+  color: dodgerblue;
 }
 
 .sidebar .elements {
@@ -380,6 +379,11 @@ nav .dropdown ul > li span {
 }
 
 .sidebar .elements ul {
+  margin: 0 0 0 1rem;
+  padding: 0;
+}
+
+.sidebar .elements > ul {
   margin: -0.25rem 0 0 0;
   padding: 0;
 }
@@ -387,6 +391,21 @@ nav .dropdown ul > li span {
 .sidebar .elements ul li {
   margin: 0.5rem 0;
   padding: 0;
+}
+
+.sidebar .elements ul li:last-child {
+  margin-bottom: 0;
+}
+
+.sidebar .elements ul li span.open {
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.sidebar .elements ul li span.open .fa {
+  position: relative;
+  top: 2px;
+  font-size: 1.2rem;
 }
 
 .sidebar .elements ul li.divider {

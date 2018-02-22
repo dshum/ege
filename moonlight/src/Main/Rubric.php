@@ -10,7 +10,7 @@ class Rubric
 {
     protected $name = null;
     protected $title = null;
-    protected $all = [];
+    protected $binds = [];
 
     public function __construct($name, $title) {
         $this->name = $name;
@@ -48,47 +48,25 @@ class Rubric
 		return $this->title;
     }
 
-    public function getAll()
+    public function getBinds()
     {
-        return $this->all;
-    }
-    
-    public function addList($binds)
-    {
-        if (is_array($binds)) {
-            foreach ($binds as $parent => $className) {
-                if (! $parent) $parent = null;
-
-                $this->all[] = [
-                    'parent' => $parent,
-                    'className' => $className,
-                ];
-            }
-        } else {
-            $this->all[] = [
-                'className' => $binds,
-            ];
-        }
-
-        return $this;
+        return $this->binds;
     }
 
-    public function addElement($classId, $name)
+    public function getBindByName($name = 0)
     {
-        $this->all[] = [
-            'classId' => $classId,
-            'name' => $name,
+        return isset($this->binds[$name])
+            ? $this->binds[$name]
+            : null;
+    }
+
+    public function bind($first, $addition = null, $name = 0)
+	{
+        $this->binds[$name] = [
+            'first' => $first,
+            'addition' => $addition,
         ];
 
-        return $this;
-    }
-
-    public function addTree($binds)
-    {
-        $this->all[] = [
-            'binds' => $binds,
-        ];
-
-        return $this;
-    }
+		return $this;
+	}
 }

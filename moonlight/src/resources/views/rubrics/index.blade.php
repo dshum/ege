@@ -27,17 +27,7 @@
 @foreach ($rubrics as $rubric)
     <div class="elements">
         <div class="h2"><span>{{ $rubric->getTitle() }}</span></div>
-        @if (sizeof($rubricElements[$rubric->getName()]))
-        <ul>
-            @foreach ($rubricElements[$rubric->getName()] as $element)
-            <li><a href="{{ route('moonlight.browse.element', $element['classId']) }}">{{ $element['name'] }}</a></li>
-            @endforeach
-        </ul>
-        @else
-        <ul>
-            <li>Элементов не найдено.</li>
-        </ul>
-        @endif
+        {!! $views[$rubric->getName()] !!}
     </div>
 @if ($index % 3 == 2)
 </div>

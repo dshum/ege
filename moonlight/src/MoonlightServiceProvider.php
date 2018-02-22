@@ -19,7 +19,11 @@ class MoonlightServiceProvider extends ServiceProvider
     {
         $site = \App::make('site');
 
-		$site->initMicroTime();
+        $site->initMicroTime();
+
+        if (file_exists($path = __DIR__.'/helpers.php')) {
+			include $path;
+		}
 
 		if (file_exists($path = app_path().'/Http/site.php')) {
 			include $path;

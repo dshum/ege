@@ -140,6 +140,12 @@ Route::group(['prefix' => 'moonlight'], function() {
         Route::post('/rubrics/open', ['as' => 'moonlight.rubrics.open', 'uses' => 'Moonlight\Controllers\RubricController@open']);
 
         Route::post('/rubrics/close', ['as' => 'moonlight.rubrics.close', 'uses' => 'Moonlight\Controllers\RubricController@close']);
+
+        Route::get('/rubrics/node/get', ['as' => 'moonlight.rubrics.node.get', 'uses' => 'Moonlight\Controllers\RubricController@getNode']);
+        
+        Route::post('/rubrics/node/open', ['as' => 'moonlight.rubrics.node.open', 'uses' => 'Moonlight\Controllers\RubricController@openNode']);
+
+        Route::post('/rubrics/node/close', ['as' => 'moonlight.rubrics.node.close', 'uses' => 'Moonlight\Controllers\RubricController@closeNode']);
         
         Route::get('/elements/list', ['as' => 'moonlight.elements.list', 'uses' => 'Moonlight\Controllers\BrowseController@elements']);
         

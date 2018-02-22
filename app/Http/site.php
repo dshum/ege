@@ -628,35 +628,29 @@ $site->
 
 	addRubric(
 		Rubric::create('students', 'Ученики')->
-		addList('App.User')
-	);
-
-	foreach ($topics as $topic) {
-		$site->
-		addRubric(
-			Rubric::create('topic_'.$topic->id, $topic->name)->
-			addElement(Element::getClassId($topic), $topic->name)->
-			addList([Element::getClassId($topic) => 'App.Subtopic'])->
-			addList([Element::getClassId($topic) => 'App.Test'])
-		);
-	}
-
-	$site->
-	addRubric(
-		Rubric::create('service_sections', 'Служебные разделы')->
-		addList([Site::ROOT => 'App.ServiceSection'])
+		bind('App.User')
 	)->
 	addRubric(
-		Rubric::create('subjects', 'Предметы')->
-		addList('App.Subject')
+		Rubric::create('subjects', 'Тесты')->
+		bind([
+			env('site.subjects', 'App.ServiceSection.2') => 'App.Subject',
+		], [	
+			'App.Subject' => 'App.Topic',
+			'App.Topic' => ['App.Subtopic', 'App.Test'],
+			'App.Subtopic' => 'App.Test',
+		])
+	)->
+	addRubric(
+		Rubric::create('service_sections', 'Служебные разделы')->
+		bind([Site::ROOT => 'App.ServiceSection'])
 	)->
 	addRubric(
 		Rubric::create('dicts', 'Справочники')->
-		addList([env('site.dicts', 'App.ServiceSection.3') => 'App.ServiceSection'])
+		bind([env('site.dicts', 'App.ServiceSection.3') => 'App.ServiceSection'])
 	)->
 	addRubric(
 		Rubric::create('site_settings', 'Настройки сайта')->
-		addList('App.SiteSettings')
+		bind('App.SiteSettings')
 	)->
 
 	end();

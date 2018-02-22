@@ -15,6 +15,90 @@ use \Moonlight\Models\Favorite;
 class RubricController extends Controller
 {
     /**
+     * Get rubric node.
+     *
+     * @return Response
+     */
+    public function getNode(Request $request)
+    {
+        $scope = [];
+        
+        $loggedUser = Auth::guard('moonlight')->user();
+        
+        $rubricName = $request->input('rubric');
+        $bindName = $request->input('bind');
+        $classId = $request->input('classId');
+        
+        $site = \App::make('site');
+        
+        $rubric = $site->getRubricByName($rubricName);
+        
+        if (! $rubric) {
+            return response()->json([]);
+        }
+
+        $html = $this->node($rubric, $bindName, $classId);
+
+        cache()->forever("rubric_node_{$loggedUser->id}_{$rubricName}_{$classId}", true);
+
+        return response()->json(['html' => $html]);
+    }
+
+    /**
+     * Open closed rubric node.
+     *
+     * @return Response
+     */
+    public function openNode(Request $request)
+    {
+        $scope = [];
+        
+        $loggedUser = Auth::guard('moonlight')->user();
+        
+        $rubricName = $request->input('rubric');
+        $classId = $request->input('classId');
+        
+        $site = \App::make('site');
+        
+        $rubric = $site->getRubricByName($rubricName);
+
+        if (! $rubric) {
+            return response()->json([]);
+        }
+        
+        cache()->forever("rubric_node_{$loggedUser->id}_{$rubricName}_{$classId}", true);
+
+        return response()->json([]);
+    }
+     
+     /**
+      * Close opened rubric node.
+      *
+      * @return Response
+      */
+    public function closeNode(Request $request)
+    {
+        $scope = [];
+        
+        $loggedUser = Auth::guard('moonlight')->user();
+        
+        $rubricName = $request->input('rubric');
+        $classId = $request->input('classId');
+        
+        $site = \App::make('site');
+        
+        $rubric = $site->getRubricByName($rubricName);
+        
+        if (! $rubric) {
+            return response()->json([]);
+        }
+        
+        cache()->forget("rubric_node_{$loggedUser->id}_{$rubricName}_{$classId}");
+
+        return response()->json([]);
+    }
+
+    /**
      * Get rubric.
      *
      * @return Response
@@ -25,24 +109,24 @@ class RubricController extends Controller
         
         $loggedUser = Auth::guard('moonlight')->user();
         
-        $name = $request->input('rubric');
+        $rubricName = $request->input('rubric');
         
         $site = \App::make('site');
         
-        $rubric = $site->getRubricByName($name);
+        $rubric = $site->getRubricByName($rubricName);
 
         if (! $rubric) {
-            $rubric = FavoriteRubric::find($name);
+            $rubric = FavoriteRubric::find($rubricName);
         }
         
         if (! $rubric) {
             return response()->json([]);
         }
 
-        cache()->forever("rubric_{$loggedUser->id}_{$name}", true);
+        cache()->forever("rubric_{$loggedUser->id}_{$rubricName}", true);
 
         $favorites = [];
-        $rubricElements = [];
+        $view = null;
 
         if ($rubric instanceof FavoriteRubric) {
             $favoriteList = Favorite::where('rubric_id', $rubric->id)->
@@ -63,34 +147,18 @@ class RubricController extends Controller
                 }
             }
         } else {
-            $all = $rubric->getAll();
-        
-            foreach ($all as $data) {
-                if (isset($data['classId'])) {
-                    $classId = $data['classId'];
+            $binds = $rubric->getBinds();
 
-                    $element = $this->getElement($classId);
-
-                    if ($element) {
-                        $rubricElements[] = $element;
-                    }
-                } elseif (isset($data['className'])) {
-                    $parent = isset($data['parent']) ? $data['parent']: null;
-                    $className = $data['className'];
-
-                    $elements = $this->getElements($parent, $className);
-                    
-                    if ($elements) {
-                        foreach ($elements as $element) {
-                            $rubricElements[] = $element;
-                        }
-                    }
-                }
+            foreach ($binds as $bindName => $bind) {
+                $views[] = $this->node($rubric, $bindName, null);
             }
+
+            $view = implode(PHP_EOL, $views);
         }
 
+        $scope['rubric'] = $rubric;
         $scope['favorites'] = $favorites;
-        $scope['rubricElements'] = $rubricElements;
+        $scope['view'] = $view;
 
         $html = view('moonlight::rubrics.rubric', $scope)->render();
 
@@ -108,21 +176,21 @@ class RubricController extends Controller
         
         $loggedUser = Auth::guard('moonlight')->user();
         
-        $name = $request->input('rubric');
+        $rubricName = $request->input('rubric');
         
         $site = \App::make('site');
         
-        $rubric = $site->getRubricByName($name);
+        $rubric = $site->getRubricByName($rubricName);
 
         if (! $rubric) {
-            $rubric = FavoriteRubric::find($name);
+            $rubric = FavoriteRubric::find($rubricName);
         }
 
         if (! $rubric) {
             return response()->json([]);
         }
         
-        cache()->forever("rubric_{$loggedUser->id}_{$name}", true);
+        cache()->forever("rubric_{$loggedUser->id}_{$rubricName}", true);
 
         return response()->json([]);
     }
@@ -138,21 +206,21 @@ class RubricController extends Controller
         
         $loggedUser = Auth::guard('moonlight')->user();
         
-        $name = $request->input('rubric');
+        $rubricName = $request->input('rubric');
         
         $site = \App::make('site');
         
-        $rubric = $site->getRubricByName($name);
+        $rubric = $site->getRubricByName($rubricName);
 
         if (! $rubric) {
-            $rubric = FavoriteRubric::find($name);
+            $rubric = FavoriteRubric::find($rubricName);
         }
         
         if (! $rubric) {
             return response()->json([]);
         }
         
-        cache()->forget("rubric_{$loggedUser->id}_{$name}");
+        cache()->forget("rubric_{$loggedUser->id}_{$rubricName}");
 
         return response()->json([]);
     }
@@ -192,55 +260,29 @@ class RubricController extends Controller
             }
         }
 
+        $views = [];
+
         $rubrics = $site->getRubricList();
-        $rubricElements = [];
 
         foreach ($rubrics as $rubric) {
-            $name = $rubric->getName();
+            $rubricName = $rubric->getName();
 
-            $open = cache()->get("rubric_{$loggedUser->id}_{$name}", false);
+            $open = cache()->get("rubric_{$loggedUser->id}_{$rubricName}", false);
 
             if (! $open) continue;
 
-            $all = $rubric->getAll();
+            $binds = $rubric->getBinds();
 
-            foreach ($all as $data) {
-                if (isset($data['classId'])) {
-                    $classId = $data['classId'];
-                    $title = isset($data['name']) ? $data['name'] : null;
-
-                    if ($title) {
-                        $rubricElements[$name][] = [
-                            'classId' => $classId,
-                            'name' => $title,
-                        ];
-                    } else {
-                        $element = $this->getElement($classId);
-
-                        if ($element) {
-                            $rubricElements[$name][] = $element;
-                        }
-                    }
-                } elseif (isset($data['className'])) {
-                    $parent = isset($data['parent']) ? $data['parent']: null;
-                    $className = $data['className'];
-
-                    $elements = $this->getElements($parent, $className);
-                    
-                    if (sizeof($elements)) {
-                        foreach ($elements as $element) {
-                            $rubricElements[$name][] = $element;
-                        }
-                    }
-                }
+            foreach ($binds as $bindName => $bind) {
+                $views[$rubricName][] = $this->node($rubric, $bindName, null, $currentClassId);
             }
         }
 
-        $scope['classId'] = $currentClassId;
-        $scope['rubrics'] = $rubrics;
-        $scope['rubricElements'] = $rubricElements;
         $scope['favoriteRubrics'] = $favoriteRubrics;
         $scope['favorites'] = $favorites;
+        $scope['rubrics'] = $rubrics;
+        $scope['views'] = $views;
+        $scope['classId'] = $currentClassId;
 
         return view('moonlight::rubrics.sidebar', $scope);
     }
@@ -281,45 +323,18 @@ class RubricController extends Controller
         $rubricList = $site->getRubricList();
 
         $rubrics = [];
-        $rubricElements = [];
 
         foreach ($rubricList as $rubric) {
-            $name = $rubric->getName();
+            $rubricName = $rubric->getName();
+            $binds = $rubric->getBinds();
 
-            $all = $rubric->getAll();
-
-            foreach ($all as $data) {
-                if (isset($data['classId'])) {
-                    $classId = $data['classId'];
-                    $title = isset($data['name']) ? $data['name'] : null;
-
-                    if ($title) {
-                        $rubricElements[$name][] = [
-                            'classId' => $classId,
-                            'name' => $title,
-                        ];
-                    } else {
-                        $element = $this->getElement($classId);
-
-                        if ($element) {
-                            $rubricElements[$name][] = $element;
-                        }
-                    }
-                } elseif (isset($data['className'])) {
-                    $parent = isset($data['parent']) ? $data['parent']: null;
-                    $className = $data['className'];
-
-                    $elements = $this->getElements($parent, $className);
-                    
-                    if ($elements) {
-                        foreach ($elements as $element) {
-                            $rubricElements[$name][] = $element;
-                        }
-                    }
-                }
+            foreach ($binds as $bindName => $bind) {
+                $views[$rubricName][] = $this->first($rubric, $bindName);
             }
 
-            if (isset($rubricElements[$name]) && sizeof($rubricElements[$name])) {
+            $views[$rubricName] = implode(PHP_EOL, $views[$rubricName]);
+
+            if ($views[$rubricName]) {
                 $rubrics[] = $rubric;
             }
         }
@@ -327,12 +342,233 @@ class RubricController extends Controller
         $scope['favoriteRubrics'] = $favoriteRubrics;
         $scope['favorites'] = $favorites;
         $scope['rubrics'] = $rubrics;
-        $scope['rubricElements'] = $rubricElements;
+        $scope['views'] = $views;
 
         return view('moonlight::rubrics.index', $scope);
     }
 
-    protected function getElements($parentId, $className)
+    protected function first($rubric, $bindName)
+    {
+        $views = [];
+
+        $loggedUser = Auth::guard('moonlight')->user();
+
+        $site = \App::make('site');
+
+        $bind = $rubric->getBindByName($bindName);
+
+        if (! $bind) {
+            return null;
+        }
+
+        $bindItem = $bind['first'];
+
+        if ($bindItem && is_string($bindItem)) {
+            $elements = $this->getElements(null, $bindItem);
+
+            if (sizeof($elements)) {
+                $scope['name'] = $rubric->getName();
+                $scope['bind'] = $bindName;
+                $scope['classId'] = null;
+                $scope['parent'] = null;
+                $scope['elements'] = $elements;
+
+                $views[] = view('moonlight::rubrics.node', $scope)->render();
+            }
+        } elseif (is_array($bindItem)) {
+            foreach ($bindItem as $key => $value) {
+                if ($key && $key == Site::ROOT) {
+                    $elements = $this->getElements($key, $value);
+                } else {
+                    $element = Element::getByClassId($key);
+
+                    if ($element) {
+                        $elements = $this->getElements($key, $value);
+                    } else {
+                        $elements = $this->getElements(null, $value);
+                    }
+                }
+
+                if (sizeof($elements)) {
+                    $scope['name'] = $rubric->getName();
+                    $scope['bind'] = $bindName;
+                    $scope['classId'] = null;
+                    $scope['parent'] = null;
+                    $scope['elements'] = $elements;
+    
+                    $views[] = view('moonlight::rubrics.node', $scope)->render();
+                }
+            }
+        }
+
+        $html = implode(PHP_EOL, $views);
+
+        return $html;
+    }
+
+    protected function node($rubric, $bindName, $parent, $currentClassId = null)
+    {
+        $views = [];
+
+        $loggedUser = Auth::guard('moonlight')->user();
+
+        $site = \App::make('site');
+
+        $bind = $rubric->getBindByName($bindName);
+
+        if (! $bind) {
+            return null;
+        }
+
+        if (strpos($parent, Element::ID_SEPARATOR)) {
+			$parts = explode(Element::ID_SEPARATOR, $parent);
+			$id = array_pop($parts);
+			$class = implode(Element::ID_SEPARATOR, $parts);
+		} else {
+			$class = $parent;
+		}
+
+        if (! $parent) {
+            $bindItem = $bind['first'];
+        } elseif (isset($bind['first'][$parent])) {
+            $bindItem = $bind['first'][$parent];
+        } elseif (isset($bind['first'][$class])) {
+            $bindItem = $bind['first'][$class];
+        } elseif (isset($bind['addition'][$parent])) {
+            $bindItem = $bind['addition'][$parent];
+        } elseif (isset($bind['addition'][$class])) {
+            $bindItem = $bind['addition'][$class];
+        } else {
+            $bindItem = null;
+        }
+
+        if ($bindItem && is_string($bindItem)) {
+            $elements = $this->getElements($parent, $bindItem);
+
+            if (sizeof($elements)) {
+                $scope['name'] = $rubric->getName();
+                $scope['bind'] = $bindName;
+                $scope['classId'] = $currentClassId;
+                $scope['parent'] = $parent;
+                $scope['elements'] = $elements;
+
+                if (isset($bind['addition'][$bindItem])) {
+                    foreach ($elements as $element) {
+                        $count = $this->count($bind, $element['classId']);
+
+                        $open = cache()->get("rubric_node_{$loggedUser->id}_{$rubric->getName()}_{$element['classId']}", false);
+                        
+                        if ($count && $open) {
+                            $scope['children'][$element['classId']] = $this->node($rubric, $bindName, $element['classId'], $currentClassId);;
+                        } elseif ($count) {
+                            $scope['haschildren'][$element['classId']] = $count;
+                        }
+                    }
+                }
+
+                $views[] = view('moonlight::rubrics.node', $scope)->render();
+            }
+        } elseif (is_array($bindItem)) {
+            foreach ($bindItem as $key => $value) {
+                if (! $parent) {
+                    if ($key && $key == Site::ROOT) {
+                        $parent = $key;
+                    } elseif ($key) {
+                        $element = Element::getByClassId($key);
+    
+                        if ($element) {
+                            $parent = $key;
+                        }
+                    }
+                }
+
+                $elements = $this->getElements($parent, $value);
+
+                if (sizeof($elements)) {
+                    $scope['name'] = $rubric->getName();
+                    $scope['bind'] = $bindName;
+                    $scope['classId'] = $currentClassId;
+                    $scope['parent'] = $parent;
+                    $scope['elements'] = $elements;
+    
+                    if (isset($bind['addition'][$value])) {
+                        foreach ($elements as $element) {
+                            $count = $this->count($bind, $element['classId']);
+
+                            $open = cache()->get("rubric_node_{$loggedUser->id}_{$rubric->getName()}_{$element['classId']}", false);
+                            
+                            if ($count && $open) {
+                                $scope['children'][$element['classId']] = $this->node($rubric, $bindName, $element['classId'], $currentClassId);
+                            } elseif ($count) {
+                                $scope['haschildren'][$element['classId']] = $count;
+                            }
+                        }
+                    }
+    
+                    $views[] = view('moonlight::rubrics.node', $scope)->render();
+                }
+            }
+        }
+
+        $html = implode(PHP_EOL, $views);
+
+        return $html;
+    }
+
+    protected function count($bind, $parent)
+    {
+        $count = 0;
+
+        $loggedUser = Auth::guard('moonlight')->user();
+
+        $site = \App::make('site');
+
+        if (strpos($parent, Element::ID_SEPARATOR)) {
+			$parts = explode(Element::ID_SEPARATOR, $parent);
+			$id = array_pop($parts);
+			$class = implode(Element::ID_SEPARATOR, $parts);
+		} else {
+			$class = $parent;
+		}
+
+        if (! $parent) {
+            $bindItem = $bind['first'];
+        } elseif (isset($bind['first'][$parent])) {
+            $bindItem = $bind['first'][$parent];
+        } elseif (isset($bind['first'][$class])) {
+            $bindItem = $bind['first'][$class];
+        } elseif (isset($bind['addition'][$parent])) {
+            $bindItem = $bind['addition'][$parent];
+        } elseif (isset($bind['addition'][$class])) {
+            $bindItem = $bind['addition'][$class];
+        } else {
+            $bindItem = null;
+        }
+
+        if ($bindItem && is_string($bindItem)) {
+            $count += $this->getElementsCount($parent, $bindItem);
+        } elseif (is_array($bindItem)) {
+            foreach ($bindItem as $key => $value) {
+                if ($parent) {
+                    $count += $this->getElementsCount($parent, $value);
+                } elseif ($key && $key == Site::ROOT) {
+                    $count += $this->getElementsCount($key, $value);
+                } else {
+                    $element = Element::getByClassId($key);
+
+                    if ($element) {
+                        $count += $this->getElementsCount($key, $value);
+                    } else {
+                        $count += $this->getElementsCount(null, $value);
+                    }
+                }
+            }
+        }
+
+        return $count;
+    }
+
+    protected function getElementsCount($parentId, $className)
     {
         $loggedUser = Auth::guard('moonlight')->user();
 
@@ -343,12 +579,12 @@ class RubricController extends Controller
         if ($parentId && $parentId != Site::ROOT) {
             $parent = Element::getByClassId($parentId);
 
-            if (! $parent) return null;
+            if (! $parent) return 0;
         }
 
         $item = $site->getItemByName($className);
 
-        if (! $item) return null;
+        if (! $item) return 0;
 
         $mainProperty = $item->getMainProperty();
 
@@ -453,7 +689,135 @@ class RubricController extends Controller
 			) {
 				$criteria->whereNotIn('id', $deniedElementList);
 			} elseif ($permissionDenied) {
-                return null;
+                return 0;
+			}
+        }
+
+        return $criteria->count();
+    }
+
+    protected function getElements($parentId, $className)
+    {
+        $loggedUser = Auth::guard('moonlight')->user();
+
+        $site = \App::make('site');
+
+        $parent = null;
+
+        if ($parentId && $parentId != Site::ROOT) {
+            $parent = Element::getByClassId($parentId);
+
+            if (! $parent) return [];
+        }
+
+        $item = $site->getItemByName($className);
+
+        if (! $item) return [];
+
+        $mainProperty = $item->getMainProperty();
+
+		if (! $loggedUser->isSuperUser()) {
+			$permissionDenied = true;
+			$deniedElementList = [];
+			$allowedElementList = [];
+
+			$groupList = $loggedUser->getGroups();
+
+			foreach ($groupList as $group) {
+                $groupItemPermission = $group->getItemPermission($item->getNameId());
+				$itemPermission = $groupItemPermission
+					? $groupItemPermission->permission
+					: $group->default_permission;
+
+				if ($itemPermission != 'deny') {
+					$permissionDenied = false;
+					$deniedElementList = [];
+				}
+
+				$elementPermissionList = $group->getElementPermissions();
+
+				$elementPermissionMap = [];
+
+				foreach ($elementPermissionList as $elementPermission) {
+					$classId = $elementPermission->class_id;
+					$permission = $elementPermission->permission;
+                    
+					$array = explode(Element::ID_SEPARATOR, $classId);
+                    $id = array_pop($array);
+                    $class = implode(Element::ID_SEPARATOR, $array);
+					
+                    if ($class == $item->getNameId()) {
+						$elementPermissionMap[$id] = $permission;
+					}
+				}
+
+				foreach ($elementPermissionMap as $id => $permission) {
+					if ($permission == 'deny') {
+						$deniedElementList[$id] = $id;
+					} else {
+						$allowedElementList[$id] = $id;
+					}
+				}
+			}
+        }
+
+        if ($parentId) {
+            $propertyList = $item->getPropertyList();
+            
+            $criteria = $item->getClass()->where(
+                function($query) use ($propertyList, $parent) {
+                    if ($parent) {
+                        $query->orWhere('id', null);
+                    }
+    
+                    foreach ($propertyList as $property) {
+                        if (
+                            $parent
+                            && $property->isOneToOne()
+                            && $property->getRelatedClass() == Element::getClass($parent)
+                        ) {
+                            $query->orWhere(
+                                $property->getName(), $parent->id
+                            );
+                        } elseif (
+                            ! $parent
+                            && $property->isOneToOne()
+                        ) {
+                            $query->orWhere(
+                                $property->getName(), null
+                            );
+                        }
+                    }
+                }
+            );
+    
+            foreach ($propertyList as $property) {
+                if (
+                    $parent
+                    && $property->isManyToMany()
+                    && $property->getRelatedClass() == Element::getClass($parent)
+                ) {
+                    $criteria = $parent->{$property->getRelatedMethod()}();
+                    break;
+                }
+            }    
+        } else {
+            $criteria = $item->getClass()->query();
+        }
+
+		if (! $loggedUser->isSuperUser()) {
+			if (
+				$permissionDenied
+				&& sizeof($allowedElementList)
+			) {
+				$criteria->whereIn('id', $allowedElementList);
+			} elseif (
+				! $permissionDenied
+				&& sizeof($deniedElementList)
+			) {
+				$criteria->whereNotIn('id', $deniedElementList);
+			} elseif ($permissionDenied) {
+                return [];
 			}
         }
         
@@ -469,28 +833,12 @@ class RubricController extends Controller
 
         foreach ($elementList as $element) {
             $elements[] = [
-                'classId' => Element::getClassId($element),
+                'classId' => class_id($element),
+                'itemId' => item_id($element),
                 'name' => $element->{$mainProperty},
             ];
         }
 
         return $elements;
-    }
-
-    protected function getElement($classId)
-    {
-        $loggedUser = Auth::guard('moonlight')->user();
-
-        $element = Element::getByClassId($classId);
-        
-        if (! $element) return null;
-
-        $item = Element::getItem($element);
-        $mainProperty = $item->getMainProperty();
-
-        return [
-            'classId' => Element::getClassId($element),
-            'name' => $element->{$mainProperty},
-        ];
     }
 }
