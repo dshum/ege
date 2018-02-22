@@ -401,6 +401,7 @@ nav .dropdown ul > li span {
   position: relative;
   top: 2px;
   font-size: 1.2rem;
+  transition: all 0.2s linear 0s;
 }
 
 .sidebar .elements ul li.divider {

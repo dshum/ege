@@ -9,7 +9,13 @@ $(function() {
 
         if (display == 'show') {
             $('.main .elements ul[node="' + classId + '"]').slideUp(200);
-            span.attr('display', 'hide').html('<i class="fa fa-angle-down"></i>');
+
+            span.attr('display', 'hide');
+            span.find('i').css('transform', 'rotate(-180deg)');
+
+            setTimeout(function() {
+                span.html('<i class="fa fa-angle-down"></i>')
+            }, 200);
 
             $.post('/moonlight/rubrics/node/close', {
                 rubric: rubric,
@@ -18,7 +24,13 @@ $(function() {
             
         } else if (display == 'hide') {
             $('.main .elements ul[node="' + classId + '"]').slideDown(200);
-            span.attr('display', 'show').html('<i class="fa fa-angle-up"></i>');
+
+            span.attr('display', 'show');
+            span.find('i').css('transform', 'rotate(180deg)');
+
+            setTimeout(function() {
+                span.html('<i class="fa fa-angle-up"></i>')
+            }, 200);
 
             $.post('/moonlight/rubrics/node/open', {
                 rubric: rubric,
@@ -35,9 +47,14 @@ $(function() {
                 $.unblockUI();
 
                 if (data.html) {
-                    $(data.html).hide().appendTo(li).slideDown(200, function() {
-                        span.attr('display', 'show').html('<i class="fa fa-angle-up"></i>');
-                    });
+                    $(data.html).hide().appendTo(li).slideDown(200);
+
+                    span.attr('display', 'show');
+                    span.find('i').css('transform', 'rotate(180deg)');
+                    
+                    setTimeout(function() {
+                        span.html('<i class="fa fa-angle-up"></i>')
+                    }, 200);
                 }
             });
         }
