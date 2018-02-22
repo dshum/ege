@@ -344,7 +344,7 @@ nav .dropdown ul > li span {
 }
 
 .sidebar ul {
-  display: table;
+  display: block;
 }
 
 .sidebar ul li a {

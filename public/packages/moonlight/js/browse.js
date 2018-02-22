@@ -929,7 +929,7 @@ $(function() {
         var display = span.attr('display');
 
         if (display == 'show') {
-            $('.sidebar .elements ul[node="' + classId + '"]').hide();
+            $('.sidebar .elements ul[node="' + classId + '"]').slideUp(200);
             span.attr('display', 'hide').html('<i class="fa fa-angle-down"></i>');
 
             $.post('/moonlight/rubrics/node/close', {
@@ -938,7 +938,7 @@ $(function() {
             });
             
         } else if (display == 'hide') {
-            $('.sidebar .elements ul[node="' + classId + '"]').show();
+            $('.sidebar .elements ul[node="' + classId + '"]').slideDown(200);
             span.attr('display', 'show').html('<i class="fa fa-angle-up"></i>');
 
             $.post('/moonlight/rubrics/node/open', {
@@ -956,8 +956,9 @@ $(function() {
                 $.unblockUI();
 
                 if (data.html) {
-                    li.append(data.html);
-                    span.attr('display', 'show').html('<i class="fa fa-angle-up"></i>');
+                    $(data.html).hide().appendTo(li).slideDown(200, function() {
+                        span.attr('display', 'show').html('<i class="fa fa-angle-up"></i>');
+                    });
                 }
             });
         }
