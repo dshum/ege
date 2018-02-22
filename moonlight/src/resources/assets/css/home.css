@@ -28,6 +28,11 @@
 }
 
 .main .elements ul {
+  margin: 0 0 0 1rem;
+  padding: 0;
+}
+
+.main .elements > ul {
   margin: -0.25rem 0 0 0;
   padding: 0;
 }
@@ -35,6 +40,21 @@
 .main .elements ul li {
   margin: 0.5rem 0;
   padding: 0;
+}
+
+.main .elements ul li:last-child {
+  margin-bottom: 0;
+}
+
+.main .elements ul li span.open {
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.main .elements ul li span.open .fa {
+  position: relative;
+  top: 2px;
+  font-size: 1.2rem;
 }
 
 .main .favorite-settings {

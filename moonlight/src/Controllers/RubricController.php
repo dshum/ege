@@ -329,7 +329,7 @@ class RubricController extends Controller
             $binds = $rubric->getBinds();
 
             foreach ($binds as $bindName => $bind) {
-                $views[$rubricName][] = $this->first($rubric, $bindName);
+                $views[$rubricName][] = $this->node($rubric, $bindName, null);
             }
 
             $views[$rubricName] = implode(PHP_EOL, $views[$rubricName]);
@@ -345,65 +345,6 @@ class RubricController extends Controller
         $scope['views'] = $views;
 
         return view('moonlight::rubrics.index', $scope);
-    }
-
-    protected function first($rubric, $bindName)
-    {
-        $views = [];
-
-        $loggedUser = Auth::guard('moonlight')->user();
-
-        $site = \App::make('site');
-
-        $bind = $rubric->getBindByName($bindName);
-
-        if (! $bind) {
-            return null;
-        }
-
-        $bindItem = $bind['first'];
-
-        if ($bindItem && is_string($bindItem)) {
-            $elements = $this->getElements(null, $bindItem);
-
-            if (sizeof($elements)) {
-                $scope['name'] = $rubric->getName();
-                $scope['bind'] = $bindName;
-                $scope['classId'] = null;
-                $scope['parent'] = null;
-                $scope['elements'] = $elements;
-
-                $views[] = view('moonlight::rubrics.node', $scope)->render();
-            }
-        } elseif (is_array($bindItem)) {
-            foreach ($bindItem as $key => $value) {
-                if ($key && $key == Site::ROOT) {
-                    $elements = $this->getElements($key, $value);
-                } else {
-                    $element = Element::getByClassId($key);
-
-                    if ($element) {
-                        $elements = $this->getElements($key, $value);
-                    } else {
-                        $elements = $this->getElements(null, $value);
-                    }
-                }
-
-                if (sizeof($elements)) {
-                    $scope['name'] = $rubric->getName();
-                    $scope['bind'] = $bindName;
-                    $scope['classId'] = null;
-                    $scope['parent'] = null;
-                    $scope['elements'] = $elements;
-    
-                    $views[] = view('moonlight::rubrics.node', $scope)->render();
-                }
-            }
-        }
-
-        $html = implode(PHP_EOL, $views);
-
-        return $html;
     }
 
     protected function node($rubric, $bindName, $parent, $currentClassId = null)

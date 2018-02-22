@@ -7,6 +7,7 @@
 @endsection
 
 @section('js')
+<script src="/packages/moonlight/js/home.js"></script>
 @endsection
 
 @section('body')
