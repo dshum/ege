@@ -887,7 +887,7 @@ $(function() {
         var block = $(this).parents('.elements');
         var rubric = block.attr('rubric');
         var display = block.attr('display');
-        var ul = block.find('ul');
+        var ul = block.find('ul').first();
 
         if (display == 'show') {
             block.attr('display', 'hide');
@@ -972,7 +972,7 @@ $(function() {
 
                     span.attr('display', 'show');
                     span.find('i').css('transform', 'rotate(180deg)');
-                    
+
                     setTimeout(function() {
                         span.html('<i class="fa fa-angle-up"></i>')
                     }, 200);

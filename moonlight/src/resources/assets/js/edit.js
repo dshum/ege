@@ -419,7 +419,7 @@ $(function() {
         var block = $(this).parents('.elements');
         var rubric = block.attr('rubric');
         var display = block.attr('display');
-        var ul = block.find('ul');
+        var ul = block.find('ul').first();
 
         if (display == 'show') {
             block.attr('display', 'hide');
