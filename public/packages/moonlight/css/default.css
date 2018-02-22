@@ -343,6 +343,10 @@ nav .dropdown ul > li span {
   padding: 2rem;
 }
 
+.sidebar ul li a {
+  color: black;
+}
+
 .sidebar ul li.active > a {
   color: dodgerblue;
 }
