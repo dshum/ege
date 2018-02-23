@@ -4,6 +4,7 @@ body {
   left: 0;
   bottom: 0;
   right: 0;
+  background: url(/assets/background.jpg) no-repeat center center fixed;
   background-position: center;
   background-size: cover;
   -webkit-background-size: cover;
