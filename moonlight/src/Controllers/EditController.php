@@ -483,6 +483,15 @@ class EditController extends Controller
 		}
         
         $element->save();
+
+        foreach ($propertyList as $propertyName => $property) {
+            if ($property->isManyToMany()) {
+                $property->
+                    setElement($element)->
+                    set();
+                continue;
+            }
+        }
         
         UserAction::log(
 			UserActionType::ACTION_TYPE_ADD_ELEMENT_ID,

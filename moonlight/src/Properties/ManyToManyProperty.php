@@ -127,6 +127,19 @@ class ManyToManyProperty extends BaseProperty
 		return $this;
 	}
 
+	public function drop()
+	{
+		$name = $this->getName();
+
+		try {
+			if (method_exists($this->element, $name)) {
+				$this->element->{$name}()->detach();
+			}
+		} catch (\Exception $e) {}
+
+		return $this;
+	}
+
 	public function sync($ids)
 	{
         $name = $this->getName();

@@ -228,7 +228,7 @@ class TrashController extends Controller
 
         $currentItem = Element::getItem($element);
 
-        $propertyList = $currentItem->getPropertyList();        
+        $propertyList = $currentItem->getPropertyList();
 
         foreach ($propertyList as $propertyName => $property) {
             $property->setElement($element)->drop();

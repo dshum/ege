@@ -39,13 +39,16 @@ class User extends Authenticatable
 
 		if (method_exists(cache()->getStore(), 'tags')) {
 			static::created(function($element) {
-				cache()->tags('admin_groups')->flush();
 				cache()->tags('admin_users')->flush();
 			});
 	
 			static::saved(function($element) {
 				cache()->tags('admin_groups')->flush();
 				cache()->tags('admin_users')->flush();
+			});
+
+			static::deleting(function($element) {
+				$element->removeGroups();
 			});
 	
 			static::deleted(function($element) {
@@ -82,6 +85,13 @@ class User extends Authenticatable
 		if ($this->inGroup($group)) {
 			$this->groups()->detach($group);
 		}
+
+		return true;
+	}
+
+	public function removeGroups()
+	{
+		$this->groups()->detach();
 
 		return true;
 	}

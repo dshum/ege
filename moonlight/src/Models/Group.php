@@ -21,13 +21,13 @@ class Group extends Model {
 	 */
 	protected $pivotTable = 'admin_users_groups_pvot';
 
-    /**
-	 * The group users.
-	 *
-	 * @var array
-	 */
-	protected $groupUsers;
-    
+	/**
+     * All of the relationships to be touched.
+     *
+     * @var array
+     */
+	protected $touches = ['users'];
+
     private $permissionTitles = [
         'deny' => 'Доступ закрыт',
         'view' => 'Просмотр элементов',

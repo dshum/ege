@@ -364,7 +364,7 @@ nav .dropdown ul > li span {
 .sidebar .elements .h2 span {
   font-size: 1.4rem;
   color: steelblue;
-  border-bottom: 1px dotted steelblue;
+  border-bottom: 1px dashed steelblue;
   cursor: pointer;
 }
 
@@ -571,7 +571,7 @@ ul.header li.h2 span {
 
 div.item.active ul.header li.h2 span {
   color: #37a;
-  border-bottom: 1px dotted steelblue;
+  border-bottom: 1px dashed #37a;
   cursor: pointer;
 }
 
@@ -595,7 +595,7 @@ ul.header li.checked > span {
 }
 
 .sort-toggler {
-  border-bottom: 1px dotted #999;
+  border-bottom: 1px dashed #999;
   cursor: pointer;
 }
 
@@ -864,7 +864,7 @@ table.elements td.date {
 
 table.elements td.editable .view-container {
   display: inline-block;
-  border-bottom: 1px dotted #666;
+  border-bottom: 1px dashed #666;
   cursor: pointer;
 }
 
@@ -1847,7 +1847,7 @@ form .loadfile .reset {
   margin-left: 1rem;
   padding: 0;
   font-size: 0.8rem;
-  border-bottom: 1px dotted #999;
+  border-bottom: 1px dashed #999;
   cursor: pointer;
 }
 
@@ -1883,7 +1883,7 @@ form .loadfile .reset {
 }
 
 .dashed {
-  border-bottom: 1px dotted inherit;
+  border-bottom: 1px dashed inherit;
 }
 
 .red {

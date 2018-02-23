@@ -956,6 +956,7 @@ class BrowseController extends Controller
         }
 
         $mainProperty = $currentItem->getMainProperty();
+        $propertyList = $currentItem->getPropertyList();
 
         $checked = $request->input('checked');
         
@@ -985,6 +986,10 @@ class BrowseController extends Controller
         
         foreach ($elements as $element) {
             $classId = Element::getClassId($element);
+
+            foreach ($propertyList as $propertyName => $property) {
+                $property->setElement($element)->drop();
+            }
 
             $element->forceDelete();
 
