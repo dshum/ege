@@ -24,4 +24,5 @@ div.item.active ul.header li.h2 span {
   display: block;
   margin-right: 0;
   margin-bottom: 0.5rem;
+  width: auto;
 }

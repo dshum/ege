@@ -214,6 +214,13 @@ abstract class BaseProperty
 		return $this->request;
 	}
 
+	public function setValue($value)
+	{
+		$this->value = $value;
+
+		return $this;
+	}
+
 	public function getValue()
 	{
 		return $this->value;

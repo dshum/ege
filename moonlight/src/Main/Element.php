@@ -185,6 +185,27 @@ final class Element
 		}
 	}
 
+	public static function setRelation(Model $element, Model $relation)
+	{
+		$item = Element::getItem($element);
+
+		$propertyList = $item->getPropertyList();
+
+		foreach ($propertyList as $propertyName => $property) {
+			if (
+				$property->isOneToOne()
+				&& $property->getRelatedClass() == static::getClass($relation)
+			) {
+				$element->$propertyName = $relation->id;
+			} elseif (
+				$property->isManyToMany()
+				&& $property->getRelatedClass() == static::getClass($relation)
+			) {
+				$property->setList([$relation]);
+			}
+		}
+	}
+
 	public static function copy(Model $element)
 	{
 		$item = Element::getItem($element);

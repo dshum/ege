@@ -4,6 +4,7 @@ div.item {
 
 div.item.active ul.header li.h2 span {
   border-bottom: none;
+  cursor: unset;
 }
 
 .buttons {

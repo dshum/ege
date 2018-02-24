@@ -634,11 +634,11 @@ class EditController extends Controller
         $loggedUser = Auth::guard('moonlight')->user();
         
         if ($classId == 'root') {
-            $parent = null;
+            $parentElement = null;
         } else {
-            $parent = Element::getByClassId($classId);
+            $parentElement = Element::getByClassId($classId);
             
-            if (! $parent) {
+            if (! $parentElement) {
                 return redirect()->route('moonlight.browse');
             }
         }
@@ -655,10 +655,10 @@ class EditController extends Controller
 
         $parents = [];
         
-        if ($parent) {
-            Element::setParent($element, $parent);
+        if ($parentElement) {
+            $parentList = Element::getParentList($parentElement);
 
-            $parentList = Element::getParentList($element);
+            $parentList[] = $parentElement;
 
             foreach ($parentList as $parent) {
                 $parentItem = Element::getItem($parent);
@@ -671,7 +671,7 @@ class EditController extends Controller
         }
 
         $propertyList = $currentItem->getPropertyList();
-        
+
         $properties = [];
         $views = [];
 
@@ -683,7 +683,23 @@ class EditController extends Controller
         }
 
         foreach ($properties as $property) {
-            $propertyScope = $property->setElement($element)->getEditView();
+            $property->setElement($element);
+
+            if (
+                $parentElement
+				&& $property->isOneToOne()
+				&& $property->getRelatedClass() == Element::getClass($parentElement)
+			) {
+				$property->setValue($parentElement);
+			} elseif (
+				$parentElement
+				&& $property->isManyToMany()
+				&& $property->getRelatedClass() == Element::getClass($parentElement)
+			) {
+				$property->setList([$parentElement]);
+            }
+            
+            $propertyScope = $property->getEditView();
             
             $views[$property->getName()] = view(
                 'moonlight::properties.'.$property->getClassName().'.edit', $propertyScope
