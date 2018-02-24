@@ -11,11 +11,6 @@ $(function() {
             $('.main .elements ul[node="' + classId + '"]').slideUp(200);
 
             span.attr('display', 'hide');
-            span.find('i').css('transform', 'rotate(-180deg)');
-
-            setTimeout(function() {
-                span.html('<i class="fa fa-angle-down"></i>')
-            }, 200);
 
             $.post('/moonlight/rubrics/node/close', {
                 rubric: rubric,
@@ -26,11 +21,6 @@ $(function() {
             $('.main .elements ul[node="' + classId + '"]').slideDown(200);
 
             span.attr('display', 'show');
-            span.find('i').css('transform', 'rotate(180deg)');
-
-            setTimeout(function() {
-                span.html('<i class="fa fa-angle-up"></i>')
-            }, 200);
 
             $.post('/moonlight/rubrics/node/open', {
                 rubric: rubric,
@@ -50,11 +40,6 @@ $(function() {
                     $(data.html).hide().appendTo(li).slideDown(200);
 
                     span.attr('display', 'show');
-                    span.find('i').css('transform', 'rotate(180deg)');
-                    
-                    setTimeout(function() {
-                        span.html('<i class="fa fa-angle-up"></i>')
-                    }, 200);
                 }
             });
         }

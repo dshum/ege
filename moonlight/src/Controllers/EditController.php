@@ -685,19 +685,9 @@ class EditController extends Controller
         foreach ($properties as $property) {
             $property->setElement($element);
 
-            if (
-                $parentElement
-				&& $property->isOneToOne()
-				&& $property->getRelatedClass() == Element::getClass($parentElement)
-			) {
-				$property->setValue($parentElement);
-			} elseif (
-				$parentElement
-				&& $property->isManyToMany()
-				&& $property->getRelatedClass() == Element::getClass($parentElement)
-			) {
-				$property->setList([$parentElement]);
-            }
+            if ($parentElement) {
+				$property->setRelation($parentElement);
+			}
             
             $propertyScope = $property->getEditView();
             

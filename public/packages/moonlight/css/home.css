@@ -58,6 +58,10 @@
   transition: all 0.2s linear 0s;
 }
 
+.main .elements ul li span.open[display="show"] .fa {
+  transform: rotate(180deg);
+}
+
 .main .favorite-settings {
   position: absolute;
   right: 0;

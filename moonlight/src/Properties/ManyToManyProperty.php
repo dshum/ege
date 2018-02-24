@@ -112,6 +112,15 @@ class ManyToManyProperty extends BaseProperty
 
 		return $this;
 	}
+
+	public function setRelation(Model $relation)
+	{
+		if ($this->getRelatedClass() == Element::getClass($relation)) {
+			$this->setList([$relation]);
+		}
+
+		return $this;
+	}
     
     public function set()
 	{

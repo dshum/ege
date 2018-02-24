@@ -43,7 +43,7 @@ class BackupDatabase extends Command
         $dbname = config('database.connections.pgsql.database');
         $username = config('database.connections.pgsql.username');
 
-        $filename = storage_path().'/backups/apples_'.date('Y-m-d').'.txt';
+        $filename = storage_path().'/backups/'.$dbname.'_'.date('Y-m-d').'.txt';
 
         $output[] = system("pg_dump --username={$username} --format plain --verbose --file {$filename} --dbname={$dbname}");
 

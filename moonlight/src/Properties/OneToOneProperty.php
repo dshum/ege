@@ -85,6 +85,15 @@ class OneToOneProperty extends BaseProperty
 		return $this;
 	}
 
+	public function setRelation(Model $relation)
+	{
+		if ($this->getRelatedClass() == Element::getClass($relation)) {
+			$this->value = $relation;
+		}
+
+		return $this;
+	}
+
 	public function searchQuery($query)
 	{
         $request = $this->getRequest();

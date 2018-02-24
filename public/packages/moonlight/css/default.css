@@ -404,6 +404,10 @@ nav .dropdown ul > li span {
   transition: all 0.2s linear 0s;
 }
 
+.sidebar .elements ul li span.open[display="show"] .fa {
+  transform: rotate(180deg);
+}
+
 .sidebar .elements ul li.divider {
   width: 5rem;
   margin: 0.5rem 0;
