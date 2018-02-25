@@ -22,7 +22,7 @@
                 <div class="container">
                     <ul>
                         @foreach ($columns as $column)
-                        <li><input type="checkbox" name="columns[{{ $currentItem->getNameId() }}][]" id="column_{{ $currentItem->getNameId() }}_{{ $column['name'] }}" value="{{ $column['name'] }}"{{ $column['show'] ? ' checked' : '' }}><label for="column_{{ $currentItem->getNameId() }}_{{ $column['name'] }}">{{ $column['title'] }}</label></li>
+                        <li name="{{ $column['name'] }}" show="{{ $column['show'] ? 'true' : 'false' }}"><span class="eye"></span>{{ $column['title'] }}</li>
                         @endforeach
                         <li class="reload"><input type="button" value="Обновить" class="btn small"></li>
                     </ul>

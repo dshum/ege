@@ -41,7 +41,7 @@ class BrowseController extends Controller
 
         $class = $request->input('item');
         $name = $request->input('name');
-        $checked = $request->input('checked');
+        $show = $request->input('show');
 
         $site = \App::make('site');
         
@@ -61,7 +61,7 @@ class BrowseController extends Controller
             return response()->json($scope);
         }
 
-        if ($checked == 'true') {
+        if ($show == 'true') {
             if ($property->getShow()) {
                 cache()->forget("show_column_{$loggedUser->id}_{$class}_{$name}");
             } else {
@@ -75,7 +75,7 @@ class BrowseController extends Controller
             }
         }
 
-        $scope['column'] = $checked;
+        $scope['column'] = $show;
 
         return response()->json($scope);
     }

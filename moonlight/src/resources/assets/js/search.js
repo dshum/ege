@@ -833,17 +833,21 @@ $(function() {
         e.stopPropagation();
     });
 
-    $('body').on('change', 'li.column-toggler .dropdown input:checkbox', function(e) {
-        var checkbox = $(this);
-        var name = checkbox.val();
-        var checked = checkbox.prop('checked');
-        var itemContainer = $(this).parents('div[item]');
+    $('body').on('click', 'li.column-toggler .dropdown ul > li[show]', function(e) {
+        var li = $(this);
+        var name = li.attr('name');
+        var show = li.attr('show');
+        var itemContainer = li.parents('div[item]');
         var item = itemContainer.attr('item');
+
+        show = show == 'true' ? 'false' : 'true';
+
+        li.attr('show', show);
 
         $.post('/moonlight/column', {
             item: item,
             name: name,
-            checked: checked
+            show: show
         });
     });
 
