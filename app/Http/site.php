@@ -320,10 +320,7 @@ $site->
 		Item::create('App\Test')->
 		setTitle('Тест')->
         setCreate(true)->
-		addProperty(
-			OrderProperty::create('order')->
-			setRelatedClass('App\Subtopic')
-		)->
+		addOrder()->
 		addProperty(
 			MainProperty::create('name')->
 			setTitle('Название')->
@@ -335,8 +332,7 @@ $site->
 			setRelatedClass('App\Topic')->
 			setParent(true)->
             setOpenItem(true)->
-			setShow(true)->
-			setRequired(true)
+			setShow(true)
 		)->
 		addProperty(
 			OneToOneProperty::create('subtopic_id')->

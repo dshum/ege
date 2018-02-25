@@ -6,7 +6,7 @@
     <ul class="header">
         <li class="h2" display="show"><span>{{ $currentItem->getTitle() }}</span></li>
         <li class="total">
-            <span class="order-toggler">Всего {{ $total }} {{ Moonlight\Utils\RussianText::selectCaseForNumber($total, ['элемент', 'элемента', 'элементов']) }}.</span>
+            <span>Всего {{ $total }} {{ Moonlight\Utils\RussianText::selectCaseForNumber($total, ['элемент', 'элемента', 'элементов']) }}.</span>
             @if ($orders && $total)
                 @if ($hasOrderProperty)
                 <span class="sort-toggler">Отсортировано по {!! $orders !!}.</span>
@@ -15,6 +15,21 @@
                 @endif
             @endif
         </li>
+        @isset($columns)
+        <li class="column-toggler" display="hide">
+            <span>Поля таблицы</span><i class="fa fa-angle-down"></i>
+            <div class="dropdown">
+                <div class="container">
+                    <ul>
+                        @foreach ($columns as $column)
+                        <li><input type="checkbox" name="columns[{{ $currentItem->getNameId() }}][]" id="column_{{ $currentItem->getNameId() }}_{{ $column['name'] }}" value="{{ $column['name'] }}"{{ $column['show'] ? ' checked' : '' }}><label for="column_{{ $currentItem->getNameId() }}_{{ $column['name'] }}">{{ $column['title'] }}</label></li>
+                        @endforeach
+                        <li class="reload"><input type="button" value="Обновить" class="btn small"></li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        @endisset
     </ul>
     <div list>
         @if (isset($browseFilterView) && $browseFilterView)

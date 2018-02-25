@@ -10,7 +10,9 @@ use Moonlight\Main\Element;
 use Moonlight\Models\FavoriteRubric;
 use Moonlight\Models\Favorite;
 use Moonlight\Properties\BaseProperty;
+use Moonlight\Properties\MainProperty;
 use Moonlight\Properties\OrderProperty;
+use Moonlight\Properties\PasswordProperty;
 use Moonlight\Properties\DateProperty;
 use Moonlight\Properties\DatetimeProperty;
 use Carbon\Carbon;
@@ -495,13 +497,39 @@ class SearchController extends Controller
         }
         
         $properties = [];
+        $columns = [];
         $views = [];
 
         foreach ($propertyList as $property) {
+            if ($property instanceof PasswordProperty) continue;
             if ($property->getHidden()) continue;
-            if (! $property->getShow()) continue;
+            
+            $show = cache()->get(
+                "show_column_{$loggedUser->id}_{$currentItem->getNameId()}_{$property->getName()}",
+                $property->getShow()
+            );
+
+            if (! $show) continue;
 
             $properties[] = $property;
+        }
+
+        foreach ($propertyList as $property) {
+            if ($property instanceof MainProperty) continue;
+            if ($property instanceof PasswordProperty) continue;
+            if ($property->getHidden()) continue;
+            if ($property->getName() == 'deleted_at') continue;
+
+            $show = cache()->get(
+                "show_column_{$loggedUser->id}_{$currentItem->getNameId()}_{$property->getName()}",
+                $property->getShow()
+            );
+
+            $columns[] = [
+                'name' => $property->getName(),
+                'title' => $property->gettitle(),
+                'show' => $show,
+            ];
         }
 
         foreach ($elements as $element) {
@@ -598,6 +626,7 @@ class SearchController extends Controller
         $scope['currentItem'] = $currentItem;
         $scope['itemPluginView'] = $itemPluginView;
         $scope['properties'] = $properties;
+        $scope['columns'] = $columns;
         $scope['total'] = $total;
         $scope['currentPage'] = $currentPage;
         $scope['hasMorePages'] = $hasMorePages;

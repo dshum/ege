@@ -202,6 +202,8 @@ Route::group(['prefix' => 'moonlight'], function() {
             where(['classId' => '[A-Za-z0-9\.]+', 'method' => '[A-Za-z0-9]+']);
         
         Route::post('/order', ['as' => 'moonlight.order', 'uses' => 'Moonlight\Controllers\BrowseController@order']);
+
+        Route::post('/column', ['as' => 'moonlight.column', 'uses' => 'Moonlight\Controllers\BrowseController@column']);
         
         Route::group(['middleware' => [
             HistoryMiddleware::class,

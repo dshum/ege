@@ -14,10 +14,12 @@ use Moonlight\Main\UserActionType;
 use Moonlight\Models\FavoriteRubric;
 use Moonlight\Models\Favorite;
 use Moonlight\Models\UserAction;
+use Moonlight\Properties\MainProperty;
 use Moonlight\Properties\OrderProperty;
 use Moonlight\Properties\FileProperty;
 use Moonlight\Properties\ImageProperty;
 use Moonlight\Properties\ManyToManyProperty;
+use Moonlight\Properties\PasswordProperty;
 use Moonlight\Properties\PluginProperty;
 use Moonlight\Properties\VirtualProperty;
 use Carbon\Carbon;
@@ -25,6 +27,58 @@ use Carbon\Carbon;
 class BrowseController extends Controller
 {
     const PER_PAGE = 10;
+
+    /**
+     * Show/hide column.
+     *
+     * @return Response
+     */
+    public function column(Request $request)
+    {
+        $scope = [];
+        
+        $loggedUser = Auth::guard('moonlight')->user();
+
+        $class = $request->input('item');
+        $name = $request->input('name');
+        $checked = $request->input('checked');
+
+        $site = \App::make('site');
+        
+        $currentItem = $site->getItemByName($class);
+        
+        if (! $currentItem) {
+            $scope['error'] = 'Класс элементов не найден.';
+            
+            return response()->json($scope);
+        }
+
+        $property = $currentItem->getPropertyByName($name);
+
+        if (! $property) {
+            $scope['error'] = 'Свойство элемента не найдено.';
+            
+            return response()->json($scope);
+        }
+
+        if ($checked == 'true') {
+            if ($property->getShow()) {
+                cache()->forget("show_column_{$loggedUser->id}_{$class}_{$name}");
+            } else {
+                cache()->forever("show_column_{$loggedUser->id}_{$class}_{$name}", 1);
+            }
+        } else {
+            if (! $property->getShow()) {
+                cache()->forget("show_column_{$loggedUser->id}_{$class}_{$name}");
+            } else {
+                cache()->forever("show_column_{$loggedUser->id}_{$class}_{$name}", 0);
+            }
+        }
+
+        $scope['column'] = $checked;
+
+        return response()->json($scope);
+    }
 
     /**
      * Order elements.
@@ -1456,13 +1510,39 @@ class BrowseController extends Controller
          */
         
         $properties = [];
+        $columns = [];
         $views = [];
 
         foreach ($propertyList as $property) {
+            if ($property instanceof PasswordProperty) continue;
             if ($property->getHidden()) continue;
-            if (! $property->getShow()) continue;
+
+            $show = cache()->get(
+                "show_column_{$loggedUser->id}_{$currentItem->getNameId()}_{$property->getName()}",
+                $property->getShow()
+            );
+
+            if (! $show) continue;
 
             $properties[] = $property;
+        }
+
+        foreach ($propertyList as $property) {
+            if ($property instanceof MainProperty) continue;
+            if ($property instanceof PasswordProperty) continue;
+            if ($property->getHidden()) continue;
+            if ($property->getName() == 'deleted_at') continue;
+
+            $show = cache()->get(
+                "show_column_{$loggedUser->id}_{$currentItem->getNameId()}_{$property->getName()}",
+                $property->getShow()
+            );
+
+            $columns[] = [
+                'name' => $property->getName(),
+                'title' => $property->gettitle(),
+                'show' => $show,
+            ];
         }
 
         foreach ($elements as $element) {
@@ -1582,6 +1662,7 @@ class BrowseController extends Controller
         $scope['itemPluginView'] = $itemPluginView;
         $scope['browseFilterView'] = $browseFilterView;
         $scope['properties'] = $properties;
+        $scope['columns'] = $columns;
         $scope['total'] = $total;
         $scope['currentPage'] = $currentPage;
         $scope['hasMorePages'] = $hasMorePages;

@@ -981,4 +981,50 @@ $(function() {
             itemContainer.find('td.browse .drag').show();
         }
     });
+
+    $('body').on('click', 'li.column-toggler', function() {
+        var li = $(this);
+        var dropdown = li.find('.dropdown');
+        var display = li.attr('display');
+
+        if (display == 'show') {
+            li.attr('display', 'hide');
+            dropdown.fadeOut(200);
+        } else {
+            li.attr('display', 'show');
+            dropdown.fadeIn(200);
+        }
+    });
+
+    $('body').on('click', 'li.column-toggler .dropdown', function(e) {
+        e.stopPropagation();
+    });
+
+    $('body').on('change', 'li.column-toggler .dropdown input:checkbox', function(e) {
+        var checkbox = $(this);
+        var name = checkbox.val();
+        var checked = checkbox.prop('checked');
+        var itemContainer = $(this).parents('div[item]');
+        var item = itemContainer.attr('item');
+
+        $.post('/moonlight/column', {
+            item: item,
+            name: name,
+            checked: checked
+        });
+    });
+
+    $('body').on('click', 'li.column-toggler .dropdown .btn', function(e) {
+        var itemContainer = $(this).parents('div[item]');
+        var li = $(this).parents('li.column-toggler');
+        var dropdown = li.find('.dropdown');
+        var classId = itemContainer.attr('classId');
+        var item = itemContainer.attr('item');
+
+        li.attr('display', 'hide');
+        
+        dropdown.fadeOut(200, function() {
+            getElements(item, classId);
+        });
+    });
 });
