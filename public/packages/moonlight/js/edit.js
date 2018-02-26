@@ -500,6 +500,7 @@ $(function() {
 
     $('body').on('contextmenu', '.sidebar .elements a', function(event) {
         event.preventDefault();
+        event.stopPropagation();
 
         var a = $(this);
         var sidebar = $('.sidebar');
