@@ -599,21 +599,21 @@ ul.header li span.sort-toggler {
 
 ul.header li.search-link {
   margin-left: 1rem;
-  color: black;
+  color: #666;
   font-size: 0.9rem;
 }
 
 ul.header li.search-link a {
-  color: black;
+  color: #666;
   text-decoration: none;
   border-bottom: 1px solid black;
 }
 
 ul.header li.column-toggler {
   margin-left: 1rem;
-  color: black;
   cursor: pointer;
   font-size: 0.9rem;
+  color: #666;
 }
 
 ul.header li.column-toggler > span {
