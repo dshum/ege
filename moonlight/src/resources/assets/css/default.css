@@ -601,13 +601,23 @@ ul.header li span.sort-toggler {
   cursor: pointer;
 }
 
+ul.header li.search-link {
+  margin-left: 1rem;
+  color: black;
+  font-size: 0.9rem;
+}
+
+ul.header li.search-link a {
+  color: black;
+  text-decoration: none;
+  border-bottom: 1px solid black;
+}
+
 ul.header li.column-toggler {
   margin-left: 1rem;
-  padding: 0;
-  border-radius: 2px;
   color: black;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 ul.header li.column-toggler > span {
@@ -753,16 +763,6 @@ div.empty > div:last-child {
 
 .buttons .button.enabled > div > .fa {
   color: black;
-  transition: 0.3s;
-}
-
-.buttons .button.enabled.up > .fa {
-  color: steelblue;
-  transition: 0.3s;
-}
-
-.buttons .button.enabled.edit > .fa {
-  color: goldenrod;
   transition: 0.3s;
 }
 

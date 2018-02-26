@@ -30,6 +30,9 @@
             </div>
         </li>
         @endisset
+        @if ($mode == 'browse')
+        <li class="search-link"><a href="{{ route('moonlight.search.item', ['item' => $currentItem->getNameId(), 'action' => 'search']) }}">Поиск</a></li>
+        @endif
     </ul>
     <div list>
         @if (isset($browseFilterView) && $browseFilterView)
