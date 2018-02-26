@@ -1,3 +1,4 @@
+@if (sizeof($recent))
 <div class="leaf welcome">
     <h2>Последние завершенные тесты</h2>
     <ul>
@@ -14,3 +15,4 @@
         @endforeach
     </ul>
 </div>
+@endif
