@@ -414,6 +414,59 @@ nav .dropdown ul > li span {
   border: 1px solid #ddd;
 }
 
+.sidebar .contextmenu {
+  display: none;
+  position: absolute;
+  z-index: 120;
+  margin: 0;
+  padding: 0;
+  box-shadow: 0 3px 7px 0 rgba(0, 0, 0, 0.18), 0 2px 11px 0 rgba(0, 0, 0, 0.15);
+  border: none;
+  background-color: white;
+  font-size: 1rem;
+}
+
+.sidebar .contextmenu ul {
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar .contextmenu ul > li {
+  float: none;
+  height: 3rem;
+  line-height: 3rem;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  color: black;
+}
+
+.sidebar .contextmenu ul > li:hover {
+  background-color: #eee;
+  transition: 0.2s;
+}
+
+.sidebar .contextmenu ul > li.title {
+  height: auto;
+  line-height: 1.5rem;
+  padding: 1rem 3rem 0.5rem 2rem;
+  background-color: white;
+  color: #357;
+}
+
+.sidebar .contextmenu ul > li.divider {
+  height: 1px;
+  background-color: #ccc;
+  padding: 0;
+}
+
+.sidebar .contextmenu ul > li a {
+  display: block;
+  padding: 0 3rem 0 2rem;
+  text-decoration: none;
+  color: black;
+}
+
 .sidebar input[type="text"] {
   margin: 0 0 2rem 0;
   width: 10rem;

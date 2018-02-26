@@ -254,6 +254,8 @@ class RubricController extends Controller
 
                     $favorites[$favoriteRubric->id][] = [
                         'classId' => $favorite->class_id,
+                        'itemId' => $item->getNameId(),
+                        'itemName' => $item->getTitle(),
                         'name' => $element->{$mainProperty},
                     ];
                 }
@@ -775,7 +777,8 @@ class RubricController extends Controller
         foreach ($elementList as $element) {
             $elements[] = [
                 'classId' => class_id($element),
-                'itemId' => item_id($element),
+                'itemId' => $item->getNameId(),
+                'itemName' => $item->getTitle(),
                 'name' => $element->{$mainProperty},
             ];
         }

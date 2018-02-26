@@ -498,6 +498,39 @@ $(function() {
         }
     });
 
+    $('body').on('contextmenu', '.sidebar .elements a', function(event) {
+        event.preventDefault();
+
+        var a = $(this);
+        var sidebar = $('.sidebar');
+        var menu = $('.sidebar .contextmenu');
+
+        var left = a.offset().left;
+        var top = a.offset().top - sidebar.offset().top + a.height() + 2;
+    
+        menu.find('li.title span').html(a.text());
+        menu.find('li.title small').html(a.attr('item'));
+        menu.find('li.edit a').attr('href', a.attr('href') + '/edit');
+        menu.find('li.browse a').attr('href', a.attr('href'));
+
+        if (top + menu.height() > $(window).height()) {
+            if (top - menu.height() - a.height() - 4 < 0) {
+                top = 0;
+            } else {
+                top = top - menu.height() - a.height() - 4;
+            }
+        }
+    
+        menu.css({
+            left: left + 'px',
+            top: top + 'px'
+        }).fadeIn(200);
+    });
+
+    $('body').on('click', '.sidebar .contextmenu', function(event) {
+        event.stopPropagation();
+    });
+
     init();
 
     $('div.item').fadeIn(200);

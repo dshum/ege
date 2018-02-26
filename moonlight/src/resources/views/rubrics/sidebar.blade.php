@@ -4,7 +4,7 @@
     @if (isset($favorites[$favoriteRubric->id]) && sizeof($favorites[$favoriteRubric->id]))
     <ul>
         @foreach ($favorites[$favoriteRubric->id] as $favorite)
-        <li class="{{ $classId == $favorite['classId'] ? 'active' : '' }}"><a href="{{ route('moonlight.browse.element', $favorite['classId']) }}">{{ $favorite['name'] }}</a></li>
+        <li class="{{ $classId == $favorite['classId'] ? 'active' : '' }}"><a href="{{ route('moonlight.browse.element', $favorite['classId']) }}" item="{{ $favorite['itemName'] }}">{{ $favorite['name'] }}</a></li>
         @endforeach
     </ul>
     @endif
@@ -20,3 +20,10 @@
     @endif
 </div>
 @endforeach
+<div class="contextmenu">
+    <ul>
+        <li class="title"><span></span><br><small></small></li>
+        <li class="edit"><a href="">Редактировать</a></li>
+        <li class="browse"><a href="">Открыть</a></li>
+    </ul>
+</div>
