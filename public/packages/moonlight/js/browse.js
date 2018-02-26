@@ -1,5 +1,5 @@
 $(function() {
-    var itemTotal = $('.main div[item]').length;
+    var itemTotal = 0;
     var itemCount = 0;
     var empty = true;
     var checked = {};
@@ -90,8 +90,10 @@ $(function() {
 
             itemCount++;
 
-            if (itemCount == itemTotal && empty) {
-                $('div.empty').show();
+            if (itemCount == itemTotal) {
+                if (empty) $('div.empty').show();
+            } else {
+                loadElements(items[itemCount].item, items[itemCount].classId);
             }
         }).fail(function() {
             $.alertDefaultError();
@@ -134,12 +136,20 @@ $(function() {
         });
     };
 
+    var items = [];
+
     $('.main div[item]').each(function () {
         var item = $(this).attr('item');
         var classId = $(this).attr('classId');
 
-        loadElements(item, classId);
+        items.push({item: item, classId: classId});
+
+        itemTotal++;
     });
+
+    if (itemTotal) {
+        loadElements(items[0].item, items[0].classId);
+    }
 
     $('body').on('click', '.main div[item] ul.header > li.h2', function() {
         var h2 = $(this);
