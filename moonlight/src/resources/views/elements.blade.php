@@ -30,7 +30,7 @@
             </div>
         </li>
         @endisset
-        @if ($mode == 'browse')
+        @if ($mode == 'browse' && $lastPage > 1)
         <li class="search-link"><a href="{{ route('moonlight.search.item', ['item' => $currentItem->getNameId(), 'action' => 'search']) }}">Поиск</a></li>
         @endif
     </ul>

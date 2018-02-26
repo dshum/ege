@@ -521,21 +521,6 @@ div.path div.divider {
   color: silver;
 }
 
-div.path div.part a.external-link {
-  margin-left: 1.5rem;
-  text-decoration: none;
-  border-bottom: none;
-}
-
-div.path div.part a.external-link .fa {
-  color: firebrick;
-  font-size: 1.3rem;
-}
-
-div.path div.add-element a {
-  margin-left: 0.25rem;
-}
-
 /* Table header */
 
 div.item {

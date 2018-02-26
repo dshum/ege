@@ -21,8 +21,13 @@
             <div class="part"><a href="{{ route('moonlight.browse.element', $parent['classId']) }}">{{ $parent['name'] }}</a></div>
             <div class="divider">/</div>
             @endforeach
-            <div class="part"><a href="{{ route('moonlight.browse.element', $classId) }}" title="Открыть">{{ $element->$mainProperty }}</a>@if (method_exists($element, 'getHref'))<a href="{{ $element->getHref() }}" class="external-link" target="_blank" title="Смотреть на сайте"><i class="fa fa-external-link"></i></a>@endif</div>
+            <div class="part"><a href="{{ route('moonlight.browse.element', $classId) }}" title="Открыть">{{ $element->$mainProperty }}</a></div>
         </div>
+        @if (method_exists($element, 'getHref'))
+        <div class="external-link">
+            <a href="{{ $element->getHref() }}" target="_blank"><i class="fa fa-external-link"></i>Смотреть на сайте</a>
+        </div>
+        @endif
         <div class="item active">
             @if ($itemPluginView)
                 {!! $itemPluginView !!}

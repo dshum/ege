@@ -20,7 +20,10 @@
             <div class="part"><a href="{{ route('moonlight.browse.element', $parent['classId']) }}">{{ $parent['name'] }}</a></div>
             <div class="divider">/</div>
             @endforeach
-            <div class="part"><a href="{{ route('moonlight.element.edit', $classId) }}" title="Редактировать">{{ $element->$mainProperty }}</a></div>
+            <div class="part">{{ $element->$mainProperty }}</div>
+        </div>
+        <div class="edit-link">
+            <a href="{{ route('moonlight.element.edit', $classId) }}" title="Редактировать"><i class="fa fa-pencil"></i>Редактировать элемент</a>
         </div>
         @if ($creates)
         <div class="add-element">
