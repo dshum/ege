@@ -1,36 +1,27 @@
-.leaf.welcome {
-    width: 80rem;
-}
-
-.welcome small {
-    color: #357;
-    font-size: 0.8rem;
-}
-
-.welcome h2 {
+.statistics h2 {
     color: black;
 }
 
-.welcome ul {
+.statistics ul {
     margin-bottom: 2rem;
 }
 
-.welcome ul > li {
+.statistics ul > li {
     margin: 0.25rem 0;
     padding: 0;
 }
 
-.welcome .correct {
+.statistics .correct {
     font-weight: bold;
     color: green;
 }
 
-.welcome .incorrect {
+.statistics .incorrect {
     font-weight: bold;
     color: red;
 }
 
-.welcome .red {
+.statistics .red {
     font-weight: bold;
     color: crimson;
 }

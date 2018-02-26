@@ -604,6 +604,9 @@ $site->
 	addBrowseScript(env('site.photo', 'App.ServiceSection.5'), '/js/photo.js')->
 	addBrowsePlugin(env('site.photo', 'App.ServiceSection.5'), 'App\Http\Plugins\PhotoLoader')->
 
+	addBrowseStyle('App.User', '/css/user-statistics.css')->
+	addBrowsePlugin('App.User', 'App\Http\Plugins\UserStatistics')->
+
 	bind(Site::ROOT, ['App.Section', 'App.ServiceSection', 'App.SiteSettings'])->
 	bind(env('site.subjects', 'App.ServiceSection.2'), 'App.Subject')->
     bind(env('site.dicts', 'App.ServiceSection.3'), 'App.ServiceSection')->
@@ -638,11 +641,15 @@ $site->
 	)->
 	addRubric(
 		Rubric::create('service_sections', 'Служебные разделы')->
-		bind([Site::ROOT => 'App.ServiceSection'])
+		bind([
+			Site::ROOT => 'App.ServiceSection'
+		])
 	)->
 	addRubric(
 		Rubric::create('dicts', 'Справочники')->
-		bind([env('site.dicts', 'App.ServiceSection.3') => 'App.ServiceSection'])
+		bind([
+			env('site.dicts', 'App.ServiceSection.3') => 'App.ServiceSection'
+		])
 	)->
 	addRubric(
 		Rubric::create('site_settings', 'Настройки сайта')->

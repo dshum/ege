@@ -15,25 +15,21 @@ use App\Answer;
 use App\UserTest;
 use App\UserQuestion;
 
-class Welcome extends Controller {
+class UserStatistics extends Controller {
 
-	public function index()
+	public function index($user)
 	{
-		$scope = [];
+        $scope = [];
+        
+        $statistics = [];
 
-        $recent = [];
-
-        $userTests = cache()->tags('user_tests')->remember("recent_tests", 1440, function() {
-            return UserTest::where('complete', true)->
+        $userTests = cache()->tags('user_tests')->remember("user_{$user->id}_tests", 1440, function() use ($user) {
+            return UserTest::where('user_id', $user->id)->
                 orderBy('created_at', 'desc')->
                 get();
         });
 
         foreach ($userTests as $userTest) {
-            $user = cache()->tags('users')->remember("user_test_{$userTest->id}_user", 1440, function() use ($userTest) {
-                return $userTest->user()->first();
-            });
-
             $test = cache()->tags('tests')->remember("user_test_{$userTest->id}_test", 1440, function() use ($userTest) {
                 return $userTest->test()->first();
             });
@@ -50,9 +46,9 @@ class Welcome extends Controller {
                 return $userTest->questions()->where('correct', 1)->count();
             });
 
-            $recent[] = [
+            $statistics[] = [
                 'id' => $userTest->id,
-                'classId' => class_id($userTest),
+                'classId' => Element::getClassId($userTest),
                 'name' => $userTest->name,
                 'created_at' => $userTest->created_at->format('d.m.Y, H:i'),
                 'complete' => $userTest->complete,
@@ -61,18 +57,12 @@ class Welcome extends Controller {
                 'correct' => $correct,
                 'incorrect' => $answered - $correct,
                 'percent' => round(100 * $correct / $total),
-                'user' => [
-                    'id' => $user->id,
-                    'classId' => class_id($user),
-                    'email' => $user->email,
-                    'name' => $user->first_name.' '.$user->last_name,
-                ],
             ];
         }
 
-        $scope['recent'] = $recent;
+        $scope['statistics'] = $statistics;
 
-		return view('plugins.welcome', $scope);
+		return view('plugins.userStatistics', $scope);
 	}
 
 } 

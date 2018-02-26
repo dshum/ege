@@ -1,10 +1,13 @@
-<div class="leaf welcome">
-    <h2>Последние завершенные тесты</h2>
+@if (sizeof($statistics))
+<div class="statistics">
     <ul>
-        @foreach ($recent as $userTest)
+        @foreach ($statistics as $userTest)
         <li>
-            <a href="{{ route('moonlight.browse.element', $userTest['user']['classId']) }}"><span>{{ $userTest['user']['name'] }}</span></a>,
+            @if ($userTest['complete'])
+            <a href="{{ route('moonlight.browse.element', $userTest['classId']) }}"><b>{{ $userTest['name'] }}</b></a>,
+            @else
             <a href="{{ route('moonlight.browse.element', $userTest['classId']) }}">{{ $userTest['name'] }}</a>,
+            @endif
             {{ $userTest['created_at'] }},
             <span class="correct">{{ $userTest['correct'] }}</span> /
             <span class="incorrect">{{ $userTest['incorrect'] }}</span> /
@@ -14,3 +17,4 @@
         @endforeach
     </ul>
 </div>
+@endif

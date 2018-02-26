@@ -521,6 +521,17 @@ div.path div.divider {
   color: silver;
 }
 
+div.path div.part a.edit {
+  margin-left: 1.5rem;
+  text-decoration: none;
+  border-bottom: none;
+}
+
+div.path div.part a.edit .fa {
+  color: darkgoldenrod;
+  font-size: 1.3rem;
+}
+
 /* Table header */
 
 div.item {
@@ -886,7 +897,7 @@ table.elements td.browse {
 
 table.elements td.browse .fa {
   position: relative;
-  top: -2px;
+  top: -4px;
   width: 1rem;
   font-size: 1.6rem;
   color: #3a7;

@@ -24,6 +24,11 @@ class UserTest extends Model
 		static::deleted(function($element) {
             cache()->tags('user_tests')->flush();
 		});
+	}
+	
+	public function user()
+    {
+        return $this->belongsTo('App\User');
     }
 
     public function test()
