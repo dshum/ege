@@ -8,7 +8,7 @@ use App\Answer;
 use App\UserTest;
 use App\UserQuestion;
 use App\UserAnswer;
-use Log;
+use Carbon\Carbon;
 
 class TestController extends Controller
 {
@@ -157,6 +157,7 @@ class TestController extends Controller
 
 		if ($questionsCount === $userQuestionsCount) {
 			$userTest->complete = true;
+			$userTest->complete_at = Carbon::now();
 
 			$userTest->save();
 		}

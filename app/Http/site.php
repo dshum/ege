@@ -460,6 +460,7 @@ $site->
 	addItem(
 		Item::create('App\UserTest')->
 		setTitle('Тест ученика')->
+		setCreate(true)->
 		addOrderBy('created_at', 'desc')->
 		addProperty(
 			MainProperty::create('name')->
@@ -468,6 +469,11 @@ $site->
 		addProperty(
 			CheckboxProperty::create('complete')->
 			setTitle('Завершен')->
+			setShow(true)
+		)->
+		addProperty(
+			DatetimeProperty::create('complete_at')->
+			setTitle('Дата завершения')->
 			setShow(true)
 		)->
 		addProperty(
