@@ -13,8 +13,7 @@ class AddColumnUserTestCompleteAt extends Migration
      */
     public function up()
     {
-        Schema::table('user_tests', function(Blueprint $table)
-		{
+        Schema::table('user_tests', function(Blueprint $table) {
             $table->timestamp('complete_at')->nullable();
 		});
     }

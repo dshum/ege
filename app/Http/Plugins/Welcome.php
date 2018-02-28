@@ -25,6 +25,7 @@ class Welcome extends Controller {
 
         $userTests = cache()->tags('user_tests')->remember("recent_tests", 1440, function() {
             return UserTest::where('complete', true)->
+                orderBy('complete_at', 'desc')->
                 orderBy('created_at', 'desc')->
                 get();
         });
@@ -50,12 +51,17 @@ class Welcome extends Controller {
                 return $userTest->questions()->where('correct', 1)->count();
             });
 
+            $completeAt = $userTest->complete_at
+                ? $userTest->complete_at->format('d.m.Y, H:i')
+                : null;
+
             $recent[] = [
                 'id' => $userTest->id,
                 'classId' => class_id($userTest),
                 'name' => $userTest->name,
                 'created_at' => $userTest->created_at->format('d.m.Y, H:i'),
                 'complete' => $userTest->complete,
+                'complete_at' => $completeAt,
                 'total' => $total,
                 'answered' => $answered,
                 'correct' => $correct,

@@ -201,24 +201,7 @@ form input[type="text"]:focus:not([readonly]) {
 }
 
 form textarea {
-  width: 30rem;
-}
-
-form input.date {
-  width: 6rem;
-}
-
-form input.time {
-  width: 1.5rem;
-  text-align: center;
-}
-
-form input.number {
-  width: 8rem;
-}
-
-form input.one {
-  width: 10rem;
+  width: 50rem;
 }
 
 /* Buttons */
@@ -374,6 +357,11 @@ footer .right .fa {
 .question.complete.incorrect {
   box-shadow: 0 3px 7px 0 rgba(220, 20, 60, 0.18), 0 2px 11px 0 rgba(220, 20, 60, 0.15);
   border-color: crimson;
+}
+
+.question.complete.waiting {
+  box-shadow: 0 3px 7px 0 rgba(30, 145, 255, 0.18), 0 2px 11px 0 rgba(30, 145, 255, 0.15);
+  border-color: dodgerblue;
 }
 
 .question.complete .fa {

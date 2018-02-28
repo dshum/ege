@@ -7,7 +7,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserTest extends Model
 {
-    use SoftDeletes;
+	use SoftDeletes;
+	
+	public function getDates()
+	{
+		return [
+			'complete_at',
+			'created_at',
+			'updated_at',
+			'deleted_at',
+		];
+    }
 
     public static function boot()
 	{

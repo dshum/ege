@@ -41,10 +41,8 @@ class TestController extends Controller
 
 		$userTest = cache()->tags('user_tests')->remember("user_test_where_user_{$user->id}_and_test_{$test->id}", 1440, function() use ($user, $test) {
 			return 
-				UserTest::where([
-					['user_id', $user->id],
-					['test_id', $test->id],
-				])->first();
+				UserTest::where('user_id', $user->id)->
+					where('test_id', $test->id)->first();
 		});
 
 		if (! $userTest) {
@@ -58,13 +56,12 @@ class TestController extends Controller
 		}
 
 		$answers = $request->input('answers');
-
-		if (empty($answers)) {
-			return redirect()->back();
-		}
+		$detailedAnswers = $request->input('detailed_answers');
 
 		foreach ($questions as $question) {
-			if (! isset($answers[$question->id])) continue;
+			if ($question->isSingle() && ! isset($answers[$question->id])) continue;
+			if ($question->isMultiple() && ! isset($answers[$question->id])) continue;
+			if ($question->isText() && ! isset($detailedAnswers[$question->id])) continue;
 
 			$userQuestion = UserQuestion::where('question_id', $question->id)->first();
 
@@ -149,6 +146,13 @@ class TestController extends Controller
 						$userAnswer->forceDelete();
 					}
 				}
+			} elseif ($question->isText()) {
+				$detailedAnswer = $detailedAnswers[$question->id];
+
+				$userQuestion->detailed_answer = $detailedAnswer;
+				$userQuestion->waiting = true;
+
+				$userQuestion->save();
 			}
 		}
 
@@ -184,10 +188,8 @@ class TestController extends Controller
 
 		$userTest = cache()->tags('user_tests')->remember("user_test_where_user_{$user->id}_and_test_{$test->id}", 1440, function() use ($user, $test) {
 			return 
-				UserTest::where([
-					['user_id', $user->id],
-					['test_id', $test->id],
-				])->first();
+				UserTest::where('user_id', $user->id)->
+					where('test_id', $test->id)->first();
 		});
 
 		if ($userTest) {
@@ -212,7 +214,7 @@ class TestController extends Controller
 			return $test->questions()->orderBy('order')->get();
 		});
 
-		$answers= [];
+		$answers = [];
 
 		foreach ($questions as $question) {
 			$answers[$question->id] = cache()->tags('answers')->remember("question_{$question->id}_answers", 1440, function() use ($question) {
@@ -229,5 +231,4 @@ class TestController extends Controller
 
 		return view('test', $scope);
 	}
-
 } 

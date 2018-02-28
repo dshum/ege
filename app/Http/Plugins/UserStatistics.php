@@ -25,6 +25,7 @@ class UserStatistics extends Controller {
 
         $userTests = cache()->tags('user_tests')->remember("user_{$user->id}_tests", 1440, function() use ($user) {
             return UserTest::where('user_id', $user->id)->
+                orderByRaw('complete_at DESC NULLS LAST')->
                 orderBy('created_at', 'desc')->
                 get();
         });
@@ -46,12 +47,17 @@ class UserStatistics extends Controller {
                 return $userTest->questions()->where('correct', 1)->count();
             });
 
+            $completeAt = $userTest->complete_at
+                ? $userTest->complete_at->format('d.m.Y, H:i')
+                : null;
+
             $statistics[] = [
                 'id' => $userTest->id,
                 'classId' => Element::getClassId($userTest),
                 'name' => $userTest->name,
                 'created_at' => $userTest->created_at->format('d.m.Y, H:i'),
                 'complete' => $userTest->complete,
+                'complete_at' => $completeAt,
                 'total' => $total,
                 'answered' => $answered,
                 'correct' => $correct,

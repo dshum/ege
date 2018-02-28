@@ -503,7 +503,8 @@ $site->
 	addItem(
 		Item::create('App\UserQuestion')->
 		setTitle('Вопрос ученика')->
-		setPerPage(25)->
+		addOrderBy('created_at', 'desc')->
+		setPerPage(20)->
 		addProperty(
 			MainProperty::create('name')->
 			setTitle('Название')
@@ -511,12 +512,23 @@ $site->
 		addProperty(
 			CheckboxProperty::create('correct')->
 			setTitle('Правильный')->
+			setEditable(true)->
+			setShow(true)
+		)->
+		addProperty(
+			CheckboxProperty::create('waiting')->
+			setTitle('Ждет проверки')->
+			setEditable(true)->
 			setShow(true)
 		)->
 		addProperty(
 			TextfieldProperty::create('answer')->
 			setTitle('Ответ')->
-			setRequired(true)->
+			setShow(true)
+		)->
+		addProperty(
+			TextareaProperty::create('detailed_answer')->
+			setTitle('Развернутый ответ')->
 			setShow(true)
 		)->
 		addProperty(

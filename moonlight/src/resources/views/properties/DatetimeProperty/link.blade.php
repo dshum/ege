@@ -1,1 +1,0 @@
-<div class="label date"><i class="fa fa-calendar"></i><span>{{ $title }}</span></div>
