@@ -32,11 +32,11 @@ class User extends Authenticatable
 
     public function getDates()
 	{
-		return array(
+		return [
 			'created_at',
 			'updated_at',
 			'deleted_at',
-		);
+        ];
     }
     
     public static function boot()
