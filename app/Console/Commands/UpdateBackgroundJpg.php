@@ -42,7 +42,7 @@ class UpdateBackgroundJpg extends Command
 
         // $url = 'http://yandex.ru/images/today?size=1920x1080'; // doesn't work anymore
 
-        $url = 'https://source.unsplash.com/random/1920x1080';
+        $url = 'https://source.unsplash.com/daily';
         $path = public_path().'/assets/background.jpg';
 
         $this->info($path);
