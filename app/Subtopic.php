@@ -18,15 +18,15 @@ class Subtopic extends Model
 		});
 
 		static::saved(function($element) {
-            cache()->tags('subtopics')->flush();
+            	cache()->tags('subtopics')->flush();
 		});
 
 		static::deleted(function($element) {
-            cache()->tags('subtopics')->flush();
+            	cache()->tags('subtopics')->flush();
 		});
-    }
+    	}
 
-    public function topic()
+    	public function topic()
 	{
 		return $this->belongsTo('App\Topic', 'topic_id');
 	}
