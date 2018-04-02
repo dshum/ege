@@ -64,6 +64,10 @@ class Handler extends ExceptionHandler
                 return response()->json(['error' => $exception->getMessage()]);
             }
 
+            if (config('app.debug')) {
+                return parent::render($request, $exception);
+            }
+
             return response()->view('errors.500', ['exception' => $exception], 500);
         } elseif ($exception instanceof TokenMismatchException) {
             if ($request->expectsJson()) {
