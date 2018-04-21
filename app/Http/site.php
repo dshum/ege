@@ -19,7 +19,6 @@ use Moonlight\Properties\PasswordProperty;
 use Moonlight\Properties\RichtextProperty;
 use Moonlight\Properties\TextareaProperty;
 use Moonlight\Properties\TextfieldProperty;
-use Moonlight\Properties\PluginProperty;
 use Moonlight\Properties\VirtualProperty;
 
 $topics = \App\Topic::orderBy('order')->get();
@@ -368,7 +367,7 @@ $site->
 			setShow(true)
 		)->
 		addProperty(
-			PluginProperty::create('answers_info')->
+			VirtualProperty::create('answers_info')->
 			setTitle('Ответы')->
 			setShow(true)
 		)->

@@ -45,7 +45,7 @@ class BackupDatabase extends Command
 
         $filename = storage_path().'/backups/'.$dbname.'_'.date('Y-m-d').'.txt';
 
-        $output[] = system("pg_dump --username={$username} --format plain --verbose --file {$filename} --dbname={$dbname}");
+        $output[] = system("pg_dump --username={$username} --format plain --file {$filename} --dbname={$dbname}");
 
         foreach ($output as $line) {
             $this->info($line);
