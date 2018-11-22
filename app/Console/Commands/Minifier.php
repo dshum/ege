@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
+use MatthiasMullie\Minify;
 
 class Minifier extends Command
 {
@@ -42,8 +42,6 @@ class Minifier extends Command
         $file = $this->argument('file');
 
         $resources = base_path().'/moonlight/src/resources';
-        $cssUrl = 'https://cssminifier.com/raw';
-        $jsUrl = 'https://javascript-minifier.com/raw';
 
         if ($type == 'css' && $file) {
             $css = [$file];
@@ -95,19 +93,12 @@ class Minifier extends Command
 
         foreach ($css as $file) {
             try {
-                $input = File::get($resources.'/source/css/'.$file.'.css');
+                $src = $resources.'/source/css/'.$file.'.css';
+                $dest = $resources.'/assets/css/'.$file.'.min.css';
 
-                $params = ['input' => $input];
+                $minifier = new Minify\CSS($src);
 
-                $result = file_get_contents($cssUrl, false, stream_context_create([
-                    'http' => [
-                        'method'  => 'POST',
-                        'header'  => 'Content-type: application/x-www-form-urlencoded',
-                        'content' => http_build_query($params)
-                    ]
-                ]));
-
-                File::put($resources.'/assets/css/'.$file.'.min.css', $result);
+                $minifier->add($dest);
 
                 echo $file.'.css'.PHP_EOL;
             } catch (\ErrorException $e) {
@@ -119,19 +110,12 @@ class Minifier extends Command
 
         foreach ($js as $file) {
             try {
-                $input = File::get($resources.'/source/js/'.$file.'.js');
+                $src = $resources.'/source/js/'.$file.'.js';
+                $dest = $resources.'/assets/js/'.$file.'.min.js';
 
-                $params = ['input' => $input];
+                $minifier = new Minify\CSS($src);
 
-                $result = file_get_contents($jsUrl, false, stream_context_create([
-                    'http' => [
-                        'method'  => 'POST',
-                        'header'  => 'Content-type: application/x-www-form-urlencoded',
-                        'content' => http_build_query($params)
-                    ]
-                ]));
-
-                File::put($resources.'/assets/js/'.$file.'.min.js', $result);
+                $minifier->add($dest);
 
                 echo $file.'.js'.PHP_EOL;
             } catch (\ErrorException $e) {
