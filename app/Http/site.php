@@ -83,6 +83,11 @@ $site->
 			setRelatedClass('App\Section')->
 			setParent(true)
 		)->
+		addProperty(
+			DateProperty::create('test_date')->
+			setTitle('Тестовая дата')->
+			setShow(true)
+		)->
 		addTimestamps()->
 		addSoftDeletes()
 	)->

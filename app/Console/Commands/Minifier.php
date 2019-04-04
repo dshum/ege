@@ -98,14 +98,12 @@ class Minifier extends Command
 
                 $minifier = new Minify\CSS($src);
 
-                $minifier->add($dest);
+                $minifier->minify($dest);
 
-                echo $file.'.css'.PHP_EOL;
+                echo $dest.PHP_EOL;
             } catch (\ErrorException $e) {
-                echo $file.'.css FAILED'.PHP_EOL;
+                echo $dest.' FAILED'.PHP_EOL;
             }
-
-            sleep(1);
         }
 
         foreach ($js as $file) {
@@ -113,16 +111,14 @@ class Minifier extends Command
                 $src = $resources.'/source/js/'.$file.'.js';
                 $dest = $resources.'/assets/js/'.$file.'.min.js';
 
-                $minifier = new Minify\CSS($src);
+                $minifier = new Minify\JS($src);
 
-                $minifier->add($dest);
+                $minifier->minify($dest);
 
-                echo $file.'.js'.PHP_EOL;
+                echo $dest.PHP_EOL;
             } catch (\ErrorException $e) {
-                echo $file.'.js FAILED'.PHP_EOL;
+                echo $dest.' FAILED'.PHP_EOL;
             }
-
-            sleep(1);
         }
     }
 }
