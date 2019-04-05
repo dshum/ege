@@ -9,7 +9,7 @@ class Test extends Model
 {
     use SoftDeletes;
 
-    /**
+  /**
 	 * The Eloquent question model.
 	 *
 	 * @var string
@@ -40,7 +40,7 @@ class Test extends Model
 		});
     }
     
-    public function questions()
+  public function questions()
 	{
 		return $this->belongsToMany(static::$questionModel, static::$testsQuestionsPivot);
 	}
